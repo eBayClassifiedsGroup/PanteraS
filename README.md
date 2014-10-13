@@ -23,5 +23,7 @@ Scale up with more slaves:
 ## References
 
 [1] https://www.docker.com/
+
 [2] http://www.fig.sh/
+
 [3] http://stackoverflow.com/questions/25217208/setting-up-a-docker-fig-mesos-environment
