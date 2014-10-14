@@ -5,15 +5,10 @@ master:
   build: mesos-master
   ports:
     - "15050:5050"
+    - "18080:8080"
   links:
     - "zk:zookeeper"
 slave:
   build: mesos-slave
-  links:
-    - "zk:zookeeper"
-chronos:
-  build: mesos-chronos
-  ports:
-    - "14400:4400"
   links:
     - "zk:zookeeper"
