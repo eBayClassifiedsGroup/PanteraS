@@ -17,6 +17,3 @@ RUN ln -sf /proc/self/mounts /etc/mtab
 
 ENV HOME  /
 WORKDIR /
-EXPOSE 8888
-
-ENTRYPOINT [ "/bin/bash", "-c" ]
