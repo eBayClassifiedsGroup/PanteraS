@@ -17,3 +17,8 @@ RUN update-alternatives --display java
 RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 RUN echo '# /lib/init/fstab: cleared out for bare-bones lxc' > /lib/init/fstab
 RUN ln -sf /proc/self/mounts /etc/mtab
+
+ENV HOME  /
+WORKDIR /
+
+ENTRYPOINT [ "/bin/bash", "-c" ]

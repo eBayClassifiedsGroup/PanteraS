@@ -4,10 +4,11 @@ zk:
 master:
   build: mesos-master
   ports:
-    - "15050:5050"
-    - "18080:8080"
+    - "5050:5050"
+    - "8080:8080"
   links:
     - "zk:zookeeper"
+  hostname: boot2docker
 slave:
   privileged: true
   build: mesos-slave
@@ -18,3 +19,7 @@ slave:
     - "/var/lib/docker:/var/lib/docker"
     - "/usr/local/bin/docker:/usr/local/bin/docker"
     - "/sys:/sys"
+    - "/tmp/mesos:/tmp/mesos"
+  ports:
+    - "5051:5051"
+  hostname: boot2docker
