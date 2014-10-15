@@ -9,6 +9,12 @@ master:
   links:
     - "zk:zookeeper"
 slave:
+  privileged: true
   build: mesos-slave
   links:
     - "zk:zookeeper"
+  volumes:
+    - "/var/run/docker.sock:/var/run/docker.sock"
+    - "/var/lib/docker:/var/lib/docker"
+    - "/usr/local/bin/docker:/usr/local/bin/docker"
+    - "/sys:/sys"
