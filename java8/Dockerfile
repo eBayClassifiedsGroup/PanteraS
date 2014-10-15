@@ -1,4 +1,4 @@
-FROM dockerregistry.mobile.rz:5000/library/ubuntu:14.04
+FROM ubuntu:14.04
 MAINTAINER <siteops@team.mobile.de>
 
 RUN sed -i.bak 's/main$/main universe/' /etc/apt/sources.list
