@@ -3,7 +3,7 @@ MAINTAINER Mark O'Connor <mark@myspotontheweb.com>
 
 RUN echo 'docker,mesos' > /etc/mesos-slave/containerizers
 RUN echo '5mins' > /etc/mesos-slave/executor_registration_timeout
-RUN apt-get -y install docker.io
+RUN apt-get install -y docker.io
 
 CMD ["--master=zk://zookeeper:2181/mesos", "--containerizers=docker,mesos"]
 
