@@ -49,15 +49,3 @@ consul:
     - "8600:8600/udp"
   hostname: $HOSTNAME
   name: consul
-
-haproxy:
-  environment:
-    MASTER_HOST: $HOSTNAME
-  ports:
-    - 80:80
-    - 81:81
-    - 82:82
-  hostname: $HOSTNAME
-  name: haproxy
-  volumes:
-    - "/opt:/haproxy-override"
