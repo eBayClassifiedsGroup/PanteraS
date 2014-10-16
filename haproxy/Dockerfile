@@ -36,7 +36,7 @@ RUN pip install supervisor-stdout
 # Add files.
 ADD haproxy.cfg /etc/haproxy/haproxy.cfg
 ADD haproxy.sh /opt/haproxy/haproxy.sh
-ADD in.conf /opt/haproxy/in.conf
+ADD in.conf /opt/consul_haproxy/in.conf
 ADD supervisord.conf /etc/supervisor/supervisord.conf
 
 # Define mountable directories.
