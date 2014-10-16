@@ -24,5 +24,4 @@ HOST=$(echo ${HOSTNAME} | awk -F- '{print $(NF-1)}')
 [ ${DC} = 'UNKNOWN' ] && BOOTSTRAP="-bootstrap-expect 1"
 MODE=" -server"
 
-
 eval "`cat fig.yml.tpl| sed  's/^\(.*\)$/echo "\1"/'`" >fig.yml
