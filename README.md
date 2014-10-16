@@ -1,5 +1,26 @@
 # Platform as a Service in the box
 
+## Starting the paas in a VM
+
+### Prerequisites
+
+Please make sure you have the following packages installed:
+- vagrant
+- VirtualBox
+
+### Usage
+
+   $ cd vagrant
+   $ vagrant up
+
+This will start an Ubuntu VM, install Docker, and then will automatically run the fig configuration described below. At the end of the process, you can run 
+   $ vagrant ssh
+
+to ssh into the VM and get access to all the docker instances.
+
+
+## Starting the paas directly on your machine 
+
 ## Prerequisites
 
 - Docker
@@ -13,7 +34,7 @@
 In order to build the docker image
 you have to execute the following command _once_:
 
-	$ ./build.sh
+	$ ./build-docker-images.sh
 
 Then you have to create a valid fig.yml file:
 
