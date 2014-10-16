@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM paas
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
 RUN mkdir /opt/consul && mkdir /etc/consul.d/

@@ -1,4 +1,4 @@
-FROM ubuntu:14.04
+FROM paas
 MAINTAINER Mark O'Connor <mark@myspotontheweb.com>
 
 RUN echo "deb http://repos.mesosphere.io/ubuntu/ trusty main" > /etc/apt/sources.list.d/mesosphere.list
