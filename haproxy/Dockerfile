@@ -5,8 +5,7 @@ MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 RUN mkdir /opt/consul_haproxy
 RUN mkdir -p /opt/haproxy/mount
 
-ENV PATH $PATH:
-ENV HOME  /opt/consul_haproxy
+ENV HOME /opt/consul_haproxy
 ENV GOPATH /.go
 WORKDIR /opt/consul_haproxy
 

@@ -52,7 +52,7 @@ consul:
 
 haproxy:
   environment:
-    MASTER_HOST: $HOSTNAME
+    MASTER_IP: $IP
     DC: $DC
   image: haproxy
   ports:
