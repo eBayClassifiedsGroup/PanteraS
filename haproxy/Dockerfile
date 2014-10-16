@@ -1,11 +1,6 @@
-# Install Haproxy.
-
-FROM dockerregistry.mobile.rz:5000/library/ubuntu:14.04
+FROM paas
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
-
-ENV http_proxy http://proxy.mobile.rz:3128
-ENV https_proxy http://proxy.mobile.rz:3128
 
 RUN mkdir /opt/consul_haproxy
 RUN mkdir -p /opt/haproxy/mount
@@ -36,7 +31,7 @@ RUN pip install supervisor-stdout
 # Add files.
 ADD haproxy.cfg /etc/haproxy/haproxy.cfg
 ADD haproxy.sh /opt/haproxy/haproxy.sh
-ADD in.conf /opt/haproxy/in.conf
+ADD in.conf /opt/consul_haproxy/in.conf
 ADD supervisord.conf /etc/supervisor/supervisord.conf
 
 # Define mountable directories.
