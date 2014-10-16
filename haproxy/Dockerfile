@@ -1,11 +1,6 @@
-# Install Haproxy.
-
-FROM dockerregistry.mobile.rz:5000/library/ubuntu:14.04
+FROM paas
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
-
-ENV http_proxy http://proxy.mobile.rz:3128
-ENV https_proxy http://proxy.mobile.rz:3128
 
 RUN mkdir /opt/consul_haproxy
 RUN mkdir -p /opt/haproxy/mount
