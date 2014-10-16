@@ -2,6 +2,7 @@ zk:
   image: mesos
   command: /usr/share/zookeeper/bin/zkServer.sh start-foreground
   name: zk
+
 master:
   image: mesos-master
   ports:
@@ -11,6 +12,7 @@ master:
     - "zk:zookeeper"
   hostname: $HOSTNAME
   name: mesos-master
+
 slave:
   privileged: true
   image: mesos-slave
@@ -26,9 +28,15 @@ slave:
     - "5051:5051"
   hostname: $HOSTNAME
   name: mesos-slave
+
 consul:
+  environment:
+    MASTER_IP: $IP
+    MASTER_HOST: $HOSTNAME
+    DC: $DC
+    CONSUL_BOOTSTRAP: \"$BOOTSTRAP\"
+    CONSUL_MODE: \"$MODE\"
   image: dockerregistry.mobile.rz:5000/library/consul:latest
-  command: '\"$CONSUL_CMD\"'
   ports:
     - "8300:8300"
     - "8301:8301"
@@ -41,3 +49,15 @@ consul:
     - "8600:8600/udp"
   hostname: $HOSTNAME
   name: consul
+
+haproxy:
+  environment:
+    MASTER_HOST: $HOSTNAME
+  ports:
+    - 80:80
+    - 81:81
+    - 82:82
+  hostname: $HOSTNAME
+  name: haproxy
+  volumes:
+    - "/opt:/haproxy-override"

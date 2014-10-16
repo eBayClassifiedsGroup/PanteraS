@@ -1,9 +1,12 @@
-# Mesos @ Docker
+# Platform as a Service in the box
 
 ## Prerequisites
 
 - Docker
-- Fig
+- ZK + Mesos + Marathon = as an orchestration tool
+- Consul = as K/V, monitoring, Service Directory and Registry
+- HAproxy + consul-haproxy = as LoadBalancer with automatic config generation
+- Fig.sh = as a spawner for developers and intgeration envirnment
 
 ## Usage
 
