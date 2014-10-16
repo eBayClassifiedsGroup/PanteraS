@@ -53,11 +53,11 @@ consul:
 haproxy:
   environment:
     MASTER_HOST: $HOSTNAME
+  image: haproxy
   ports:
     - 80:80
     - 81:81
-    - 82:82
   hostname: $HOSTNAME
   name: haproxy
   volumes:
-    - "/opt:/haproxy-override"
+    - "/opt:/opt/haproxy/mount"
