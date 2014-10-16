@@ -1,1 +1,3 @@
 vagrant/.vagrant/
+fig.yml
+*.swp
