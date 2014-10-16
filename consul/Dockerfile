@@ -1,6 +1,4 @@
-# Dockerfile that create mobile consul
-
-FROM dockerregistry.mobile.rz:5000/library/ubuntu:14.04
+FROM paas
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
 RUN mkdir /opt/consul && mkdir /etc/consul.d/

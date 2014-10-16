@@ -36,7 +36,7 @@ consul:
     DC: $DC
     CONSUL_BOOTSTRAP: \"$BOOTSTRAP\"
     CONSUL_MODE: \"$MODE\"
-  image: dockerregistry.mobile.rz:5000/library/consul:latest
+  image: consul
   ports:
     - "8300:8300"
     - "8301:8301"
