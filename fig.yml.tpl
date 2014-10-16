@@ -53,6 +53,7 @@ consul:
 haproxy:
   environment:
     MASTER_HOST: $HOSTNAME
+    DC: $DC
   image: haproxy
   ports:
     - 80:80
