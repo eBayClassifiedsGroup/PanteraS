@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 BOOTSTRAP="-bootstrap-expect 1"
 CONSUL_CMD="-advertise ${IP} -server -node=${HOSTNAME}"
