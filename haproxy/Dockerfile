@@ -9,21 +9,23 @@ ENV HOME /opt/consul_haproxy
 ENV GOPATH /.go
 WORKDIR /opt/consul_haproxy
 
-# Install consul-haproxy
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get -y install golang git \
-    && go get -u github.com/hashicorp/consul-haproxy \
-    && cp /.go/bin/consul-haproxy .
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install supervisor python-pip
-
-# Install HAproxy
 RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
     && apt-get update \
-    && apt-get install -y haproxy=1.5.3-1~ubuntu14.04.1 \
-    && sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
+    && apt-get install -y \
+    haproxy=1.5.3-1~ubuntu14.04.1 \
+    golang \
+    git \
+    supervisor \
+    python-pip
+#    openssh-server
+
+# HAproxy
+RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
     && rm -rf /var/lib/apt/lists/*
 
+# consul-haproxy
+RUN go get -u github.com/hashicorp/consul-haproxy \
+    && cp /.go/bin/consul-haproxy .
 
 RUN pip install supervisor-stdout
 
@@ -36,9 +38,22 @@ ADD supervisord.conf /etc/supervisor/supervisord.conf
 # Define mountable directories.
 VOLUME ["/haproxy-override"]
 
-ENTRYPOINT [ "supervisord" ]
-#ENTRYPOINT [ "./consul-haproxy", "-in", "in.conf", "-out", "/etc/haproxy/haproxy.cfg" ]
+# install ssh
+# RUN mkdir /var/run/sshd
+# RUN echo 'root:root' | chpasswd
+# RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+# RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
+# ENV NOTVISIBLE "in users profile"
+# RUN echo "export VISIBLE=now" >> /etc/profile
 
-# Expose ports.
+# ssh port
+EXPOSE 22
+
+# superviser http gui
+EXPOSE 9001
+
+# haproxy ports
 EXPOSE 80
 EXPOSE 81
+
+ENTRYPOINT [ "supervisord" ]

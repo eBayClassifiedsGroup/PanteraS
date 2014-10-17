@@ -54,6 +54,16 @@ To start an instance of each service execute:
 
 	$ fig up -d
 
+### Web Interfaces
+
+Given the `IP`/`hostname` above
+you can reach the PaaS components
+on the following ports:
+
+- Consul: http://hostname:8500
+- Marathon: http://hostname:8080
+- Mesos: http://hostname:5050
+
 ## References
 
 [1] https://www.docker.com/

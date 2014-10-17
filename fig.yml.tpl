@@ -8,6 +8,7 @@ master:
   ports:
     - "5050:5050"
     - "8080:8080"
+    - "9001:9001"
   links:
     - "zk:zookeeper"
   hostname: $HOSTNAME
@@ -26,6 +27,7 @@ slave:
     - "/tmp/mesos:/tmp/mesos"
   ports:
     - "5051:5051"
+    - "9002:9001"
   hostname: $HOSTNAME
   name: mesos-slave
 
@@ -47,6 +49,7 @@ consul:
     - "8500:8500"
     - "8600:8600"
     - "8600:8600/udp"
+    - "9003:9001"
   hostname: $HOSTNAME
   name: consul
 
@@ -56,9 +59,8 @@ haproxy:
     DC: $DC
   image: haproxy
   ports:
-    - 80:80
-    - 81:81
+    - "80:80"
+    - "81:81"
+    - "9004:9001"
   hostname: $HOSTNAME
   name: haproxy
-  volumes:
-    - "/opt:/opt/haproxy/mount"
