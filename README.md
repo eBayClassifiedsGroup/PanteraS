@@ -1,38 +1,46 @@
-# Platform as a Service in the box
+# Platform as a Service in a box
 
-## Starting the paas in a VM
+This project has the goal to spawn a complete environment
+containing all necessary components for a PaaS environment:
 
-### Prerequisites
-
-Please make sure you have the following packages installed:
-- vagrant
-- VirtualBox
-
-### Usage
-
-   $ cd vagrant
-   $ vagrant up
-
-This will start an Ubuntu VM, install Docker, and then will automatically run the fig configuration described below. At the end of the process, you can run 
-   $ vagrant ssh
-
-to ssh into the VM and get access to all the docker instances.
-
-
-## Starting the paas directly on your machine 
-
-## Prerequisites
-
-- Docker
-- ZK + Mesos + Marathon = as an orchestration tool
-- Consul = as K/V, monitoring, Service Directory and Registry
-- HAproxy + consul-haproxy = as LoadBalancer with automatic config generation
-- Fig.sh = as a spawner for developers and intgeration envirnment
+- Mesos + Marathon + ZooKeeper (orchestration components)
+- Consul (K/V store, monitoring, service directory and registry)
+- HAproxy + consul-haproxy (load balancer with automatic config generation)
 
 ## Usage
 
-In order to build the docker image
-you have to execute the following command _once_:
+### Vagrant
+
+The easiest way to start is using vagrant.
+Please make sure you have the following packages installed:
+
+- vagrant >1.5
+- VirtualBox
+
+Then execute:
+
+	$ cd vagrant
+	$ vagrant up
+
+This will start an Ubuntu VM,
+install all prerequisites and spawn all components.
+At the end of the process, you can run 
+
+	$ vagrant ssh
+
+to ssh into the VM and get access to all the docker instances.
+
+### Standalone
+
+If you prefer to run the PaaS components directly
+on your linux box or in an environment like boot2docker
+you can do so by installing the following packages:
+
+- docker
+- fig.sh
+
+Execute the following command _once_
+in order to build the necessary docker images:
 
 	$ ./build-docker-images.sh
 
