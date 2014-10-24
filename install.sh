@@ -20,13 +20,26 @@ if [[ $unamestr == Darwin ]]; then
         rm *.dmg
         #fire-up an Ubuntu VM via vagrant. The
 		cd vagrant
-		echo Powering-up Ubuntu VM. may take a while. A cofee may be a good idea now...
+		echo Installing VM. It may take a while. A cofee may be a good idea now...
 		vagrant up
-		vagrant ssh
+		@echo Done. Now run: vagrant ssh
 elif [[ $unamestr == Linux && $lindistro == Ubuntu* ]]; then
         sudo apt-get -q -y install docker.io
 		curl -L https://github.com/docker/fig/releases/download/1.0.0/fig-`uname -s`-`uname -m` > /tmp/fig; chmod +x /tmp/fig; sudo mv /tmp/fig /usr/local/bin
-        bash build-docker-images.sh
+		docker stop $(docker ps -a -q)
+        sudo docker stop $(sudo docker ps -a -q)
+        sudo docker rm $(sudo docker ps -a -q)
+		sudo docker rmi -f $(sudo docker images -q)
+		echo Installing VMs. It may take a while. A cofee may be a good idea now...
+		sudo docker build --rm=true --tag=paas paas
+		sudo docker build --rm=true --tag=mesos mesos
+		sudo docker build --rm=true --tag=mesos-slave mesos-slave
+		sudo docker build --rm=true --tag=mesos-master mesos-master
+		sudo docker build --rm=true --tag=consul consul
+		sudo docker build --rm=true --tag=haproxy haproxy
+		HOSTNAME=boot2docker IP=192.168.59.103 ./genfig.sh
+		sudo fig up -d
+		echo Done. Now run: sudo docker run -i -t paas
 else
         echo Only Mac OSX and Ubuntu platforms are supported. Exiting now.
         exit 1
