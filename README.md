@@ -13,8 +13,8 @@ containing all necessary components for a PaaS environment:
 Execute:
 	$ install.sh
 
-- If you're on a Mac OSX box, this will install the [Vagrant](#Vagrant) Paas in a Box below.<br />
-- If you are on an Ubuntu box, this will install the [Standalone](#Standalone) Paas in a Box below.<br />
+- If you're on a Mac OSX box, this will install the [Vagrant](#vagrant) Paas in a Box below.<br />
+- If you are on an Ubuntu box, this will install the [Standalone](#standalone) Paas in a Box below.<br />
 In both cases you'll be ssh'd into the target VM.
 
 ### Vagrant
