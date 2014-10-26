@@ -10,13 +10,10 @@ WORKDIR /opt/consul
 
 # Install Consul
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get -y install wget unzip supervisor python-pip \
     && wget https://dl.bintray.com/mitchellh/consul/0.4.0_linux_amd64.zip \
     && wget https://dl.bintray.com/mitchellh/consul/0.4.0_web_ui.zip \
     && unzip 0.4.0_linux_amd64.zip \
     && unzip 0.4.0_web_ui.zip
-
-RUN pip install supervisor-stdout
 
 # Install Go
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install golang git \

@@ -14,10 +14,7 @@ RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
     && apt-get install -y \
     haproxy=1.5.3-1~ubuntu14.04.1 \
     golang \
-    git \
-    supervisor \
-    python-pip
-#    openssh-server
+    git
 
 # HAproxy
 RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
@@ -27,8 +24,6 @@ RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
 RUN go get -u github.com/hashicorp/consul-haproxy \
     && cp /.go/bin/consul-haproxy .
 
-RUN pip install supervisor-stdout
-
 # Add files.
 ADD haproxy.cfg /etc/haproxy/haproxy.cfg
 ADD haproxy.sh /opt/haproxy/haproxy.sh
@@ -37,17 +32,6 @@ ADD supervisord.conf /etc/supervisor/supervisord.conf
 
 # Define mountable directories.
 VOLUME ["/haproxy-override"]
-
-# install ssh
-# RUN mkdir /var/run/sshd
-# RUN echo 'root:root' | chpasswd
-# RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-# RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-# ENV NOTVISIBLE "in users profile"
-# RUN echo "export VISIBLE=now" >> /etc/profile
-
-# ssh port
-EXPOSE 22
 
 # superviser http gui
 EXPOSE 9001
