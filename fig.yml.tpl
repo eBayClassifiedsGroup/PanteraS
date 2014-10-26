@@ -64,3 +64,19 @@ haproxy:
     - "9004:9001"
   hostname: $HOSTNAME
   name: haproxy
+
+openvpn:
+  privileged: true
+  image: openvpn
+  volumes:
+    - "/etc/openvpn:/etc/openvpn"
+    - "/etc/nslcd.conf:/etc/nslcd.conf"
+    - "/etc/ssl/certs/:/etc/ssl/certs/"
+    - "/etc/nsswitch.conf:/etc/nsswitch.conf"
+  ports:
+    - "1194:1194"
+    - "1194:1194/udp"
+  hostname: $HOSTNAME
+  name: openvpn
+  net: host
+
