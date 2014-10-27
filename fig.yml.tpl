@@ -50,7 +50,7 @@ consul:
     - "8600:8600"
     - "8600:8600/udp"
     - "9003:9001"
-  hostname: $HOSTNAME
+  hostname: $HOSTNAME-consul
   name: consul
 
 haproxy:
@@ -62,7 +62,7 @@ haproxy:
     - "80:80"
     - "81:81"
     - "9004:9001"
-  hostname: $HOSTNAME
+  hostname: $HOSTNAME-haproxy
   name: haproxy
 
 openvpn:
@@ -76,7 +76,7 @@ openvpn:
   ports:
     - "1194:1194"
     - "1194:1194/udp"
-  hostname: $HOSTNAME
+  hostname: $HOSTNAME-openvpn
   name: openvpn
   net: host
 
