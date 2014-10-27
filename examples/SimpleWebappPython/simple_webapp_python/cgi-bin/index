@@ -1,0 +1,6 @@
+#!/usr/bin/python3
+import socket
+print("Content-type: text/plain")
+print()
+print("Hello World!")
+print("Greetings from container", socket.gethostname())
