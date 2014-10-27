@@ -7,7 +7,6 @@
         "type": "DOCKER",
         "volumes": []
     },
-    "cmd": "while sleep 10; do date -u +%T; done",
     "cpus": 0.1,
     "mem": 64.0,
     "instances": 2
