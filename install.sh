@@ -27,7 +27,7 @@ elif [[ $unamestr == Linux && $lindistro == Ubuntu* ]]; then
 	LOCALIP=`hostname --ip-address`
 	sudo apt-get -q -y install docker.io
 	curl -L https://github.com/docker/fig/releases/download/1.0.0/fig-`uname -s`-`uname -m` > /tmp/fig; chmod +x /tmp/fig; sudo mv /tmp/fig /usr/local/bin
-	docker stop $(docker ps -a -q)
+	sudo docker stop $(sudo docker ps -a -q)
 	sudo docker stop $(sudo docker ps -a -q)
 	sudo docker rm $(sudo docker ps -a -q)
 	sudo docker rmi -f $(sudo docker images -q)
