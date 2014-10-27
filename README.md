@@ -9,6 +9,14 @@ containing all necessary components for a PaaS environment:
 
 ## Usage
 
+### tl;dr
+Execute:
+	$ install.sh
+
+- If you're on a Mac OSX box, this will install the [Vagrant](#vagrant) Paas in a Box below.<br />
+- If you are on an Ubuntu box, this will install the [Standalone](#standalone) Paas in a Box below.<br />
+Then manually run the command that is indicated by the script to ssh into the target VM.
+
 ### Vagrant
 
 The easiest way to start is using vagrant.
@@ -42,7 +50,7 @@ you can do so by installing the following packages:
 Execute the following command _once_
 in order to build the necessary docker images:
 
-	$ ./build-docker-images.sh
+	$ sudo ./build-docker-images.sh
 
 Then you have to create a valid fig.yml file:
 
