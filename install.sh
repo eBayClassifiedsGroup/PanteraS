@@ -24,7 +24,7 @@ if [[ $unamestr == Darwin ]]; then
 	vagrant up
 	@echo Done. Now run: vagrant ssh
 elif [[ $unamestr == Linux && $lindistro == Ubuntu* ]]; then
-	LOCALIP=`host unix.stackexchange.com | awk '/has address/ { print $4 ; exit }'`
+	LOCALIP=`hostname --ip-address`
 	sudo apt-get -q -y install docker.io
 	curl -L https://github.com/docker/fig/releases/download/1.0.0/fig-`uname -s`-`uname -m` > /tmp/fig; chmod +x /tmp/fig; sudo mv /tmp/fig /usr/local/bin
 	docker stop $(docker ps -a -q)
