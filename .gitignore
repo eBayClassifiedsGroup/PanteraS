@@ -1,3 +1,4 @@
+restricted/
 vagrant/.vagrant/
 fig.yml
 *.swp
