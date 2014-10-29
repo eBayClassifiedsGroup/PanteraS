@@ -14,8 +14,10 @@ RUN chmod a+x /opt/web/cgi-bin/index
 
 ADD ./register.tmpl /opt/web/
 ADD ./register_and_start.sh /opt/web/
+ADD ./start.sh /opt/web/
 RUN chmod a+x /opt/web/register_and_start.sh
+RUN chmod a+x /opt/web/start.sh
 
 EXPOSE 8000
 
-ENTRYPOINT [ "/bin/bash", "-c", "/opt/web/register_and_start.sh" ]
+ENTRYPOINT [ "/bin/bash", "-c", "/opt/web/start.sh" ]

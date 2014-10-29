@@ -80,3 +80,6 @@ openvpn:
   name: openvpn
   net: host
 
+registrator:
+  image: progrium/registrator
+

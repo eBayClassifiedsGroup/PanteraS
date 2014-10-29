@@ -46,3 +46,5 @@ else
 	exit 1
 fi
 
+# for all operating systems
+	sudo docker pull progrium/registrator
