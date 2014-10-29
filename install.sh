@@ -38,6 +38,7 @@ elif [[ $unamestr == Linux && $lindistro == Ubuntu* ]]; then
 	sudo docker build --rm=true --tag=mesos-master mesos-master
 	sudo docker build --rm=true --tag=consul consul
 	sudo docker build --rm=true --tag=haproxy haproxy
+	sudo docker build --rm=true --tag=registrator registrator
 	HOSTNAME=boot2docker IP=$LOCALIP ./genfig.sh
 	sudo fig up -d
 	echo Done. Now run: sudo docker run -i -t paas
@@ -46,5 +47,3 @@ else
 	exit 1
 fi
 
-# for all operating systems
-	sudo docker pull progrium/registrator
