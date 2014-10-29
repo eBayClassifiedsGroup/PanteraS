@@ -83,4 +83,6 @@ openvpn:
 registrator:
   image: registrator
   name: registrator
-
+  volumes:
+    - "/var/run/docker.sock:/tmp/docker.sock"
+  command: consul://$IP:8500
