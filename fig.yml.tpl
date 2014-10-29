@@ -38,7 +38,7 @@ consul:
     DC: $DC
     CONSUL_BOOTSTRAP: \"$BOOTSTRAP\"
     CONSUL_MODE: \"$MODE\"
-  image: consul
+  image: ${REGISTRY}consul:latest
   ports:
     - "8300:8300"
     - "8301:8301"
