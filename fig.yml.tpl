@@ -1,10 +1,10 @@
 zk:
-  image: mesos
+  image: ${REGISTRY}mesos
   command: /usr/share/zookeeper/bin/zkServer.sh start-foreground
   name: zk
 
 master:
-  image: mesos-master
+  image: ${REGISTRY}mesos-master
   ports:
     - "5050:5050"
     - "8080:8080"
@@ -16,7 +16,7 @@ master:
 
 slave:
   privileged: true
-  image: mesos-slave
+  image: ${REGISTRY}mesos-slave
   links:
     - "zk:zookeeper"
   volumes:
@@ -57,7 +57,7 @@ haproxy:
   environment:
     MASTER_IP: $IP
     DC: $DC
-  image: haproxy
+  image: ${REGISTRY}haproxy
   ports:
     - "80:80"
     - "81:81"
@@ -67,7 +67,7 @@ haproxy:
 
 openvpn:
   privileged: true
-  image: openvpn
+  image: ${REGISTRY}openvpn
   volumes:
     - "/etc/openvpn:/etc/openvpn"
     - "/etc/nslcd.conf:/etc/nslcd.conf"
@@ -81,7 +81,7 @@ openvpn:
   net: host
 
 registrator:
-  image: registrator
+  image: ${REGISTRY}registrator
   name: registrator
   hostname: $HOSTNAME
   volumes:
