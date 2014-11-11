@@ -32,13 +32,7 @@ elif [[ $unamestr == Linux && $lindistro == Ubuntu* ]]; then
 	sudo docker rm $(sudo docker ps -a -q)
 	sudo docker rmi -f $(sudo docker images -q)
 	echo Installing VMs. It may take a while. A cofee may be a good idea now...
-	sudo docker build --rm=true --tag=paas paas
-	sudo docker build --rm=true --tag=mesos mesos
-	sudo docker build --rm=true --tag=mesos-slave mesos-slave
-	sudo docker build --rm=true --tag=mesos-master mesos-master
-	sudo docker build --rm=true --tag=consul consul
-	sudo docker build --rm=true --tag=haproxy haproxy
-	sudo docker build --rm=true --tag=registrator registrator
+        ./build-docker-images.sh
 	HOSTNAME=boot2docker IP=$LOCALIP ./genfig.sh
 	sudo fig up -d
 	echo Done. Now run: sudo docker run -i -t paas
