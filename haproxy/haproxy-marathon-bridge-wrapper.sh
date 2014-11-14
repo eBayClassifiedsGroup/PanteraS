@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPT=/opt/haproxy/haproxy-marathon-bridge
-OUTPUT=/etc/haproxy/haproxy.cfg-marathon-bridge
+OUTPUT=/etc/haproxy/haproxy.cfg
 
 while true ; do
 

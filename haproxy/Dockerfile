@@ -34,6 +34,9 @@ ADD supervisord.conf /etc/supervisor/supervisord.conf
 ADD haproxy-marathon-bridge /opt/haproxy/haproxy-marathon-bridge
 ADD haproxy-marathon-bridge-wrapper.sh /opt/haproxy/haproxy-marathon-bridge-wrapper.sh
 
+RUN chmod a+x /opt/haproxy/haproxy-marathon-bridge-wrapper.sh
+RUN chmod a+x /opt/haproxy/haproxy-marathon-bridge
+
 # Define mountable directories.
 VOLUME ["/haproxy-override"]
 
