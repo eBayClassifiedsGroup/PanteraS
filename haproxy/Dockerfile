@@ -24,11 +24,15 @@ RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
 RUN go get -u github.com/hashicorp/consul-haproxy \
     && cp /.go/bin/consul-haproxy .
 
-# Add files.
+# Add files
 ADD haproxy.cfg /etc/haproxy/haproxy.cfg
 ADD haproxy.sh /opt/haproxy/haproxy.sh
 ADD in.conf /opt/consul_haproxy/in.conf
 ADD supervisord.conf /etc/supervisor/supervisord.conf
+
+# source https://github.com/mesosphere/marathon/blob/master/bin/haproxy-marathon-bridge
+ADD haproxy-marathon-bridge /opt/haproxy/haproxy-marathon-bridge
+ADD haproxy-marathon-bridge-wrapper.sh /opt/haproxy/haproxy-marathon-bridge-wrapper.sh
 
 # Define mountable directories.
 VOLUME ["/haproxy-override"]
