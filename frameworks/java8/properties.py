@@ -101,7 +101,7 @@ print("calling property assembler with url: " + url)
 
 try:
     response = urllib2.urlopen(url, timeout=3)
-except (RuntimeError,urllib2.HTTPError,urllib2.URLError), e:
+except (RuntimeError,urllib2.HTTPError,urllib2.URLError) as e:
     print("ERROR: encountered error calling the property assembler: " + str(e),file=sys.stderr)
     sys.exit(1)
 

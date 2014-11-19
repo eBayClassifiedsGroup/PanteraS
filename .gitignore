@@ -2,3 +2,4 @@ restricted/
 vagrant/.vagrant/
 fig.yml
 *.swp
+.DS_Store
