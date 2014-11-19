@@ -15,5 +15,8 @@ RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 RUN echo '# /lib/init/fstab: cleared out for bare-bones lxc' > /lib/init/fstab
 RUN ln -sf /proc/self/mounts /etc/mtab
 
+ADD properties.py /usr/local/bin/properties.py
+RUN chmod +x /usr/local/bin/properties.py
+
 ENV HOME  /
 WORKDIR /
