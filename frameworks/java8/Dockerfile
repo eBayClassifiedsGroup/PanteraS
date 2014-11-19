@@ -15,6 +15,12 @@ RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 RUN echo '# /lib/init/fstab: cleared out for bare-bones lxc' > /lib/init/fstab
 RUN ln -sf /proc/self/mounts /etc/mtab
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install python-pip
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install python-dev
+RUN pip install consulate
+RUN pip install tornado
+RUN pip install netifaces
+
 ADD properties.py /usr/local/bin/properties.py
 RUN chmod +x /usr/local/bin/properties.py
 
