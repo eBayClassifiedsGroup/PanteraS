@@ -8,3 +8,4 @@ docker build --rm=true --tag=consul consul
 docker build --rm=true --tag=haproxy haproxy
 docker build --rm=true --tag=openvpn openvpn
 docker build --rm=true --tag=registrator registrator
+docker build --rm=true --tag=dnsmasq dnsmasq
