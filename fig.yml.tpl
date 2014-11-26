@@ -55,8 +55,8 @@ consul:
     - "8302:8302/udp"
     - "8400:8400"
     - "8500:8500"
-    - "8600:8600"
-    - "8600:8600/udp"
+    - "$IP:8600:8600"
+    - "$IP:8600:8600/udp"
     - "9003:9001"
   hostname: $HOSTNAME-consul
   name: consul
@@ -103,6 +103,8 @@ dns:
   ports:
     - "$IP:53:53"
     - "$IP:53:53/udp"
+  volumes:
+    - "/etc/resolv.conf:/etc/resolv.conf"
   privileged: true
   image: dnsmasq
   name: dnsmasq
