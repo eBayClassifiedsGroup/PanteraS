@@ -27,7 +27,6 @@ Please make sure you have the following packages installed:
 
 Then execute:
 
-	$ cd vagrant
 	$ vagrant up
 
 This will start an Ubuntu VM,

@@ -3,3 +3,4 @@ vagrant/.vagrant/
 fig.yml
 *.swp
 .DS_Store
+.vagrant/
