@@ -77,10 +77,7 @@ openvpn:
   privileged: true
   image: ${REGISTRY}openvpn
   volumes:
-    - "/etc/openvpn:/etc/openvpn"
-    - "/etc/nslcd.conf:/etc/nslcd.conf"
-    - "/etc/ssl/certs/:/etc/ssl/certs/"
-    - "/etc/nsswitch.conf:/etc/nsswitch.conf"
+    ${VOL}
   ports:
     - "1194:1194"
     - "1194:1194/udp"
