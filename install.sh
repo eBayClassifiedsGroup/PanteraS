@@ -207,7 +207,7 @@ if [ "$MODE" == "vagrant-provision" ] ; then
 
     LOCALIP=${LOCALIP:-$(hostname --ip-address| awk '{ print $2}')}
     DNS_CONFIG="DOCKER_OPTS=\"\${DOCKER_OPTS} --dns $LOCALIP\""
-    grep -cq -- "$DNS_CONFIG" /etc/default/docker || echo $DNS_CONFIG >>/etc/default/docker
+    grep -q -- "$DNS_CONFIG" /etc/default/docker || echo $DNS_CONFIG >>/etc/default/docker
 
     echo "stopping any running docker containers."
     sudo docker stop $(sudo docker ps -a -q) 2>/dev/null
@@ -264,9 +264,14 @@ if [ "$MODE" == "boot2docker" ] ; then
     BOOT2DOCKERIP=$(boot2docker ip 2>/dev/null)
     # dns config on boot2docker
     
-#    boot2docker ssh -t sudo sh -c 'echo\ "EXTRA_ARGS=\"--dns $BOOT2DOCKERIP\"">/var/lib/boot2docker/profile'
-
-    boot2docker ssh -t sudo /etc/init.d/docker restart
+    DNS_CONFIG="EXTRA_ARGS=\\\"\\\${EXTRA_ARGS} --dns $BOOT2DOCKERIP\\\""
+    boot2docker ssh \
+      "sudo touch /var/lib/boot2docker/profile && \
+       grep -q -- \"$DNS_CONFIG\" /var/lib/boot2docker/profile || \
+       echo $DNS_CONFIG | \
+       sudo tee -a /var/lib/boot2docker/profile && \
+       sudo /etc/init.d/docker restart && \
+       sleep 4"
 
     echo "stopping any running docker containers."
     docker stop $(docker ps -a -q) 2>/dev/null
