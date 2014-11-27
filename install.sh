@@ -267,11 +267,12 @@ if [ "$MODE" == "boot2docker" ] ; then
     DNS_CONFIG="EXTRA_ARGS=\\\"\\\${EXTRA_ARGS} --dns $BOOT2DOCKERIP\\\""
     boot2docker ssh \
       "sudo touch /var/lib/boot2docker/profile && \
-       grep -q -- \"$DNS_CONFIG\" /var/lib/boot2docker/profile || \
-       echo $DNS_CONFIG | \
-       sudo tee -a /var/lib/boot2docker/profile && \
-       sudo /etc/init.d/docker restart && \
-       sleep 4"
+       grep -q -- \"$DNS_CONFIG\" /var/lib/boot2docker/profile || { \
+         echo $DNS_CONFIG | \
+         sudo tee -a /var/lib/boot2docker/profile && \
+         sudo /etc/init.d/docker restart && \
+         sleep 4
+       }"
 
     echo "stopping any running docker containers."
     docker stop $(docker ps -a -q) 2>/dev/null
