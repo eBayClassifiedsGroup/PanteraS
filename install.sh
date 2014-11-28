@@ -166,7 +166,8 @@ if [ "$MODE" == "vagrant" ] ; then
 	echo "starting vagrant vm with provisioning ..."
 	vagrant reload --provision
     else
-	echo "cannot find Vagrantfile.  are you running this from inside $pass git-repo top-level directory?"
+	echo "cannot find Vagrantfile.  are you running this from inside $pass git-repo top-level directory?" >&2
+	exit 1
     fi
 
 
@@ -195,11 +196,13 @@ if [ "$MODE" == "vagrant-provision" ] ; then
 	curl -L $FIG_URL > /tmp/fig; chmod +x /tmp/fig; sudo mv /tmp/fig /usr/local/bin
     fi
 
+    # verify docker installation
     if ! hasDocker ; then
 	echo "error: aborting. docker installation not detected. Check the docker installation steps." >&2
 	exit 1
     fi
 
+    # verify fig installation
     if ! hasFig ; then
 	echo "error: aborting. fig installation not detected. Check the fig installation steps." >&2
 	exit 1
@@ -246,9 +249,15 @@ if [ "$MODE" == "boot2docker" ] ; then
     if ! hasFig ; then
 	echo "fig not found. Installing fig" >&2
 	echo "sudo will be used to install fig in $FIG_INSTALL_PATH"
-        sudo curl -L $FIG_URL > /tmp/fig
+        curl -L $FIG_URL > /tmp/fig
 	sudo mv /tmp/fig $FIG_INSTALL_PATH
 	sudo chmod +x $FIG_INSTALL_PATH
+    fi
+
+    # verify fig installation
+    if ! hasFig ; then
+	echo "fig could not be installed. Please check the fig installation steps for errors or install fig manually, then rerun this script." >&2
+	exit 1
     fi
 
     if [ "$(boot2docker status 2>/dev/null)" != "running" ] ; then
