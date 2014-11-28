@@ -1,0 +1,23 @@
+{
+    "id": "webapp1", 
+    "container": {
+        "docker": {
+            "image": "simple_webapp_python",
+            "network": "BRIDGE",
+            "portMappings": [
+              { "containerPort": 8000, "hostPort": 0, "servicePort": 9000, "protocol": "tcp" }
+            ]
+        },
+        "type": "DOCKER",
+        "volumes": []
+    },
+    "cpus": 0.1,
+    "mem": 64.0,
+    "instances": 2,
+    "env": {
+      "SERVICE_TAGS" : "python1",
+      "SERVICE_NAME" : "webapp",
+      "http_proxy" : "",
+      "https_proxy" : ""
+    }
+}

@@ -2,12 +2,12 @@ FROM paas
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
-RUN mkdir /opt/consul_haproxy
+RUN mkdir /opt/consul_template
 RUN mkdir -p /opt/haproxy/mount
 
-ENV HOME /opt/consul_haproxy
+ENV HOME /opt/consul_template
 ENV GOPATH /.go
-WORKDIR /opt/consul_haproxy
+WORKDIR /opt/consul_template
 
 RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
     && apt-get update \
@@ -21,21 +21,13 @@ RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
     && rm -rf /var/lib/apt/lists/*
 
 # consul-haproxy
-RUN go get -u github.com/hashicorp/consul-haproxy \
-    && cp /.go/bin/consul-haproxy .
+RUN go get -u github.com/hashicorp/consul-template \
+    && cp /.go/bin/consul-template .
 
 # Add files
 ADD haproxy.cfg /etc/haproxy/haproxy.cfg
-ADD haproxy.sh /opt/haproxy/haproxy.sh
-ADD in.conf /opt/consul_haproxy/in.conf
+ADD in.conf /opt/consul_template/in.conf
 ADD supervisord.conf /etc/supervisor/supervisord.conf
-
-# source https://github.com/mesosphere/marathon/blob/master/bin/haproxy-marathon-bridge
-ADD haproxy-marathon-bridge /opt/haproxy/haproxy-marathon-bridge
-ADD haproxy-marathon-bridge-wrapper.sh /opt/haproxy/haproxy-marathon-bridge-wrapper.sh
-
-RUN chmod a+x /opt/haproxy/haproxy-marathon-bridge-wrapper.sh
-RUN chmod a+x /opt/haproxy/haproxy-marathon-bridge
 
 # Define mountable directories.
 VOLUME ["/haproxy-override"]

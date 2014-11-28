@@ -1,5 +1,5 @@
 {
-    "id": "simplewebapp", 
+    "id": "webapp2", 
     "container": {
         "docker": {
             "image": "simple_webapp_python",
@@ -15,7 +15,8 @@
     "mem": 64.0,
     "instances": 2,
     "env": {
-      "NAME" : "simplewebapp-marathon",
+      "SERVICE_TAGS" : "python2",
+      "SERVICE_NAME" : "webapp",
       "http_proxy" : "",
       "https_proxy" : ""
     }
