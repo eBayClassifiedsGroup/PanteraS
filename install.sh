@@ -128,14 +128,21 @@ fi
 
 if [ "$MODE" == "vagrant" ] ; then
 
+    MISSING_REQS=false
     if isLinux ; then
         if ! hasVagrant ; then
-	    echo "Please install Vagrant for your Linux distribution"
+	    echo "Error: Please install Vagrant for your Linux distribution" >&2
+	    MISSING_REQS=true
         fi
 
         if ! hasVirtualBox ; then
-	    echo "Please install VirtualBox for your Linux distribution"
+	    echo "Error: Please install VirtualBox for your Linux distribution" >&2
+	    MISSING_REQS=true
         fi
+    fi
+
+    if [ "$MISSING_REQS" == "true" ] ; then
+	exit 1
     fi
 
     if isMac ; then
@@ -162,6 +169,16 @@ if [ "$MODE" == "vagrant" ] ; then
         fi
     fi # close mac section
 
+    if ! hasVagrant ; then
+	echo "vagrant installation not detected.  Check installation steps or install vagrant manually" >&2
+	exit 1
+    fi
+
+    if ! hasVirtualBox ; then
+	echo "VirtualBox installation not detected.  Check installation steps or install VirtualBox manually" >&2
+	exit 1
+    fi
+
     if [ -f Vagrantfile ] ; then
 	echo "starting vagrant vm with provisioning ..."
 	vagrant reload --provision
@@ -182,7 +199,6 @@ if [ "$MODE" == "vagrant-provision" ] ; then
 	exit 1
     fi
 
-
     if [ ! -f /etc/apt/sources.list.d/docker.list ]; then
 	sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
 	echo 'deb http://get.docker.io/ubuntu docker main' > /tmp/docker.list
@@ -198,13 +214,13 @@ if [ "$MODE" == "vagrant-provision" ] ; then
 
     # verify docker installation
     if ! hasDocker ; then
-	echo "error: aborting. docker installation not detected. Check the docker installation steps." >&2
+	echo "error: aborting. docker installation not detected. Check the docker installation steps for any errors." >&2
 	exit 1
     fi
 
     # verify fig installation
     if ! hasFig ; then
-	echo "error: aborting. fig installation not detected. Check the fig installation steps." >&2
+	echo "error: aborting. fig installation not detected. Check the fig installation steps for any errors." >&2
 	exit 1
     fi
 
