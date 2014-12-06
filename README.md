@@ -175,9 +175,11 @@ using DNS consul SRV abilities, to verify answers:
 
 for debugging:
 asking DNS directly:
+
 	$ dig @DOCKER_HOST -p53   python1.service.consul SRV
 
 asking Consul directly:
+
 	$ dig @DOCKER_HOST -p8600 python1.service.consul SRV
 
 remmeber to disable DNS caching in your future services.
