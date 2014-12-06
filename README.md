@@ -18,7 +18,7 @@ Services supposed to be spawn in a second, fully scalable, easy to monitor, debu
 There are few ways you can run the project:
 
 1. [Vagrant](#installing-using-vagrant)
-2. boot2docker(#installing-using-boot2docker)
+2. [boot2docker](#installing-using-boot2docker)
 3. [Standalone](#standalone) on Linux
 
 ### Installing using Vagrant
