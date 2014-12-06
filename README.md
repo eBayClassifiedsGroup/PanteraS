@@ -35,7 +35,7 @@ Please make sure you have the following packages installed:
 - vagrant >1.5
 - VirtualBox
 
-or start manuallly:
+or start manually:
 
 	$ vagrant up
 
