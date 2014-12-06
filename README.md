@@ -52,14 +52,14 @@ to ssh into the VM and get access to all the docker instances.
 be sure you have virtualbox, boot2docker and fig installed.
 (VirtualBox you have to install manually) then just run 
 
-         $ ./install.sh -m boot2docker
+	$ ./install.sh -m boot2docker
 
 or you can start manually:
 
-         $ brew install boot2docker
-         $ brew install fig
-         $ boot2docker up
-         $ $(boot2docker init)
+	$ brew install boot2docker
+	$ brew install fig
+	$ boot2docker up
+	$ $(boot2docker init)
 
 ### Standalone
 
@@ -81,7 +81,7 @@ in order to build the necessary docker images:
 
 Then you have to create a valid fig.yml file:
 
-        $ ./genfig.sh
+	$ ./genfig.sh
        
 or if you want to modify docker HOSTNAME and IP overwrite variables like:
 Where HOSTNAME and IP correspond to your local VM (i.e. boot2docker)
@@ -106,7 +106,7 @@ To start containers which has been stopped:
 Use same commandis for stopping/starting specific container
 just by adding its name like:
 
-        $ fig stop haproxy
+	$ fig stop haproxy
 
 ### Web Interfaces
 
@@ -155,9 +155,9 @@ rather use containers that have DNS in fig.yaml file configured.
 
 ### Running an example
 
-$ cd examples/SimpleWebappPython
-$ ./build-docker-image.sh
-$ ./start_with_marathon.sh
+	$ cd examples/SimpleWebappPython
+	$ ./build-docker-image.sh
+	$ ./start_with_marathon.sh
 
 which gonna spawn 4 containers described in deploy1_marathon.json and deploy2_marathon.json
 2 services with 2 instances each, that can be accessed for humans via browser:
@@ -171,14 +171,14 @@ which has been mapped and assigned by marathon.
 For non human access, like services intercommunication, you can use direct access 
 using DNS consul SRV abilities, to verify answers:
 
-dig python1.service.consul SRV
+	$ dig python1.service.consul SRV
 
 for debugging:
 asking DNS directly:
-dig @DOCKER_HOST -p53   python1.service.consul SRV
+	$ dig @DOCKER_HOST -p53   python1.service.consul SRV
 
 asking Consul directly:
-dig @DOCKER_HOST -p8600 python1.service.consul SRV
+	$ dig @DOCKER_HOST -p8600 python1.service.consul SRV
 
 remmeber to disable DNS caching in your future services.
 
