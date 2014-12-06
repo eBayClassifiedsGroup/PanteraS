@@ -105,7 +105,7 @@ To start containers which has been stopped:
 
 	$ fig start
 
-Use same commandis for stopping/starting specific container
+Use same commands for stopping/starting specific container
 just by adding its name like:
 
 	$ fig stop haproxy
@@ -133,7 +133,7 @@ We have prepared two services that might help you solving this problem.
 
 DNS - which supposed to be running on every docker host,
 it is important that you have only one DNS server occupying port 53 on docker host,
-you might need to disable yours if you have already configured.
+you might need to disable yours, if you have already configured.
 
 If you have direct access to the docker host DNS,
 then just modify your /etc/resolv.conf adding its IP address.
@@ -154,7 +154,7 @@ Do NOT use for that:
 - containers that runs with "net: host"
 - DNS container itself
 
-rather use containers that have DNS in fig.yaml file configured.
+rather use containers, that have DNS in fig.yaml file configured.
 
 ### Running an example
 
@@ -168,7 +168,7 @@ which gonna spawn 4 containers described in deploy1_marathon.json and deploy2_ma
 http://python1.service.consul
 http://python2.service.consul
 
-HAproxy gonna ballance services between ports
+HAproxy gonna ballance services between ports,
 which has been mapped and assigned by marathon.
 
 For non human access, like services intercommunication, you can use direct access 
