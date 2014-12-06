@@ -1,11 +1,11 @@
 # Platform as a Service in a box
 
 ## Goal
-The goal is to spawn a complete dockerized environment,
-containing all necessary components for a PaaS,
-fully transferable between any kind of development stage: laptop / integration / production 
-highly robust, highly available, fail tolerance,
-where deployment part is fully independent from a running part.
+The goal is to spawn a complete dockerized environment,<br />
+containing all necessary components for a PaaS,<br />
+fully transferable between any kind of development stage: laptop / integration / production<br />
+highly robust, highly available, fail tolerance,<br />
+where deployment part is fully independent from a running part.<br />
 Services supposed to be spawn in a second, fully scalable, easy to monitor, debug and orchestrate.
 
 ## Components
@@ -16,16 +16,18 @@ Services supposed to be spawn in a second, fully scalable, easy to monitor, debu
 ## Install
 
 There are few ways you can run the project:
-1. vagrant
-2. boot2docker
-3. standalone on linux
+
+1. [Vagrant](#installing-using-vagrant)
+2. boot2docker(#installing-using-boot2docker)
+3. [Standalone](#standalone) on Linux
 
 ### Installing using Vagrant
 
 Execute:
+
 	$ ./install.sh -m vagrant
 
-- If you're on a Mac OSX box, this will install the [Vagrant](#vagrant) Paas in a Box below.<br />
+- If you are on a Mac OSX box, this will install the [Vagrant](#installing-using-vagrant) Paas in a Box below.<br />
 - If you are on an Ubuntu box, this will install the [Standalone](#standalone) Paas in a Box below.<br />
 Then manually run the command that is indicated by the script to ssh into the target VM.
 
@@ -63,8 +65,8 @@ or you can start manually:
 
 ### Standalone
 
-If you prefer to run the PaaS components directly
-on your linux box you can do so by installing the following packages:
+If you prefer to run the PaaS components directly on your Linux box<br />
+you can do so by installing the following packages:
 
 - docker
 - fig
@@ -151,6 +153,7 @@ Do NOT use for that:
 - docker host itself
 - containers that runs with "net: host"
 - DNS container itself
+
 rather use containers that have DNS in fig.yaml file configured.
 
 ### Running an example
