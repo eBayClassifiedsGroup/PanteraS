@@ -10,6 +10,7 @@ VIRTUAL_BOX_INSTALL_FILE=${VIRTUAL_BOX_URL##*/}
 FIG_URL=https://github.com/docker/fig/releases/download/1.0.1/fig-`uname -s`-`uname -m`
 FIG_INSTALL_PATH=/usr/local/bin/fig
 REPODIR=`dirname $0`
+DOCKER_VERSION="1.3.3"
 
 usage(){
 cat <<_END_
@@ -206,10 +207,12 @@ if [ "$MODE" == "vagrant-provision" ] ; then
 	sudo apt-get update
     fi
 
-    sudo apt-get -q -y install lxc-docker
+    sudo apt-get -q -y install lxc-docker-${DOCKER_VERSION}
 
     if ! hasFig; then
-	curl -L $FIG_URL > /tmp/fig; chmod +x /tmp/fig; sudo mv /tmp/fig /usr/local/bin
+       curl -L $FIG_URL > /tmp/fig; chmod +x /tmp/fig; sudo mv /tmp/fig /usr/local/bin
+       #sudo apt-get install python-pip
+       #sudo pip install fig
     fi
 
     # verify docker installation
@@ -224,15 +227,6 @@ if [ "$MODE" == "vagrant-provision" ] ; then
 	exit 1
     fi
 
-    LOCALIP=${LOCALIP:-$(hostname --ip-address| awk '{ print $2}')}
-    DNS_CONFIG="DOCKER_OPTS=\"\${DOCKER_OPTS} --dns $LOCALIP\""
-    grep -q -- "$DNS_CONFIG" /etc/default/docker || echo $DNS_CONFIG >>/etc/default/docker
-
-    echo "stopping any running docker containers."
-    sudo docker stop $(sudo docker ps -a -q) 2>/dev/null
-    echo "deleting previously run docker containers."
-    sudo docker rm $(sudo docker ps -a -q) 2>/dev/null
-
     if [ "$BUILDIMAGES" == "true" ] ; then
 	echo "deleting all docker images."
 	sudo docker rmi -f $(sudo docker images -q) 2>/dev/null
@@ -241,6 +235,15 @@ if [ "$MODE" == "vagrant-provision" ] ; then
 	cd $REPODIR
 	sudo ./build-docker-images.sh
     fi
+
+    LOCALIP=${LOCALIP:-$(hostname --ip-address| awk '{ print $2}')}
+    DNS_CONFIG="DOCKER_OPTS=\"\${DOCKER_OPTS} --dns $LOCALIP\""
+    grep -q -- "$DNS_CONFIG" /etc/default/docker || echo $DNS_CONFIG >>/etc/default/docker
+
+    echo "stopping any running docker containers."
+    sudo docker stop $(sudo docker ps -a -q) 2>/dev/null
+    echo "deleting previously run docker containers."
+    sudo docker rm $(sudo docker ps -a -q) 2>/dev/null
 
     echo "(re)generating fig.yml configuration file"
     cd $REPODIR
@@ -285,6 +288,19 @@ if [ "$MODE" == "boot2docker" ] ; then
 
     $(boot2docker shellinit)
 
+    echo "stopping any running docker containers."
+    docker stop $(docker ps -a -q) 2>/dev/null
+    echo "deleting previously run docker containers."
+    docker rm $(docker ps -a -q) 2>/dev/null
+
+    if [ "$BUILDIMAGES" == "true" ] ; then
+	echo "deleting all docker images."
+	docker rmi -f $(docker images -q) 2>/dev/null
+
+	echo "building docker images. This will take some time"
+	cd $REPODIR
+	./build-docker-images.sh
+    fi
 
     BOOT2DOCKERIP=$(boot2docker ip 2>/dev/null)
     # dns config on boot2docker
@@ -299,19 +315,6 @@ if [ "$MODE" == "boot2docker" ] ; then
          sleep 4
        }"
 
-    echo "stopping any running docker containers."
-    docker stop $(docker ps -a -q) 2>/dev/null
-    echo "deleting previously run docker containers."
-    docker rm $(docker ps -a -q) 2>/dev/null
-
-    if [ "$BUILDIMAGES" == "true" ] ; then
-	echo "deleting all docker images."
-	docker rmi -f $(docker images -q) 2>/dev/null
-
-	echo "building docker images. This will take some time"
-	cd $REPODIR
-	./build-docker-images.sh
-    fi
 
     echo "(re)generating fig.yml configuration file"
     cd $REPODIR
