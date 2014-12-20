@@ -3,22 +3,19 @@ MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
 RUN mkdir /opt/consul && mkdir /etc/consul.d/
 ENV HOME /opt/consul
-ENV GOPATH /.go
 
 ENV PATH $PATH:/opt/consul
 WORKDIR /opt/consul
 
 # Install Consul
-RUN apt-get update \
-    && wget https://dl.bintray.com/mitchellh/consul/0.4.0_linux_amd64.zip \
-    && wget https://dl.bintray.com/mitchellh/consul/0.4.0_web_ui.zip \
-    && unzip 0.4.0_linux_amd64.zip \
-    && unzip 0.4.0_web_ui.zip
-
-# Install Go
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install golang git \
-    && go get -u github.com/hashicorp/envconsul \
-    && cp /.go/bin/envconsul .
+RUN . /opt/versions.conf \
+    && wget https://dl.bintray.com/mitchellh/consul/${CONSUL_VERSION}_linux_amd64.zip \
+    && wget https://dl.bintray.com/mitchellh/consul/${CONSUL_VERSION}_web_ui.zip \
+    && wget https://github.com/hashicorp/envconsul/releases/download/v${ENVCONSUL_VERSION}/envconsul_${ENVCONSUL_VERSION}_linux_amd64.tar.gz \
+    && unzip ${CONSUL_VERSION}_linux_amd64.zip \
+    && unzip ${CONSUL_VERSION}_web_ui.zip \
+    && tar zxf envconsul_${ENVCONSUL_VERSION}_linux_amd64.tar.gz \
+    && ln -s envconsul_${ENVCONSUL_VERSION}_linux_amd64/envconsul .
 
 ADD supervisord.conf /etc/supervisor/supervisord.conf
 ADD consul_wan_joiner.sh /opt/consul/consul_wan_joiner.sh
