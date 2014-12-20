@@ -10,7 +10,6 @@ VIRTUAL_BOX_INSTALL_FILE=${VIRTUAL_BOX_URL##*/}
 FIG_URL=https://github.com/docker/fig/releases/download/1.0.1/fig-`uname -s`-`uname -m`
 FIG_INSTALL_PATH=/usr/local/bin/fig
 REPODIR=`dirname $0`
-DOCKER_VERSION="1.3.3"
 
 usage(){
 cat <<_END_
