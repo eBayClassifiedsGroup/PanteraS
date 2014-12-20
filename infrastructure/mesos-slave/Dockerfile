@@ -7,7 +7,9 @@ MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
 RUN echo 'deb http://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D8576A8BA88D21E9
-RUN apt-get update && apt-get install -y lxc-docker
+RUN . /opt/versions.conf \
+    && apt-get update \
+    && apt-get install -y lxc-docker-${DOCKER_VERSION}
 
 CMD ["--master=zk://zookeeper:2181/mesos", "--containerizers=docker,mesos", "--executor_registration_timeout=5mins"]
 

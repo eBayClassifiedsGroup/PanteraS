@@ -16,3 +16,4 @@ RUN apt-get update \
 
 RUN pip install supervisor-stdout
 
+ADD versions.conf /opt/versions.conf
