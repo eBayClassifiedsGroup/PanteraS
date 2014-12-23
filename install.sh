@@ -1,13 +1,13 @@
 #!/bin/bash
 
+VAGRANT_OSX_URL=https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.5.dmg
+VIRTUALBOX_OSX_URL=http://download.virtualbox.org/virtualbox/4.3.18/VirtualBox-4.3.18-96516-OSX.dmg
+VAGRANT_INSTALL_FILE=${VAGRANT_OSX_URL##*/}
+VIRTUAL_BOX_INSTALL_FILE=${VIRTUALBOX_OSX_URL##*/}
+FIG_URL=https://github.com/docker/fig/releases/download/1.0.1/fig-`uname -s`-`uname -m`
 unamestr=`uname`
 lindistro=`cat /etc/issue 2>/dev/null`
 paas="Paas-in-a-box"
-VAGRANT_OSX_URL=https://dl.bintray.com/mitchellh/vagrant/vagrant_1.6.5.dmg
-VAGRANT_INSTALL_FILE=${VAGRANT_OSX_URL##*/}
-VIRTUAL_BOX_URL=http://download.virtualbox.org/virtualbox/4.3.18/VirtualBox-4.3.18-96516-OSX.dmg
-VIRTUAL_BOX_INSTALL_FILE=${VIRTUAL_BOX_URL##*/}
-FIG_URL=https://github.com/docker/fig/releases/download/1.0.1/fig-`uname -s`-`uname -m`
 FIG_INSTALL_PATH=/usr/local/bin/fig
 REPODIR=`dirname $0`
 
@@ -84,6 +84,7 @@ if [ -z "$MODE" ] ; then
     exit 1
 fi
 
+# tests
 isMac() {
 [[ "$OSTYPE" == "darwin"* ]] && return 0 || return 1
 }
@@ -159,7 +160,7 @@ if [ "$MODE" == "vagrant" ] ; then
 
 	if ! hasVirtualBox ; then
 	    echo "installing VirtualBox"
-	    curl -L -O $VIRTUAL_BOX_URL
+	    curl -L -O $VIRTUALBOX_OSX_URL
 	    hdiutil mount $VIRTUAL_BOX_INSTALL_FILE
 	    sudo installer -verbose -pkg /Volumes/VirtualBox/VirtualBox.pkg -target /
 	    hdiutil unmount /Volumes/VirtualBox
