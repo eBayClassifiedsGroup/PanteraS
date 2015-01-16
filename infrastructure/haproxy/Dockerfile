@@ -6,7 +6,13 @@ RUN mkdir /opt/consul_template
 RUN mkdir -p /opt/haproxy/mount
 
 ENV HOME /opt/consul_template
+ENV GOPATH ${HOME}/go
 WORKDIR /opt/consul_template
+
+RUN apt-get update \
+    && apt-get install -y \
+    golang \
+    git
 
 RUN . /opt/versions.conf \
     && sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
@@ -21,8 +27,11 @@ RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
 # consul-haproxy
 RUN . /opt/versions.conf \
     && wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_VERSION}/consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.tar.gz \
-    && tar zxf consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.tar.gz \
-    && ln -s consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64/consul-template .
+    && tar zxf consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64.tar.gz 
+#   && ln -s consul-template_${CONSUL_TEMPLATE_VERSION}_linux_amd64/consul-template .
+
+RUN go get -u github.com/hashicorp/consul-template \
+    && ln -s ${GOPATH}/bin/consul-template .
 
 # Add files
 ADD haproxy.cfg /etc/haproxy/haproxy.cfg
