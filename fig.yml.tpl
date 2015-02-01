@@ -7,10 +7,10 @@ zk:
   name: zk
 
 master:
+  image: ${REGISTRY}mesos-master
   environment:
     ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
     MASTER_HOST: $HOSTNAME
-  image: ${REGISTRY}mesos-master
   dns: $IP
   ports:
     - "5050:5050"
@@ -20,11 +20,11 @@ master:
   name: mesos-master
 
 slave:
+  image: ${REGISTRY}mesos-slave
   privileged: true
   environment:
     ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
     MASTER_HOST: $HOSTNAME
-  image: ${REGISTRY}mesos-slave
   command: "--master=zk://$IP:2181/mesos --containerizers=docker,mesos --executor_registration_timeout=5mins --hostname=$HOSTNAME"
   volumes:
     - "/var/run/docker.sock:/var/run/docker.sock"
@@ -40,13 +40,13 @@ slave:
   name: mesos-slave
 
 consul:
+  image: ${REGISTRY}consul:latest
   environment:
     MASTER_IP: $IP
     MASTER_HOST: $HOSTNAME
     DC: $DC
     CONSUL_BOOTSTRAP: \"$BOOTSTRAP\"
     CONSUL_MODE: \"$MODE\"
-  image: ${REGISTRY}consul:latest
   ports:
     - "8300:8300"
     - "8301:8301"
@@ -62,10 +62,10 @@ consul:
   name: consul
 
 haproxy:
+  image: ${REGISTRY}haproxy
   environment:
     MASTER_IP: $IP
     DC: $DC
-  image: ${REGISTRY}haproxy
   ports:
     - "80:80"
     - "81:81"
@@ -74,10 +74,10 @@ haproxy:
   name: haproxy
 
 openvpn:
-  privileged: true
   image: ${REGISTRY}openvpn
+  privileged: true
   volumes:
-    ${VOL}
+    ${OPENVPN_VOL}
   ports:
     - "1194:1194"
     - "1194:1194/udp"
@@ -93,7 +93,8 @@ registrator:
     - "/var/run/docker.sock:/tmp/docker.sock"
   command: consul://$IP:8500
 
-dns:
+dnsmasq:
+  image: ${REGISTRY}dnsmasq
   environment:
     MASTER_IP: $IP
     MASTER_HOSTNAME: $HOSTNAME
@@ -101,8 +102,7 @@ dns:
     - "$IP:53:53"
     - "$IP:53:53/udp"
   volumes:
-    - "/etc/resolv.conf:/etc/resolv.conf"
+    ${DNS_VOL}
   privileged: true
-  image: dnsmasq
   name: dnsmasq
   net: bridge
