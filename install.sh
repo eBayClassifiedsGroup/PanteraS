@@ -206,7 +206,6 @@ if [ "$MODE" == "vagrant-provision" ] ; then
 	sudo mv /tmp/docker.list /etc/apt/sources.list.d/
 	sudo apt-get update
     fi
-
     sudo apt-get -q -y install lxc-docker-${DOCKER_VERSION}
 
     if ! hasFig; then
@@ -239,6 +238,12 @@ if [ "$MODE" == "vagrant-provision" ] ; then
     LOCALIP=${LOCALIP:-$(hostname --ip-address| awk '{ print $2}')}
     DNS_CONFIG="DOCKER_OPTS=\"\${DOCKER_OPTS} --dns $LOCALIP\""
     grep -q -- "$DNS_CONFIG" /etc/default/docker || echo $DNS_CONFIG >>/etc/default/docker
+
+    # evil hack to set a proper /etc/hosts entry (non localhost) for our hostname.
+    #   This is needed for marathon (and posible consul) checks to work properly. Since these
+    #   service run within a docker container, and checks are performed on <MESOS_SLAVE_HOSTNAME>:<PORT>,
+    #   this must resolve to a non localhost IP.
+    sudo sed -i "s/^127\.0\.1\.1\(.*\)/$LOCALIP\1/" /etc/hosts
 
     echo "stopping any running docker containers."
     sudo docker stop $(sudo docker ps -a -q) 2>/dev/null

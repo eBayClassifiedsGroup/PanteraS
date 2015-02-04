@@ -26,6 +26,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # evil hack to set a proper /etc/hosts entry (non localhost) for our hostname
-  config.vm.provision "shell", inline: "sed -i 's/^127\\\.0\\\.1\\\.1\\\(.*\\\)/10.0.2.15\\\1/' /etc/hosts"
   config.vm.provision "shell", inline: ". /vagrant/versions.conf; export DOCKER_VERSION; LOCALIP=192.168.10.10 /vagrant/install.sh -m vagrant-provision -b"
 end
