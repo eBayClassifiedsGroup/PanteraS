@@ -18,6 +18,7 @@ master:
     - "9001:9001"
   hostname: $HOSTNAME-master
   name: mesos-master
+  net: host
 
 slave:
   image: ${REGISTRY}mesos-slave
@@ -38,6 +39,7 @@ slave:
     - "9002:9001"
   hostname: $HOSTNAME-slave
   name: mesos-slave
+  net: host
 
 consul:
   image: ${REGISTRY}consul:latest
