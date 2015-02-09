@@ -11,6 +11,8 @@ master:
   environment:
     ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
     MASTER_HOST: $HOSTNAME
+    CLUSTER_NAME: $CLUSTER_NAME
+    no_proxy: $HOSTNAME
   dns: $IP
   ports:
     - "5050:5050"
@@ -26,6 +28,7 @@ slave:
   environment:
     ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
     MASTER_HOST: $HOSTNAME
+    no_proxy: $HOSTNAME
   command: "--master=zk://$IP:2181/mesos --containerizers=docker,mesos --executor_registration_timeout=5mins --hostname=$HOSTNAME"
   volumes:
     - "/var/run/docker.sock:/var/run/docker.sock"

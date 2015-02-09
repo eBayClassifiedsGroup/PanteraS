@@ -5,6 +5,7 @@
 DC=${DC:-"UNKNOWN"}
 BOOTSTRAP=${BOOTSTRAP:-" -bootstrap-expect 1"}
 MODE=${MODE:-" -server"}
+CLUSTER_NAME=${CLUSTER_NAME:-"mesoscluster"}
 
 B2D=""
 which boot2docker && {
