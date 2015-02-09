@@ -11,6 +11,8 @@ master:
   environment:
     ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
     MASTER_HOST: $HOSTNAME
+    CLUSTER_NAME: $CLUSTER_NAME
+    no_proxy: $HOSTNAME
   dns: $IP
   ports:
     - "5050:5050"
@@ -18,6 +20,7 @@ master:
     - "9001:9001"
   hostname: $HOSTNAME-master
   name: mesos-master
+  net: host
 
 slave:
   image: ${REGISTRY}mesos-slave
@@ -25,6 +28,7 @@ slave:
   environment:
     ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
     MASTER_HOST: $HOSTNAME
+    no_proxy: $HOSTNAME
   command: "--master=zk://$IP:2181/mesos --containerizers=docker,mesos --executor_registration_timeout=5mins --hostname=$HOSTNAME"
   volumes:
     - "/var/run/docker.sock:/var/run/docker.sock"
@@ -38,6 +42,7 @@ slave:
     - "9002:9001"
   hostname: $HOSTNAME-slave
   name: mesos-slave
+  net: host
 
 consul:
   image: ${REGISTRY}consul:latest
