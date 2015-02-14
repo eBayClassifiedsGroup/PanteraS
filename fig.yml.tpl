@@ -64,6 +64,8 @@ consul:
     - "$IP:8600:8600/udp"
     - "9003:9001"
   hostname: $HOSTNAME-consul
+  volumes:
+    - "/var/run/docker.sock:/var/run/docker.sock"
   name: consul
 
 haproxy:
