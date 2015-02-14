@@ -11,6 +11,10 @@ RUN . /opt/versions.conf \
     && apt-get update \
     && apt-get install -y lxc-docker-${DOCKER_VERSION}
 
-CMD ["--master=zk://zookeeper:2181/mesos", "--containerizers=docker,mesos", "--executor_registration_timeout=5mins"]
+#CMD ["--master=zk://zookeeper:2181/mesos", "--containerizers=docker,mesos", "--executor_registration_timeout=5mins"]
+#ENTRYPOINT ["mesos-slave"]
 
-ENTRYPOINT ["mesos-slave"]
+ADD supervisord.conf /etc/supervisor/supervisord.conf
+
+ENTRYPOINT ["supervisord"]
+
