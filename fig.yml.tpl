@@ -26,7 +26,6 @@ master:
     ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
     MASTER_HOST: $HOSTNAME
     CLUSTER_NAME: $CLUSTER_NAME
-    no_proxy: $HOSTNAME
   dns: $IP
   ports:
     - "5050:5050"
@@ -42,7 +41,6 @@ slave:
   environment:
     ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
     MASTER_HOST: $HOSTNAME
-    no_proxy: $HOSTNAME
   volumes:
     - "/var/run/docker.sock:/var/run/docker.sock"
     - "/var/lib/docker:/var/lib/docker"

@@ -2,8 +2,6 @@ FROM paas
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
 RUN mkdir /opt/consul && mkdir /etc/consul.d/
-ENV HOME /opt/consul
-
 ENV PATH $PATH:/opt/consul
 WORKDIR /opt/consul
 
@@ -18,10 +16,13 @@ RUN . /opt/versions.conf \
     && ln -s envconsul_${ENVCONSUL_VERSION}_linux_amd64/envconsul .
 
 RUN echo 'deb http://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D8576A8BA88D21E9
+#RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D8576A8BA88D21E9
+RUN gpg --keyserver keyserver.ubuntu.com --recv D8576A8BA88D21E9 && gpg --export --armor D8576A8BA88D21E9 | apt-key add -
 RUN . /opt/versions.conf \
     && apt-get update \
     && apt-get install -y lxc-docker-${DOCKER_VERSION}
+
+ENV HOME /opt/consul
 
 ADD supervisord.conf /etc/supervisor/supervisord.conf
 ADD consul_wan_joiner.sh /opt/consul/consul_wan_joiner.sh

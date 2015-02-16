@@ -5,7 +5,6 @@ MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 RUN mkdir /opt/consul_template
 RUN mkdir -p /opt/haproxy/mount
 
-ENV HOME /opt/consul_template
 ENV GOPATH ${HOME}/go
 WORKDIR /opt/consul_template
 
@@ -32,6 +31,9 @@ RUN . /opt/versions.conf \
 
 #RUN go get -u github.com/hashicorp/consul-template \
 #    && ln -s ${GOPATH}/bin/consul-template .
+
+
+ENV HOME /opt/consul_template
 
 # Add files
 ADD haproxy.cfg /etc/haproxy/haproxy.cfg
