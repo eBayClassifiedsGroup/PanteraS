@@ -1,0 +1,18 @@
+#!/bin/bash
+main() {
+  local container_id="$1"; shift
+  local port="$1"; shift
+  local ext_port=$(docker inspect -f '{{range $i,$e := .NetworkSettings.Ports}}{{$p := index $e 0}}{{$p.HostPort}}{{end}}' $container_id)
+  local path="$1"; shift
+  local opts="$@"
+  local ip=$MASTER_IP
+  curl \
+    --silent \
+    --show-error \
+    --fail \
+    --dump-header /dev/stderr \
+    --retry 2 \
+    $opts \
+    http://${ip}:${ext_port}${path} > /dev/null
+}
+main $@

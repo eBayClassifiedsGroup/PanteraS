@@ -1,3 +1,17 @@
+dnsmasq:
+  image: ${REGISTRY}dnsmasq
+  environment:
+    MASTER_IP: $IP
+    MASTER_HOSTNAME: $HOSTNAME
+  ports:
+    - "$IP:53:53"
+    - "$IP:53:53/udp"
+  volumes:
+    ${DNS_VOL}
+  privileged: true
+  name: dnsmasq
+  net: bridge
+
 zk:
   image: ${REGISTRY}mesos
   command: /usr/share/zookeeper/bin/zkServer.sh start-foreground
@@ -12,7 +26,6 @@ master:
     ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
     MASTER_HOST: $HOSTNAME
     CLUSTER_NAME: $CLUSTER_NAME
-    no_proxy: $HOSTNAME
   dns: $IP
   ports:
     - "5050:5050"
@@ -28,8 +41,6 @@ slave:
   environment:
     ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
     MASTER_HOST: $HOSTNAME
-    no_proxy: $HOSTNAME
-  command: "--master=zk://$IP:2181/mesos --containerizers=docker,mesos --executor_registration_timeout=5mins --hostname=$HOSTNAME"
   volumes:
     - "/var/run/docker.sock:/var/run/docker.sock"
     - "/var/lib/docker:/var/lib/docker"
@@ -64,6 +75,8 @@ consul:
     - "$IP:8600:8600/udp"
     - "9003:9001"
   hostname: $HOSTNAME-consul
+  volumes:
+    - "/var/run/docker.sock:/var/run/docker.sock"
   name: consul
 
 haproxy:
@@ -86,16 +99,3 @@ registrator:
     - "/var/run/docker.sock:/tmp/docker.sock"
   command: consul://$IP:8500
 
-dnsmasq:
-  image: ${REGISTRY}dnsmasq
-  environment:
-    MASTER_IP: $IP
-    MASTER_HOSTNAME: $HOSTNAME
-  ports:
-    - "$IP:53:53"
-    - "$IP:53:53/udp"
-  volumes:
-    ${DNS_VOL}
-  privileged: true
-  name: dnsmasq
-  net: bridge
