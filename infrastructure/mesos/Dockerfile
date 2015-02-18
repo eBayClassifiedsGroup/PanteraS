@@ -11,3 +11,5 @@ RUN . /opt/versions.conf \
     && apt-get -y install \
       mesos=${MESOS_VERSION} \
       marathon=${MARATHON_VERSION}
+
+ADD zkStart.sh /opt/zkStart.sh

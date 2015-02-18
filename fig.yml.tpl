@@ -13,17 +13,23 @@ dnsmasq:
   net: bridge
 
 zk:
+  environment:
+    ${ZK_ID}
+    ${ZK_ENV_SERVERS}
   image: ${REGISTRY}mesos
-  command: /usr/share/zookeeper/bin/zkServer.sh start-foreground
+  command: /opt/zkStart.sh
   ports:
     - "2181:2181"
+    - "2188:2188"
+    - "2888:2888"
+    - "3888:3888"
   hostname: $HOSTNAME-zk
   name: zk
 
 master:
   image: ${REGISTRY}mesos-master
   environment:
-    ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
+    ZOOKEEPER_HOSTS: ${ZOOKEEPER_HOSTS}
     MASTER_HOST: $HOSTNAME
     CLUSTER_NAME: $CLUSTER_NAME
   dns: $IP
@@ -39,7 +45,7 @@ slave:
   image: ${REGISTRY}mesos-slave
   privileged: true
   environment:
-    ZOOKEEPER_HOSTS: "$HOSTNAME:2181"
+    ZOOKEEPER_HOSTS: ${ZOOKEEPER_HOSTS}
     MASTER_HOST: $HOSTNAME
   volumes:
     - "/var/run/docker.sock:/var/run/docker.sock"
