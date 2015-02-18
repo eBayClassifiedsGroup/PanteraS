@@ -9,7 +9,14 @@
             ]
         },
         "type": "DOCKER",
-        "volumes": []
+        "volumes": [ 
+          {
+            "containerPath": "/var/run/docker.sock",
+            "hostPath": "/var/run/docker.sock",
+            "mode": "RO"
+          }
+        ]
+
     },
     "cpus": 0.1,
     "mem": 64.0,

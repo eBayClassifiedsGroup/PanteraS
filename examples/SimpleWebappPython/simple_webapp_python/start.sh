@@ -1,15 +1,25 @@
 #!/bin/bash
-unset http_proxy
-unset https_proxy
 
-HOST=${HOST:-$HOSTNAME}
-NAME=${NAME:-undefined}
-PORT=${PORT:-1234}
+PORT_INT=8000
+MASTER_HOST=${HOST}
 
-ID=$(awk -F\/ '/:cpu:/{print $3}' /proc/1/cgroup)
-SCRIPT="http_proxy='' https_proxy='' wget -q -O - http://${HOST}:${PORT}/cgi-bin/index"
+CONTAINER_ID=${HOSTNAME}
+CONTAINER_NAME=$(docker inspect -format="{{ .Name }}" ${CONTAINER_ID}|awk -F/ '{print $2}')
+
+CONSUL_MASTER="consul.service.consul"
+CONSUL_SERVICE_NAME="${MASTER_HOST}-registrator:${CONTAINER_NAME}:${PORT_INT}"
+
+DEREGISTER="curl http://${CONSUL_MASTER}:8500/v1/agent/service/deregister/${CONSUL_SERVICE_NAME}"
+
+trap '$DEREGISTER && sleep 2 && kill -TERM $PID' TERM INT
 
 cd /opt/web/
-/usr/bin/python3 -m http.server --cgi
+/usr/bin/python3 -m http.server --cgi &
+PID=$!
+wait $PID
+trap - TERM INT
+wait $PID
+EXIT_STATUS=$?
+
 
 
