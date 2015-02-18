@@ -13,10 +13,16 @@ dnsmasq:
   net: bridge
 
 zk:
+  environment:
+    ${ZK_ID}
+    ${ZK_ENV_SERVERS}
   image: ${REGISTRY}mesos
-  command: /usr/share/zookeeper/bin/zkServer.sh start-foreground
+  command: /opt/zkStart.sh
   ports:
     - "2181:2181"
+    - "2188:2188"
+    - "2888:2888"
+    - "3888:3888"
   hostname: $HOSTNAME-zk
   name: zk
 
