@@ -7,6 +7,7 @@ DC=${DC:-"UNKNOWN"}
 BOOTSTRAP=${BOOTSTRAP:-" -bootstrap-expect 1"}
 MODE=${MODE:-" -server"}
 CLUSTER_NAME=${CLUSTER_NAME:-"mesoscluster"}
+ZOOKEEPER_HOSTS=${ZOOKEEPER_HOSTS:-"${HOSTNAME}:2181"}
 
 
 B2D=""
