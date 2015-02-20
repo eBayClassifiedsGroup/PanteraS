@@ -184,7 +184,7 @@ if [ "$MODE" == "vagrant" ] ; then
 	echo "starting vagrant vm with provisioning ..."
 	vagrant reload --provision
     else
-	echo "cannot find Vagrantfile.  are you running this from inside $pass git-repo top-level directory?" >&2
+	echo "cannot find Vagrantfile.  are you running this from inside $paas git-repo top-level directory?" >&2
 	exit 1
     fi
 
