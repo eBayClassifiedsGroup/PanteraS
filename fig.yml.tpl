@@ -14,6 +14,7 @@ dnsmasq:
 
 zk:
   environment:
+    ZOOKEEPER_HOSTS: ${ZOOKEEPER_HOSTS}
     ${ZK_ID}
     ${ZK_ENV_SERVERS}
   image: ${REGISTRY}mesos
