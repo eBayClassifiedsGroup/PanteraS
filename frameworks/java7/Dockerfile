@@ -25,5 +25,8 @@ RUN pip install consulate
 RUN pip install tornado
 RUN pip install netifaces
 
+ADD start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
+
 ENV HOME  /
 WORKDIR /
