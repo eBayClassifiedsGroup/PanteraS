@@ -33,6 +33,10 @@ master:
     MASTER_HOST: ${HOSTNAME}
     ZOOKEEPER_HOSTS: ${ZOOKEEPER_HOSTS}
     MESOS_CLUSTER_NAME: ${MESOS_CLUSTER_NAME}
+    CUSTOM_MESOS_MASTER_PARAMS: "${CUSTOM_MESOS_MASTER_PARAMS}"
+    CUSTOM_MARATHON_PARAMS: "${CUSTOM_MARATHON_PARAMS}"
+  volumes:
+    - "/var/spool/marathon/artifacts/store:/var/spool/store"
   dns: $IP
   ports:
     - "5050:5050"
