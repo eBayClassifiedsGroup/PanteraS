@@ -6,6 +6,6 @@ openvpn:
   ports:
     - "1194:1194"
     - "1194:1194/udp"
-  hostname: $HOSTNAME-openvpn
+  hostname: ${HOSTNAME}-openvpn
   name: openvpn
   net: host

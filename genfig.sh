@@ -3,10 +3,15 @@
 [ -f ./restricted/common ] && . ./restricted/common
 [ -f ./restricted/host ]   && . ./restricted/host
 
-DC=${DC:-"UNKNOWN"}
-BOOTSTRAP=${BOOTSTRAP:-" -bootstrap-expect 1"}
-MODE=${MODE:-" -server"}
-CLUSTER_NAME=${CLUSTER_NAME:-"mesoscluster"}
+[ -z $DOCKER_HOST ] || IP=$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')
+IP=${IP:-$(ifconfig | awk '/inet .*10/{gsub(/.*:/,"",$2);print $2;exit}')}
+
+
+CONSUL_IP=${IP}
+CONSUL_DC=${CONSUL_DC:-"UNKNOWN"}
+CONSUL_BOOTSTRAP=${CONSUL_BOOTSTRAP:-'" -bootstrap-expect 1"'}
+CONSUL_MODE=${CONSUL_MODE:-'" -server"'}
+MESOS_CLUSTER_NAME=${CLUSTER_NAME:-"mesoscluster"}
 ZOOKEEPER_HOSTS=${ZOOKEEPER_HOSTS:-"${HOSTNAME}:2181"}
 
 
@@ -22,7 +27,5 @@ which boot2docker && {
 DNS_VOL='- "/etc/resolv.conf:/etc/resolv.conf"'
 $B2D [ -f /etc/resolv.conf.paas ] 2>/dev/null && DNS_VOL='- "/etc/resolv.conf.paas:/etc/resolv.conf"'
 
-[ -z $DOCKER_HOST ] || IP=$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')
-IP=${IP:-$(ifconfig | awk '/inet .*10/{gsub(/.*:/,"",$2);print $2;exit}')}
 
 eval "$(cat fig.yml.tpl| sed 's/"/+++/g'|sed  's/^\(.*\)$/echo "\1"/')"|sed 's/+++/"/g'|sed 's;\\";";g' > fig.yml
