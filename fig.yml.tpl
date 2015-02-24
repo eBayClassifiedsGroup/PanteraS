@@ -2,7 +2,7 @@ dnsmasq:
   image: ${REGISTRY}dnsmasq
   environment:
     CONSUL_IP: ${CONSUL_IP}
-    MASTER_HOSTNAME: ${HOSTNAME}
+    MASTER_HOST: ${HOSTNAME}
   ports:
     - "$IP:53:53"
     - "$IP:53:53/udp"
