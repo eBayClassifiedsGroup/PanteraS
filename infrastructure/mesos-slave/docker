@@ -1,0 +1,14 @@
+#!/bin/bash
+# Dummy docker wrapper to provide CONTAINER_NAME
+# inside mesos containers
+
+DOCKER=/usr/bin/docker
+
+[ "$1" = "run" ] && {
+  shift
+  CONTAINER_NAME=$(echo $* | sed -n 's/.*--name \(mesos[-0-9a-z]*\).*/\1/p')
+  $DOCKER run -e CONTAINER_NAME=${CONTAINER_NAME} $*
+} || {
+  $DOCKER $*
+}
+exit $?

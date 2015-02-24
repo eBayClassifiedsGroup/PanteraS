@@ -17,5 +17,8 @@ RUN . /opt/versions.conf \
 
 ADD supervisord.conf /etc/supervisor/supervisord.conf
 
+# Adding docker wrapper, so CONTAINER_NAME will be available for every mesos containers
+ADD docker /usr/local/sbin/docker
+
 ENTRYPOINT ["supervisord"]
 
