@@ -74,21 +74,10 @@ consul:
     CONSUL_DC: ${CONSUL_DC}
     CONSUL_BOOTSTRAP: ${CONSUL_BOOTSTRAP}
     CONSUL_MODE: ${CONSUL_MODE}
-  ports:
-    - "8300:8300"
-    - "8301:8301"
-    - "8301:8301/udp"
-    - "8302:8302"
-    - "8302:8302/udp"
-    - "8400:8400"
-    - "8500:8500"
-    - "$IP:8600:8600"
-    - "$IP:8600:8600/udp"
-    - "9003:9001"
-  hostname: ${HOSTNAME}-consul
   volumes:
     - "/var/run/docker.sock:/var/run/docker.sock"
   name: consul
+  net: host
 
 haproxy:
   image: ${REGISTRY}haproxy
