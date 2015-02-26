@@ -30,3 +30,5 @@ RUN chmod +x /usr/local/bin/start.sh
 
 ENV HOME  /
 WORKDIR /
+
+ENTRYPOINT ["/usr/local/bin/start.sh"]
