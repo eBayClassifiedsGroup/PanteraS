@@ -16,7 +16,7 @@ maintenance(){
 
 trap 'maintenance && sleep 2 && kill -TERM $PID' TERM INT
 
-"$@" &
+eval "$@" &
 PID=$!
 wait $PID
 trap - TERM INT
