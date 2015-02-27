@@ -92,9 +92,10 @@ haproxy:
 
 registrator:
   image: ${REGISTRY}registrator
+  environment:
+    CONSUL_IP: ${CONSUL_IP}
   name: registrator
   hostname: ${HOSTNAME}-registrator
   volumes:
     - "/var/run/docker.sock:/tmp/docker.sock"
-  command: consul://${CONSUL_IP}:8500
 
