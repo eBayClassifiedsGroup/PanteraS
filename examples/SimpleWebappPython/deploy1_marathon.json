@@ -9,14 +9,7 @@
             ]
         },
         "type": "DOCKER",
-        "volumes": [ 
-          {
-            "containerPath": "/var/run/docker.sock",
-            "hostPath": "/var/run/docker.sock",
-            "mode": "RO"
-          }
-        ]
-
+        "volumes": []
     },
     "cpus": 0.1,
     "mem": 64.0,
@@ -24,8 +17,6 @@
     "env": {
       "SERVICE_TAGS" : "webapp",
       "SERVICE_NAME" : "python1",
-      "SERVICE_8000_CHECK_HTTP" : "/index.html",
-      "http_proxy" : "",
-      "https_proxy" : ""
+      "SERVICE_8000_CHECK_SCRIPT" : "curl --silent $MASTER_IP:$SERVICE_PORT/index.html"
     }
 }

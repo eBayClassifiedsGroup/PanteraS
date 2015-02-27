@@ -74,8 +74,6 @@ consul:
     CONSUL_DC: ${CONSUL_DC}
     CONSUL_BOOTSTRAP: ${CONSUL_BOOTSTRAP}
     CONSUL_MODE: ${CONSUL_MODE}
-  volumes:
-    - "/var/run/docker.sock:/var/run/docker.sock"
   name: consul
   net: host
 
