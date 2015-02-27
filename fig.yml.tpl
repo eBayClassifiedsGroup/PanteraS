@@ -74,8 +74,6 @@ consul:
     CONSUL_DC: ${CONSUL_DC}
     CONSUL_BOOTSTRAP: ${CONSUL_BOOTSTRAP}
     CONSUL_MODE: ${CONSUL_MODE}
-  volumes:
-    - "/var/run/docker.sock:/var/run/docker.sock"
   name: consul
   net: host
 
@@ -92,9 +90,10 @@ haproxy:
 
 registrator:
   image: ${REGISTRY}registrator
+  environment:
+    CONSUL_IP: ${CONSUL_IP}
   name: registrator
   hostname: ${HOSTNAME}-registrator
   volumes:
     - "/var/run/docker.sock:/tmp/docker.sock"
-  command: consul://${CONSUL_IP}:8500
 
