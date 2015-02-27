@@ -2,9 +2,8 @@
 main() {
   local container_id="$1"; shift
   local port="$1"; shift
-  local ext_ports=$(docker inspect -f '{{range $i,$e := .NetworkSettings.Ports}}{{$i }} {{$p := index $e 2}}{{$p.HostPort}}
-{{end}}' $container_id)
-  local ext_port=$(echo "$ext_ports"|awk "/${port}/{print \$2}")
+  local ext_ports=$(docker inspect -f '{{range $i,$e := .NetworkSettings.Ports}}{{ $i }} {{$p := index $e 0}}{{$p.HostPort}}\n{{end}}' $container_id)
+  local ext_port=$(echo -e "$ext_ports"|awk "/${port}/{print \$2}")
   local path="$1"; shift
   local opts="$@"
   local ip=$MASTER_IP
