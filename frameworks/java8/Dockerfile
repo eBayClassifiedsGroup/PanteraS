@@ -1,4 +1,5 @@
-FROM paas
+FROM ubuntu:14.04.2
+
 MAINTAINER <siteops@team.mobile.de>
 
 RUN apt-get update
@@ -19,11 +20,6 @@ RUN update-alternatives --display java
 RUN echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 RUN echo '# /lib/init/fstab: cleared out for bare-bones lxc' > /lib/init/fstab
 RUN ln -sf /proc/self/mounts /etc/mtab
-
-RUN apt-get -y install python-pip python-dev
-RUN pip install consulate
-RUN pip install tornado
-RUN pip install netifaces
 
 ADD start.sh /usr/local/bin/start.sh
 RUN chmod +x /usr/local/bin/start.sh
