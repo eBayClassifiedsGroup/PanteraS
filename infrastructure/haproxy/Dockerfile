@@ -37,7 +37,11 @@ ENV HOME /opt/consul_template
 
 # Add files
 ADD haproxy.cfg /etc/haproxy/haproxy.cfg
-ADD in.conf /opt/consul_template/in.conf
+# same file for an "empty template"
+ADD haproxy.cfg /opt/consul_template/haproxy.tmpl
+ADD template.conf /opt/consul_template/template.conf
+ADD haproxy_watcher.sh /opt/consul_template/haproxy_watcher.sh
+
 ADD supervisord.conf /etc/supervisor/supervisord.conf
 
 # Define mountable directories.

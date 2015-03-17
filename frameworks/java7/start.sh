@@ -14,7 +14,15 @@ maintenance(){
   done
 }
 
-trap 'maintenance && sleep 2 && kill -TERM $PID' TERM INT
+trap 'maintenance && sleep 2 && kill -TERM $PID $PID_CUSTOM' TERM INT
+
+# You can start your additional application
+# like supervisord etc.
+#
+[ -f /etc/rc.custom ] && {
+  /etc/rc.custom &
+  PID_CUSTOM=$!
+}
 
 eval "$@" &
 PID=$!
