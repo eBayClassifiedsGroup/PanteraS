@@ -1,127 +1,60 @@
-# Platform as a Service in a box
+# PanteraS - Platform as a Service in a box
+"One container to rule them all"
 
 ## Goal
-The goal is to spawn a complete dockerized environment,<br />
-containing all necessary components for a PaaS,<br />
-fully transferable between any kind of development stage: laptop / integration / production<br />
-highly robust, highly available, fail tolerance,<br />
-where deployment part is fully independent from a running part.<br />
+The goal is to spawn a complete dockerized environment,  
+containing all necessary components for a PaaS,  
+fully transferable between any kind of development stage: laptop / integration / production,  
+highly robust, highly available, fail tolerance,  
+where deployment part is fully independent from a running part.  
 Services supposed to be spawn in a second, fully scalable, easy to monitor, debug and orchestrate.
 
 ## Components
 - Mesos + Marathon + ZooKeeper (orchestration components)
-- Consul (K/V store, monitoring, service directory and registry)
+- Consul (K/V store, monitoring, service directory and registry)  + Registrator (automating register/ deregister)
 - HAproxy + consul-template (load balancer with automatic config generation)
 
-## Install
+## Usage:
 
-There are few ways you can run the project:
+##### Stand alone mode (master and slave in one box)
+    # vagrant up
+or
+    # ./generate_yml.sh
+    # docker-compose up -d
 
-1. [Vagrant](#installing-using-vagrant)
-2. [boot2docker](#installing-using-boot2docker)
-3. [Standalone](#standalone) on Linux
+#### 3 Masters + N salves:
 
-### Installing using Vagrant
+##### Configure zookeeper and consul:
 
-Execute:
+    everyhost# cd panteras
+    everyhost# mkdir restricted
+    everyhost# echo 'ZOOKEEPER_HOSTS="masterhost-1:2181,masterhost-2:2181,masterhost-3:2181"' >> restricted/host
+    everyhost# echo 'CONSUL_HOSTS="-join=masterhost-1 -join=masterhost-2 -join=masterhost-3"' >> restricted/host
+    
+    masterhost-1# echo "ZOOKEEPER_ID=1" >> restricted/host
+    masterhost-2# echo "ZOOKEEPER_ID=2" >> restricted/host
+    masterhost-3# echo "ZOOKEEPER_ID=3" >> restricted/host
+    
+##### Start containers:
 
-	$ ./install.sh -m vagrant
+    masterhost-n# ./generate_yml.sh
+    masterhost-n# docker-compose up -d
 
-- If you are on a Mac OSX box, this will install the [Vagrant](#installing-using-vagrant) Paas in a Box below.<br />
-- If you are on an Ubuntu box, this will install the [Standalone](#standalone) Paas in a Box below.<br />
-Then manually run the command that is indicated by the script to ssh into the target VM.
-
-The easiest way to start is using vagrant.
-Please make sure you have the following packages installed:
-
-- vagrant >1.5
-- VirtualBox
-
-or start manually:
-
-	$ vagrant up
-
-This will start an Ubuntu VM,
-install all prerequisites and spawn all components.
-At the end of the process, you can run 
-
-	$ vagrant ssh
-
-to ssh into the VM and get access to all the docker instances.
-
-### Installing using boot2docker
-
-be sure you have virtualbox, boot2docker and fig installed.
-(VirtualBox you have to install manually) then just run 
-
-	$ ./install.sh -m boot2docker
-
-or you can start manually:
-
-	$ brew install boot2docker
-	$ brew install fig
-	$ boot2docker up
-	$ $(boot2docker init)
-
-### Standalone
-
-If you prefer to run the PaaS components directly on your Linux box<br />
-you can do so by installing the following packages:
-
-- docker
-- fig
-
-## Configuration
-
-you might need to modify / reconfigure the project.
-Here are some configuration info:
-
-Execute the following command _once_
-in order to build the necessary docker images:
-
-	$ ./build-docker-images.sh
-
-Then you have to create a valid fig.yml file:
-
-	$ ./genfig.sh
-       
-or if you want to modify docker HOSTNAME and IP overwrite variables like:
-Where HOSTNAME and IP correspond to your local VM (i.e. boot2docker)
-
-	$ HOSTNAME=boot2docker IP=192.168.59.103 ./genfig.sh
-
-## Stopping and starting manually
-
-You might need to start stop containers in a future:
-
-To stop all
-
-	$ fig stop
-
-To start an instance of each service execute (first time):
-
-	$ fig up -d 
-To start containers which has been stopped:
-
-	$ fig start
-
-Use same commands for stopping/starting specific container
-just by adding its name like:
-
-	$ fig stop haproxy
+    slavehost-n# MASTER=false ./generate_yml.sh
+    slavehost-n# docker-compose up -d
 
 ### Web Interfaces
 
-Given the `IP`/`hostname` from above
-you can reach the PaaS components
+You can reach the PaaS components
 on the following ports:
 
-- HAproxy: http://hostname:81 or http://hostname/haproxyStats
+- HAproxy: http://hostname:81
 - Consul: http://hostname:8500
 - Marathon: http://hostname:8080
 - Mesos: http://hostname:5050
+- Supervisord: http://hostname:9000
 
-### Accessibility
+### Services Accessibility
 
 You might want to access the PaaS and services
 with your browser directly via service name like:
@@ -149,48 +82,36 @@ so you might to try second option first.
 
 B. SSHuttle - use https://github.com/apenwarr/sshuttle project so you can tunnel DNS traffic over ssh
 but you have to have ssh daemon running in some container.
-Do NOT use for that:
-- docker host itself
-- containers that runs with "net: host"
-- DNS container itself
 
-rather use containers, that have DNS in fig.yaml file configured.
+### Running an example application inside PaaS
 
-### Running an example
-
-	$ cd examples/SimpleWebappPython
-	$ ./build-docker-image.sh
-	$ ./start_with_marathon.sh
+      $ cd examples/SimpleWebappPython
+      $ ./build-docker-image.sh
+      $ ./start_with_marathon.sh
 
 which gonna spawn 4 containers described in deploy1_marathon.json and deploy2_marathon.json
 2 services with 2 instances each, that can be accessed for humans via browser:
 
-http://python1.service.consul
+http://python1.service.consul  
 http://python2.service.consul
 
-HAproxy gonna ballance services between ports,
+HAproxy gonna ballance services between ports,  
 which has been mapped and assigned by marathon.
 
 For non human access, like services intercommunication, you can use direct access 
 using DNS consul SRV abilities, to verify answers:
 
-	$ dig python1.service.consul SRV
+      $ dig python1.service.consul +tcp SRV
 
-for debugging:
-asking DNS directly:
+or asking consul DNS directly:
 
-	$ dig @DOCKER_HOST -p53   python1.service.consul SRV
-
-asking Consul directly:
-
-	$ dig @DOCKER_HOST -p8600 python1.service.consul SRV
+      $ dig @$CONSUL_IP -p8600  python1.service.consul +tcp SRV
 
 remmeber to disable DNS caching in your future services.
 
 ## References
 
-[1] https://www.docker.com/
-
-[2] http://www.fig.sh/
-
+[1] https://www.docker.com/  
+[2] http://www.fig.sh/  
 [3] http://stackoverflow.com/questions/25217208/setting-up-a-docker-fig-mesos-environment
+

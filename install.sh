@@ -252,7 +252,7 @@ if [ "$MODE" == "vagrant-provision" ] ; then
 
     echo "(re)generating fig.yml configuration file"
     cd $REPODIR
-    IP=$LOCALIP ./genfig.sh
+    IP=$LOCALIP ./generate_yml.sh
     echo "starting $paas components with fig"
     sudo fig up -d
 
@@ -324,7 +324,7 @@ if [ "$MODE" == "boot2docker" ] ; then
     echo "(re)generating fig.yml configuration file"
     cd $REPODIR
     echo "generating fig.yml configuration with boot2docker host ip $BOOT2DOCKERIP"
-    IP=$BOOT2DOCKERIP ./genfig.sh
+    IP=$BOOT2DOCKERIP ./generate_yml.sh
     echo "stopping any previously running containers with fig."
     $FIG_INSTALL_PATH stop
     echo "starting $paas components with fig"

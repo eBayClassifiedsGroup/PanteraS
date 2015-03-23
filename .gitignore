@@ -1,6 +1,7 @@
 restricted/
 vagrant/.vagrant/
 fig.yml
+docker-compose.yml
 *.swp
 .DS_Store
 .vagrant/
