@@ -18,7 +18,9 @@ Services supposed to be spawn in a second, fully scalable, easy to monitor, debu
 
 ##### Stand alone mode (master and slave in one box)
     # vagrant up
+
 or  
+
     # ./generate_yml.sh
     # docker-compose up -d
 

@@ -1,6 +1,6 @@
 # Simplest web app ever
 
-FROM paas
+FROM ubuntu:14.04.2
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 

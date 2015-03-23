@@ -5,24 +5,6 @@ FROM ubuntu:14.04.2
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
-ENV TZ Europe/Berlin
-# APT
-RUN echo 'Acquire::http::Proxy  "http://proxy.mobile.rz:3128";'  > /etc/apt/apt.conf.d/20ubuntu
-RUN echo 'Acquire::https::Proxy "http://proxy.mobile.rz:3128";' >> /etc/apt/apt.conf.d/20ubuntu
-# GIT
-RUN echo '[http]'  > /root/.gitconfig && echo 'proxy = http://proxy.mobile.rz:3128' >>  /root/.gitconfig
-RUN echo '[https]'>> /root/.gitconfig && echo 'proxy = http://proxy.mobile.rz:3128' >>  /root/.gitconfig
-# PIP
-RUN mkdir /root/.pip && echo '[global]' > /root/.pip/pip.conf && echo 'proxy = http://proxy.mobile.rz:3128' >> /root/.pip/pip.conf
-# GNUPG
-RUN mkdir /root/.gnupg && echo 'keyserver-options http-proxy="http://proxy.mobile.rz:3128"' > /root/.gnupg/gpg.conf
-# WGET
-RUN echo http_proxy="http://proxy.mobile.rz:3128" > /root/.wgetrc && echo https_proxy="http://proxy.mobile.rz:3128" >> /root/.wgetrc
-# GO
-RUN echo "export http_proxy=http://proxy.mobile.rz:3128" > /root/.golangrc
-
-
-
 RUN locale-gen en_US.UTF-8
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -142,7 +124,7 @@ RUN mkdir /opt/registrator
 ENV PATH ${PATH}:/opt/registrator
 WORKDIR /opt/registrator
 
-RUN . ${HOME}/.golangrc && go get -u -tags ${REGISTRATOR_APP_VERSION} github.com/gliderlabs/registrator \
+RUN [ -f ${HOME}/.golangrc ] && . ${HOME}/.golangrc; go get -u -tags ${REGISTRATOR_APP_VERSION} github.com/gliderlabs/registrator \
     && cp ${GOPATH}/bin/registrator .
 
 # Builds are not supported any more
