@@ -20,14 +20,21 @@ Services supposed to be spawn in a second, fully scalable, easy to monitor, debu
 
 
 ##### Master mode Container
+This is the default configuration, that starts all components inside container.
+It is recommended to run 3 or 5 master containers to ensure high availability of the PasteraS cluster.
+
 ![Master Mode](https://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg)
 
 ##### Slave mode Container
+Slave mode is enabled by MASTER=flase. In this mode starts only slave components, (master pasrt is excluded)
+You can run as many slaves as you wish - this is fully scalable.
+
 ![Slave Mode](https://s3.amazonaws.com/easel.ly/all_easels/19186/SlaveMode/image.jpg)
 
 ##### Multiple Datacenter supporeted by Consul
-![Consul multi DC](https://s3.amazonaws.com/easel.ly/all_easels/19186/consul/image.jpg)
+To connect multiple datacenter use `consul join -wan <server 1> <server 2>`
 
+![Consul multi DC](https://s3.amazonaws.com/easel.ly/all_easels/19186/consul/image.jpg)
 
 
 
@@ -95,9 +102,9 @@ If you do NOT have direct access to docker host DNS,
 then you have two options:
 
 A. use OpenVPN client
-an example server we have created for you,
+an example server we have created for you (in optional),
 but you need to provide certificates and config file,
-it might be little bit complex for the begining,
+it might be little bit complex for the beginers,
 so you might to try second option first.
 
 B. SSHuttle - use https://github.com/apenwarr/sshuttle project so you can tunnel DNS traffic over ssh
@@ -109,7 +116,7 @@ but you have to have ssh daemon running in some container.
       $ ./build-docker-image.sh
       $ ./start_with_marathon.sh
 
-which gonna spawn 4 containers described in deploy1_marathon.json and deploy2_marathon.json
+which gonna spawn 4 containers described in `deploy1_marathon.json` and `deploy2_marathon.json`
 2 services with 2 instances each, that can be accessed for humans via browser:
 
 http://python1.service.consul  
@@ -132,6 +139,7 @@ remmeber to disable DNS caching in your future services.
 ## References
 
 [1] https://www.docker.com/  
-[2] http://www.fig.sh/  
+[2] http://docs.docker.com/compose/
 [3] http://stackoverflow.com/questions/25217208/setting-up-a-docker-fig-mesos-environment
+[4] http://www.consul.io/docs/
 
