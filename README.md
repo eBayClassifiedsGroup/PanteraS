@@ -16,14 +16,14 @@ Services supposed to be spawn in a second, fully scalable, easy to monitor, debu
 - Consul (K/V store, monitoring, service directory and registry)  + Registrator (automating register/ deregister)
 - HAproxy + consul-template (load balancer with dynamic config generation)
 
-![PanteraS Architecture](http://www.easel.ly/viewEasel/1700823)
+![PanteraS Architecture](https://s3.amazonaws.com/easel.ly/all_easels/19186/panteras/image.jpg)
 
 
 ##### Master mode Container
-![Consul multi DC](http://www.easel.ly/viewEasel/1702133)
+![Consul multi DC](https://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg)
 
 ##### Slave mode Container
-![Slave mode](http://www.easel.ly/viewEasel/1702146)
+![Slave mode](https://s3.amazonaws.com/easel.ly/all_easels/19186/SlaveMode/image.jpg)
 
 ##### Multiple Datacenter supporeted by Consul
 ![Master mode](http://www.easel.ly/viewEasel/1702056)
