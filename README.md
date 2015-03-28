@@ -9,10 +9,28 @@ highly robust, highly available, fail tolerance,
 where deployment part is fully independent from a running part.  
 Services supposed to be spawn in a second, fully scalable, easy to monitor, debug and orchestrate.
 
-## Components
+## Architecture
+
+### Components
 - Mesos + Marathon + ZooKeeper (orchestration components)
 - Consul (K/V store, monitoring, service directory and registry)  + Registrator (automating register/ deregister)
-- HAproxy + consul-template (load balancer with automatic config generation)
+- HAproxy + consul-template (load balancer with dynamic config generation)
+
+![PanteraS Architecture](http://www.easel.ly/viewEasel/1700823)
+
+
+##### Master mode Container
+![Consul multi DC](http://www.easel.ly/viewEasel/1702133)
+
+##### Slave mode Container
+![Slave mode](http://www.easel.ly/viewEasel/1702146)
+
+##### Multiple Datacenter supporeted by Consul
+![Master mode](http://www.easel.ly/viewEasel/1702056)
+
+
+
+
 
 ## Usage:
 
