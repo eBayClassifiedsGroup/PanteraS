@@ -140,7 +140,7 @@ remmeber to disable DNS caching in your future services.
 ## References
 
 [1] https://www.docker.com/  
-[2] http://docs.docker.com/compose/
-[3] http://stackoverflow.com/questions/25217208/setting-up-a-docker-fig-mesos-environment
-[4] http://www.consul.io/docs/
+[2] http://docs.docker.com/compose/  
+[3] http://stackoverflow.com/questions/25217208/setting-up-a-docker-fig-mesos-environment  
+[4] http://www.consul.io/docs/  
 
