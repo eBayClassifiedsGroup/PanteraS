@@ -20,13 +20,14 @@ Services supposed to be spawn in a second, fully scalable, easy to monitor, debu
 
 
 ##### Master mode Container
-This is the default configuration, that starts all components inside container.
+This is the default configuration, that starts all components inside container.  
 It is recommended to run 3 or 5 master containers to ensure high availability of the PasteraS cluster.
 
 ![Master Mode](https://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg)
 
 ##### Slave mode Container
-Slave mode is enabled by MASTER=flase. In this mode starts only slave components, (master pasrt is excluded)
+Slave mode is enabled by `MASTER=flase`  
+In this mode starts only slave components, (master part is excluded)  
 You can run as many slaves as you wish - this is fully scalable.
 
 ![Slave Mode](https://s3.amazonaws.com/easel.ly/all_easels/19186/SlaveMode/image.jpg)
