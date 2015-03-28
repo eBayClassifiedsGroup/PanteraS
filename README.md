@@ -20,13 +20,13 @@ Services supposed to be spawn in a second, fully scalable, easy to monitor, debu
 
 
 ##### Master mode Container
-![Consul multi DC](https://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg)
+![Master Mode](https://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg)
 
 ##### Slave mode Container
-![Slave mode](https://s3.amazonaws.com/easel.ly/all_easels/19186/SlaveMode/image.jpg)
+![Slave Mode](https://s3.amazonaws.com/easel.ly/all_easels/19186/SlaveMode/image.jpg)
 
 ##### Multiple Datacenter supporeted by Consul
-![Master mode](http://www.easel.ly/viewEasel/1702056)
+![Consul multi DC](https://s3.amazonaws.com/easel.ly/all_easels/19186/consul/image.jpg)
 
 
 
