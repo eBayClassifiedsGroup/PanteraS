@@ -16,21 +16,21 @@ Services supposed to be spawn in a second, fully scalable, easy to monitor, debu
 - Consul (K/V store, monitoring, service directory and registry)  + Registrator (automating register/ deregister)
 - HAproxy + consul-template (load balancer with dynamic config generation)
 
-![PanteraS Architecture](https://s3.amazonaws.com/easel.ly/all_easels/19186/panteras/image.jpg)
+![PanteraS Architecture](http://s3.amazonaws.com/easel.ly/all_easels/19186/panteras/image.jpg)
 
 
 ##### Master mode Container
 This is the default configuration, that starts all components inside container.  
 It is recommended to run 3 or 5 master containers to ensure high availability of the PasteraS cluster.
 
-![Master Mode](https://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg)
+![Master Mode](http://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg)
 
 ##### Slave mode Container
 Slave mode is enabled by `MASTER=false`  
 In this mode starts only slave components, (master part is excluded)  
 You can run as many slaves as you wish - this is fully scalable.
 
-![Slave Mode](https://s3.amazonaws.com/easel.ly/all_easels/19186/SlaveMode/image.jpg)
+![Slave Mode](http://s3.amazonaws.com/easel.ly/all_easels/19186/SlaveMode/image.jpg)
 
 ##### Multiple Datacenter supporeted by Consul
 To connect multiple datacenter use `consul join -wan <server 1> <server 2>`
