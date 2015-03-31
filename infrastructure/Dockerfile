@@ -18,7 +18,6 @@ ENV GOPATH ${HOME}/go
 RUN apt-get update \
     && apt-get install -y \
       python-pip \
-      supervisor \
       wget \
       curl \
       unzip \
@@ -28,10 +27,11 @@ RUN apt-get update \
       git
 
 RUN pip install supervisor-stdout
+RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
 
 ENV DOCKER_APP_VERSION 1.5.0
 ENV CONSUL_APP_VERSION 0.5.0
-ENV CONSUL_TEMPLATE_APP_VERSION 0.7.0
+ENV CONSUL_TEMPLATE_APP_VERSION 0.8.0
 ENV ENVCONSUL_APP_VERSION 0.3.0
 ENV HAPROXY_APP_VERSION 1.5.3-1~ubuntu14.04.1
 ENV MESOS_APP_VERSION 0.21.1-1.1.ubuntu1404
@@ -55,7 +55,6 @@ RUN wget https://dl.bintray.com/mitchellh/consul/${CONSUL_APP_VERSION}_linux_amd
     && tar zxf envconsul_${ENVCONSUL_APP_VERSION}_linux_amd64.tar.gz \
     && ln -s envconsul_${ENVCONSUL_APP_VERSION}_linux_amd64/envconsul .
 
-#ADD consul_wan_joiner.sh /opt/consul/consul_wan_joiner.sh
 
 # DNSMASQ
 #
@@ -64,9 +63,9 @@ RUN apt-get install -y dnsmasq dnsutils
 
 # HAPROXY
 #
-RUN mkdir /opt/consul_template
-ENV PATH $PATH:/opt/consul_template
-WORKDIR /opt/consul_template
+RUN mkdir /opt/consul-template
+ENV PATH $PATH:/opt/consul-template
+WORKDIR /opt/consul-template
 
 RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
     && apt-get update \
@@ -75,6 +74,7 @@ RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
 
 RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
     && rm -rf /var/lib/apt/lists/*
+
 
 # consul-haproxy
 RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
@@ -87,9 +87,10 @@ RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSU
 # Add files
 ADD haproxy.cfg /etc/haproxy/haproxy.cfg
 # same file for an "empty template"
-ADD haproxy.cfg /opt/consul_template/haproxy.tmpl
-ADD template.conf /opt/consul_template/template.conf
-ADD haproxy_watcher.sh /opt/consul_template/haproxy_watcher.sh
+ADD haproxy.cfg        /opt/consul-template/
+ADD template.conf      /opt/consul-template/
+ADD haproxy_watcher.sh /opt/consul-template/
+ADD haproxy_reload.sh  /opt/consul-template/
 
 
 # ZOOKEEPER MESOS MARATHON
@@ -124,19 +125,17 @@ RUN mkdir /opt/registrator
 ENV PATH ${PATH}:/opt/registrator
 WORKDIR /opt/registrator
 
+# You can setup .golangrc with proxy setup if you wanna build behind proxy
 RUN [ -f ${HOME}/.golangrc ] && . ${HOME}/.golangrc; go get -u -tags ${REGISTRATOR_APP_VERSION} github.com/gliderlabs/registrator \
     && cp ${GOPATH}/bin/registrator .
 
-# Builds are not supported any more
+# Binaries are not supported anymore
 #  && wget https://github.com/progrium/registrator/releases/download/v${REGISTRATOR_APP_VERSION}/registrator_${REGISTRATOR_APP_VERSION}_linux_x86_64.tgz \
 #  && tar zxf registrator_${REGISTRATOR_APP_VERSION}_linux_x86_64.tgz
 
 
-ADD supervisord.conf /etc/supervisor/supervisord.conf
-
-RUN apt-get remove -y supervisor
-RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
-RUN ln -s /etc/supervisor/supervisord.conf /etc/supervisord.conf
+ADD supervisord.conf /etc/supervisord.conf
+ADD consul_config.json /etc/consul.d/
 
 WORKDIR /opt
 ENTRYPOINT [ "supervisord" ]

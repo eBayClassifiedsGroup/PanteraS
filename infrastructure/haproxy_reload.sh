@@ -1,0 +1,1 @@
+eval ${HAPROXY_APP_RELOAD}

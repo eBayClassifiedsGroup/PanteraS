@@ -28,19 +28,22 @@ CONSUL_MODE=${CONSUL_MODE:-'-server'}
 MESOS_CLUSTER_NAME=${CLUSTER_NAME:-"mesoscluster"}
 ZOOKEEPER_HOSTS=${ZOOKEEPER_HOSTS:-"${HOSTNAME}:2181"}
 ZOOKEEPER_ID=${ZOOKEEPER_ID:-"0"}
+GOMAXPROCS=${GOMAXPROCS:-"4"}
+DNSMASQ_START=${DNSMASQ_START:-"true"}
 
 # Parameters for every supervisord command
 #
+# -config-dir=/etc/consul.d/ \
 CONSUL_PARAMS="agent \
  -client=0.0.0.0 \
  -data-dir=/opt/consul/ \
  -ui-dir=/opt/consul/dist/ \
- -config-dir=/etc/consul.d/ \
  -advertise=${HOST_IP} \
  -node=${HOSTNAME} \
  -dc=${CONSUL_DC} \
  ${CONSUL_MODE} \
- ${CONSUL_HOSTS}"
+ ${CONSUL_HOSTS} \
+ ${CONSUL_PARAMS}"
 #
 DNSMASQ_PARAMS="-d \
  -u dnsmasq \
@@ -48,32 +51,37 @@ DNSMASQ_PARAMS="-d \
  -7 /etc/dnsmasq.d \
  --server=/consul/${CONSUL_IP}#8600 \
  --address=/consul/${CONSUL_IP} \
- --host-record=${HOSTNAME},${CONSUL_IP}"
+ --host-record=${HOSTNAME},${CONSUL_IP} \
+ ${DNSMASQ_PARAMS}"
 #
-# we have workaround
-HAPROXY_PARAMS=""
+HAPROXY_APP_RELOAD="/usr/sbin/haproxy -p /tmp/haproxy.pid -f /etc/haproxy/haproxy.cfg -sf \$(pidof /usr/sbin/haproxy) || true"
+HAPROXY_PARAMS="-consul=${CONSUL_IP}:8500 \
+ -template template.conf:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh"
 #
 MARATHON_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --zk zk://${ZOOKEEPER_HOSTS}/marathon \
- --hostname ${HOSTNAME}"
+ --hostname ${HOSTNAME} \
+ ${MARATHON_PARAMS}"
 #
 MESOS_MASTER_PARAMS="--zk=zk://${ZOOKEEPER_HOSTS}/mesos \
  --work_dir=/var/lib/mesos \
  --quorum=1 \
  --ip=0.0.0.0 \
  --hostname=${HOSTNAME} \
- --cluster=${MESOS_CLUSTER_NAME}"
+ --cluster=${MESOS_CLUSTER_NAME} \
+ ${MESOS_MASTER_PARAMS}"
 #
 MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --containerizers=docker,mesos \
  --executor_registration_timeout=5mins \
  --hostname=${HOSTNAME} \
- --docker_stop_timeout=5secs"
+ --docker_stop_timeout=5secs \
+ ${MESOS_SLAVE_PARAMS}"
 #
-REGISTRATOR_PARAMS="-ip=${HOST_IP} consul://${CONSUL_IP}:8500"
+REGISTRATOR_PARAMS="-ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
+ ${REGISTRATOR_PARAMS}"
 #
 ZOOKEEPER_PARAMS="start-foreground"
-
 
 CONSUL_APP_PARAMS=${CONSUL_APP_PARAMS:-$CONSUL_PARAMS}
 DNSMASQ_APP_PARAMS=${DNSMASQ_APP_PARAMS:-$DNSMASQ_PARAMS}
@@ -83,8 +91,6 @@ MESOS_MASTER_APP_PARAMS=${MESOS_MASTER_APP_PARAMS:-$MESOS_MASTER_PARAMS}
 MESOS_SLAVE_APP_PARAMS=${MESOS_SLAVE_APP_PARAMS:-$MESOS_SLAVE_PARAMS}
 REGISTRATOR_APP_PARAMS=${REGISTRATOR_APP_PARAMS:-$REGISTRATOR_PARAMS}
 ZOOKEEPER_APP_PARAMS=${ZOOKEEPER_APP_PARAMS:-$ZOOKEEPER_PARAMS}
-
-
 
 # DNS manipulation
 # You can change your resolv.conf inside panetras image

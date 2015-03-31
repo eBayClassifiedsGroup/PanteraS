@@ -37,16 +37,22 @@ listen stats :81
 frontend http-in
     bind *:80
 
-{{range services}}{{range $tag, $services := service .Name|byTag}}{{if or (eq $tag "webapp") (eq $tag "haproxy")}}    #{{$service_name := (index $services 0).Name}}{{$service_name}}
-    acl acl_{{$service_name}} hdr(host) -i {{$service_name}}.service.consul
-    use_backend backend_{{$service_name}} if acl_{{$service_name}}
+{{ range services }}
+{{ "{{range $tag, $services := service \""}}{{ .Name }}{{"\"|byTag}}{{if or (eq $tag \"webapp\") (eq $tag \"haproxy\")}}" }}
+{{ "#{{$service_name := (index $services 0).Name}}{{$service_name}}" }}
+{{ "  acl acl_{{$service_name}} hdr(host) -i {{$service_name}}.service.consul" }}
+{{ "  use_backend backend_{{$service_name}} if acl_{{$service_name}}" }}
+{{ "{{end}}{{end}}" }}
+{{ end }}
 
-{{end}}{{end}}{{end}}
-{{range services}}{{range $tag, $services := service .Name|byTag}}{{if or (eq $tag "webapp") (eq $tag "haproxy")}}{{$service_name := (index $services 0).Name}}
-    backend backend_{{$service_name}}
-      balance leastconn
-      option http-server-close
-{{range $services}}      server {{.Node}}_{{.Port}} {{.Address}}:{{.Port}} maxconn 32
-{{end}}
-{{end}}{{end}}{{end}}
+{{ range services }}
+{{ "{{range $tag, $services := service \""}}{{ .Name }}{{"\"|byTag}}{{if or (eq $tag \"webapp\") (eq $tag \"haproxy\")}}" }}
+{{ "{{$service_name := (index $services 0).Name}}" }}
+{{ "  backend backend_{{$service_name}}" }}
+{{ "    balance leastconn" }}
+{{ "    option http-server-close" }}
+{{ "{{range $services}}      server {{.Node}}_{{.Port}} {{.Address}}:{{.Port}} maxconn 32" }}
+{{ "{{end}}" }}
+{{ "{{end}}{{end}}" }}
+{{ end }}
 

@@ -1,5 +1,7 @@
 # Leaner build then Ubunutu
-FROM paas
+ubuntu:14.04.2
+
+MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
 RUN apt-get update && \
     apt-get -y build-dep pam && \
