@@ -26,7 +26,7 @@ It is recommended to run 3 or 5 master containers to ensure high availability of
 ![Master Mode](https://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg)
 
 ##### Slave mode Container
-Slave mode is enabled by `MASTER=flase`  
+Slave mode is enabled by `MASTER=false`  
 In this mode starts only slave components, (master part is excluded)  
 You can run as many slaves as you wish - this is fully scalable.
 
