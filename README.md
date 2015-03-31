@@ -19,13 +19,13 @@ Services supposed to be spawn in a second, fully scalable, easy to monitor, debu
 ![PanteraS Architecture](http://s3.amazonaws.com/easel.ly/all_easels/19186/panteras/image.jpg)
 
 
-##### Master mode Container
+##### Master+SLave mode Container
 This is the default configuration, that starts all components inside container.  
 It is recommended to run 3 or 5 master containers to ensure high availability of the PasteraS cluster.
 
 ![Master Mode](http://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg)
 
-##### Slave mode Container
+##### Only Slave mode Container
 Slave mode is enabled by `MASTER=false`  
 In this mode starts only slave components, (master part is excluded)  
 You can run as many slaves as you wish - this is fully scalable.
@@ -37,8 +37,25 @@ To connect multiple datacenter use `consul join -wan <server 1> <server 2>`
 
 ![Consul multi DC](https://s3.amazonaws.com/easel.ly/all_easels/19186/consul/image.jpg)
 
+##### Combination of deamons startup
 
+Depending on `MASTER` and `SLAVE` you can define role of the container
 
+   daemon\role  | default   | Only Master | Only Slave   |
+    -----------:|:----------------:|:-----------:|:-------------:|
+                |Stand alone mode  |  |  |
+                |`MASTER=true`     |`MASTER=true`| `MASTER=false`|
+                |`SLAVE=true`      |`SLAVE=false`| `SLAVE=true`  |
+          Consul| x | x | x |
+    Mesos Master| x | x | - |
+    Marathon    | x | x | - |
+    Zookeeper   | x | x | - |
+ Consul-template| x | - | x |
+    Haproxy     | x | - | x |
+    Mesos Slave | x | - | x |
+     Registrator| x | - | x |
+         dnsmasq| x | x | x |
+        
 
 ## Usage:
 
