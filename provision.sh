@@ -2,6 +2,7 @@
 
 paas="PanteraS"
 REPODIR=`dirname $0`
+IMAGE="panteras/paas-in-a-box:latest"
 
 usage(){
 cat <<_END_
@@ -94,7 +95,7 @@ case "$MODE" in
 
 'vagrant-provision')
   echo "provisioning vagrant virtual machine with $paas components"
-  [ ! isUbuntu ] && echo "error: $paas is only supported on an Ubuntu virtual machine host" && exit 1
+  ! isUbuntu && echo "error: $paas is only supported on an Ubuntu virtual machine host" && exit 1
   [ ! -f /etc/apt/sources.list.d/docker.list ] && {
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
     echo 'deb http://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
@@ -102,20 +103,21 @@ case "$MODE" in
   }
   sudo apt-get -q -y install lxc-docker-${DOCKER_VERSION}
 
-  [ ! hasDockerCompose ] && {
-    sudo apt-get install python-pip
+  ! hasDockerCompose && {
+    sudo apt-get install -y python-pip
     sudo pip install docker-compose
   }
   # verify:
-  [ ! hasDocker ] && echo "error: docker not detected." >&2 && exit 1
-  [ ! hasDockerCompose ] && echo "error: docker-compose not detected" >&2 && exit 1
-
+  ! hasDocker && echo "error: docker not detected." >&2 && exit 1
+  ! hasDockerCompose && echo "error: docker-compose not detected" >&2 && exit 1
+  echo BUILDIMAGES
+  echo $BUILDIMAGES
   [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && sudo ./build-docker-images.sh \
-    || docker pull sielaq/panteras
+    || docker pull ${IMAGE}
 
   LOCALIP=${LOCALIP:-$(hostname --ip-address| awk '{ print $2}')}
   DNS_CONFIG="DOCKER_OPTS=\"\${DOCKER_OPTS} --dns $LOCALIP\""
-  grep -q -- "$DNS_CONFIG" /etc/default/docker || echo $DNS_CONFIG >>/etc/default/docker
+  grep -q -- "$DNS_CONFIG" /etc/default/docker || echo $DNS_CONFIG >>/etc/default/docker && sudo service docker restart
 
   # evil hack to set a proper /etc/hosts entry (non localhost) for our hostname.
   #   This is needed for marathon (and posible consul) checks to work properly. Since these
@@ -132,15 +134,15 @@ case "$MODE" in
 
   echo "(re)generating configuration file"
   IP=$LOCALIP ./generate_yml.sh
-  echo "starting $paas components with fig"
+  echo "starting $paas components with docker-compose"
   sudo docker-compose up -d
   ;;
 
 
 "boot2docker")
-  [ ! isMac ] && echo "boot2docker is only supported on OSX" >&2 && exit 1
-  [ ! hasBoot2docker ] && echo "boot2docker not found. Please install the latest boot2docker version on your Mac" >&2 && exit 1
-  [ ! hasDockerCompose ] && echo "DockerCompose not found. Please install docker-compose" >&2 && exit 1
+  ! isMac && echo "boot2docker is only supported on OSX" >&2 && exit 1
+  ! hasBoot2docker && echo "boot2docker not found. Please install the latest boot2docker version on your Mac" >&2 && exit 1
+  ! hasDockerCompose && echo "DockerCompose not found. Please install docker-compose" >&2 && exit 1
 
   [ "$(boot2docker status 2>/dev/null)" != "running" ] && {
     echo "boot2docker not running. Attempting to start."        
@@ -150,8 +152,8 @@ case "$MODE" in
   }
   $(boot2docker shellinit)
 
-  [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && sudo ./build-docker-images.sh \
-    || docker pull sielaq/panteras
+  [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && ./build-docker-images.sh \
+    || docker pull ${IMAGE}
 
   BOOT2DOCKERIP=$(boot2docker ip 2>/dev/null)
 
@@ -166,9 +168,9 @@ case "$MODE" in
        sleep 4
      }"
 
-  echo "(re)generating fig.yml configuration file"
+  echo "(re)generating docker-compose.yml configuration file"
   cd $REPODIR
-  echo "generating fig.yml configuration with boot2docker host ip $BOOT2DOCKERIP"
+  echo "generating docker-compose.yml configuration with boot2docker host ip $BOOT2DOCKERIP"
   IP=$BOOT2DOCKERIP ./generate_yml.sh
   echo "clean up previous container"
   docker-compose stop 2>/dev/null

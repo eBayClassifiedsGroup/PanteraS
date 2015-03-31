@@ -5,7 +5,7 @@
             "image": "simple_webapp_python",
             "network": "BRIDGE",
             "portMappings": [
-              { "containerPort": 8000, "hostPort": 0, "servicePort": 9000, "protocol": "tcp" }
+              { "containerPort": 8000, "hostPort": 0, "protocol": "tcp" }
             ]
         },
         "type": "DOCKER",

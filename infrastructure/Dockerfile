@@ -126,7 +126,8 @@ ENV PATH ${PATH}:/opt/registrator
 WORKDIR /opt/registrator
 
 # You can setup .golangrc with proxy setup if you wanna build behind proxy
-RUN [ -f ${HOME}/.golangrc ] && . ${HOME}/.golangrc; go get -u -tags ${REGISTRATOR_APP_VERSION} github.com/gliderlabs/registrator \
+RUN [ -f ${HOME}/.golangrc ] && . ${HOME}/.golangrc; \
+    go get -u -tags ${REGISTRATOR_APP_VERSION} github.com/gliderlabs/registrator \
     && cp ${GOPATH}/bin/registrator .
 
 # Binaries are not supported anymore
@@ -134,8 +135,9 @@ RUN [ -f ${HOME}/.golangrc ] && . ${HOME}/.golangrc; go get -u -tags ${REGISTRAT
 #  && tar zxf registrator_${REGISTRATOR_APP_VERSION}_linux_x86_64.tgz
 
 
-ADD supervisord.conf /etc/supervisord.conf
 ADD consul_config.json /etc/consul.d/
+ADD supervisord.conf /etc/supervisord.conf
+ADD supervisord.sh /opt/
 
 WORKDIR /opt
-ENTRYPOINT [ "supervisord" ]
+ENTRYPOINT [ "/opt/supervisord.sh" ]

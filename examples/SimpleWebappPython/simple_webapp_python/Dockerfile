@@ -4,6 +4,7 @@ FROM ubuntu:14.04.2
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
+RUN DEBIAN_FRONTEND=noninteractive apt-get update; apt-get install -y curl
 RUN mkdir -p /opt/web/cgi-bin
 WORKDIR /opt/web
 ENV HOME  /opt/web

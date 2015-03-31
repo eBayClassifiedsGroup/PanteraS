@@ -59,32 +59,40 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
 ## Usage:
 
 ##### Default: Stand alone mode (master and slave in one box)
-    # vagrant up
+```
+# vagrant up
+```
 
-or  
-    # IP=192.168.1.1 ./generate_yml.sh
-    # docker-compose up -d
+or
+```
+# IP=192.168.1.1 ./generate_yml.sh
+# docker-compose up -d
+```
 
 #### 3 Masters + N slaves:
 
 ##### Configure zookeeper and consul:
-
-    everyhost# cd panteras
-    everyhost# mkdir restricted
-    everyhost# echo 'ZOOKEEPER_HOSTS="masterhost-1:2181,masterhost-2:2181,masterhost-3:2181"' >> restricted/host
-    everyhost# echo 'CONSUL_HOSTS="-join=masterhost-1 -join=masterhost-2 -join=masterhost-3"' >> restricted/host
-    
-    masterhost-1# echo "ZOOKEEPER_ID=1" >> restricted/host
-    masterhost-2# echo "ZOOKEEPER_ID=2" >> restricted/host
-    masterhost-3# echo "ZOOKEEPER_ID=3" >> restricted/host
-    
+```
+everyhost# cd panteras
+everyhost# mkdir restricted
+everyhost# echo 'ZOOKEEPER_HOSTS="masterhost-1:2181,masterhost-2:2181,masterhost-3:2181"' >> restricted/host
+everyhost# echo 'CONSUL_HOSTS="-join=masterhost-1 -join=masterhost-2 -join=masterhost-3"' >> restricted/host
+```
+``` 
+masterhost-1# echo "ZOOKEEPER_ID=1" >> restricted/host
+masterhost-2# echo "ZOOKEEPER_ID=2" >> restricted/host
+masterhost-3# echo "ZOOKEEPER_ID=3" >> restricted/host
+```    
 ##### Start containers:
 
-    masterhost-n# ./generate_yml.sh
-    masterhost-n# docker-compose up -d
-
-    slavehost-n# MASTER=false ./generate_yml.sh
-    slavehost-n# docker-compose up -d
+```
+masterhost-n# ./generate_yml.sh
+masterhost-n# docker-compose up -d
+```
+```
+slavehost-n# MASTER=false ./generate_yml.sh
+slavehost-n# docker-compose up -d
+```
 
 ### Web Interfaces
 
@@ -128,9 +136,11 @@ but you have to have ssh daemon running in some container.
 
 ### Running an example application inside PaaS
 
-      $ cd examples/SimpleWebappPython
-      $ ./build-docker-image.sh
-      $ ./start_with_marathon.sh
+```
+$ cd examples/SimpleWebappPython
+$ ./build-docker-image.sh
+$ ./start_with_marathon.sh
+```
 
 which gonna spawn 4 containers described in `deploy1_marathon.json` and `deploy2_marathon.json`
 2 services with 2 instances each, that can be accessed for humans via browser:
@@ -144,11 +154,15 @@ which has been mapped and assigned by marathon.
 For non human access, like services intercommunication, you can use direct access 
 using DNS consul SRV abilities, to verify answers:
 
-      $ dig python1.service.consul +tcp SRV
+```
+$ dig python1.service.consul +tcp SRV
+```
 
 or asking consul DNS directly:
 
-      $ dig @$CONSUL_IP -p8600  python1.service.consul +tcp SRV
+```
+$ dig @$CONSUL_IP -p8600  python1.service.consul +tcp SRV
+```
 
 remmeber to disable DNS caching in your future services.
 

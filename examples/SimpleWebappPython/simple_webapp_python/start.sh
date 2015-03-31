@@ -20,9 +20,7 @@ cd /opt/web/
 /usr/bin/python3 -m http.server --cgi &
 PID=$!
 wait $PID
+
 trap - TERM INT
 wait $PID
-EXIT_STATUS=$?
-
-
-
+exit $?
