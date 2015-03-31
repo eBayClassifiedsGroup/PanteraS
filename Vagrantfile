@@ -26,5 +26,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   # evil hack to set a proper /etc/hosts entry (non localhost) for our hostname
-  config.vm.provision "shell", inline: ". /vagrant/versions.conf; export DOCKER_VERSION; LOCALIP=192.168.10.10 /vagrant/install.sh -m vagrant-provision -b"
+  config.vm.provision "shell", inline: "export DOCKER_VERSION=$(awk '/ENV DOCKER_APP_VERSION/{print $3}' /vagrant/infrastructure/Dockerfile); LOCALIP=192.168.10.10 /vagrant/provision.sh -m vagrant-provision"
 end
