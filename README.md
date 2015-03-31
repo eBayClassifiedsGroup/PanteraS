@@ -43,7 +43,6 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
 
    daemon\role  | default   | Only Master | Only Slave   |
     -----------:|:----------------:|:-----------:|:-------------:|
-                |Stand alone mode  |  |  |
                 |`MASTER=true`     |`MASTER=true`| `MASTER=false`|
                 |`SLAVE=true`      |`SLAVE=false`| `SLAVE=true`  |
           Consul| x | x | x |
@@ -59,15 +58,14 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
 
 ## Usage:
 
-##### Stand alone mode (master and slave in one box)
+##### Default: Stand alone mode (master and slave in one box)
     # vagrant up
 
 or  
-
-    # ./generate_yml.sh
+    # IP=192.168.1.1 ./generate_yml.sh
     # docker-compose up -d
 
-#### 3 Masters + N salves:
+#### 3 Masters + N slaves:
 
 ##### Configure zookeeper and consul:
 
