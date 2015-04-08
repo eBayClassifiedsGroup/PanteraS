@@ -21,4 +21,4 @@ $B2D [ -f /etc/nslcd.conf ]    2>/dev/null && OPENVPN_VOL=${OPENVPN_VOL}'
     - "/etc/nslcd.conf:/etc/nslcd.conf"'
 
 
-eval "$(cat fig.yml.tpl| sed 's/"/+++/g'|sed  's/^\(.*\)$/echo "\1"/')"|sed 's/+++/"/g'|sed 's;\\";";g' > fig.yml
+eval "$(cat docker-compose.yml.tpl| sed 's/"/+++/g'|sed  's/^\(.*\)$/echo "\1"/')"|sed 's/+++/"/g'|sed 's;\\";";g' > docker-compose.yml
