@@ -4,8 +4,8 @@ cat << EOF
 PanteraS - Platform as a Service
 Usage:
 
-$ git clone https://github.com/eBayClassifiedsGroup/paas-in-a-box
-$ cd paas-in-a-box
+$ git clone https://github.com/eBayClassifiedsGroup/PanteraS
+$ cd PanteraS
 
 # ------------------------------------------
 # Stand Alone (Master & Slave):
@@ -16,7 +16,7 @@ $ docker-compose up -d
 
 # ------------------------------------------
 # 3 Masters (without Slaves daemons) mode:
-# Reapeat on every master docker host, but keep in mind to have ZOOKEEPER_ID uniq:
+# Repeat on every master docker host, but keep in mind to have ZOOKEEPER_ID uniq:
 
 $ mkdir restricted
 $ echo 'ZOOKEEPER_ID=1' >> restricted/host
