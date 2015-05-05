@@ -11,6 +11,7 @@ which boot2docker && {
   $(boot2docker shellinit)
   HOSTNAME=boot2docker
   B2D="boot2docker ssh"
+  FQDN=$HOSTNAME
 }
 
 # detect DOCKERHOST IP
@@ -51,7 +52,7 @@ MESOS_CLUSTER_NAME=${CLUSTER_NAME:-"mesoscluster"}
 ZOOKEEPER_HOSTS=${ZOOKEEPER_HOSTS:-"${HOSTNAME}:2181"}
 ZOOKEEPER_ID=${ZOOKEEPER_ID:-"0"}
 GOMAXPROCS=${GOMAXPROCS:-"4"}
-FQDN=`hostname -f`
+FQDN=${FQDN:-"`hostname -f`"}
 
 # Parameters for every supervisord command
 #
