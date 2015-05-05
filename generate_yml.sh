@@ -51,8 +51,7 @@ MESOS_CLUSTER_NAME=${CLUSTER_NAME:-"mesoscluster"}
 ZOOKEEPER_HOSTS=${ZOOKEEPER_HOSTS:-"${HOSTNAME}:2181"}
 ZOOKEEPER_ID=${ZOOKEEPER_ID:-"0"}
 GOMAXPROCS=${GOMAXPROCS:-"4"}
-
-
+FQDN=`hostname -f`
 
 # Parameters for every supervisord command
 #
@@ -91,14 +90,14 @@ MESOS_MASTER_PARAMS="--zk=zk://${ZOOKEEPER_HOSTS}/mesos \
  --work_dir=/var/lib/mesos \
  --quorum=1 \
  --ip=0.0.0.0 \
- --hostname=${HOSTNAME} \
+ --hostname=${FQDN} \
  --cluster=${MESOS_CLUSTER_NAME} \
  ${MESOS_MASTER_PARAMS}"
 #
 MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --containerizers=docker,mesos \
  --executor_registration_timeout=5mins \
- --hostname=${HOSTNAME} \
+ --hostname=${FQDN} \
  --docker_stop_timeout=5secs \
  ${MESOS_SLAVE_PARAMS}"
 #
