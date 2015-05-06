@@ -19,8 +19,6 @@ which boot2docker && {
 IP=${IP:-$(ifconfig | awk '/inet .*10/{gsub(/.*:/,"",$2);print $2;exit}')}
 
 
-
-
 # Defaults for stand alone mode
 MASTER=${MASTER:-"true"}
 SLAVE=${SLAVE:-"true"}
@@ -49,6 +47,7 @@ CONSUL_DC=${CONSUL_DC:-"UNKNOWN"}
 CONSUL_BOOTSTRAP=${CONSUL_BOOTSTRAP:-'-bootstrap-expect 1'}
 CONSUL_HOSTS=${CONSUL_HOSTS:-${CONSUL_BOOTSTRAP}}
 MESOS_CLUSTER_NAME=${CLUSTER_NAME:-"mesoscluster"}
+MESOS_MASTER_QUORUM=${MESOS_MASTER_QUORUM:-"1"}
 ZOOKEEPER_HOSTS=${ZOOKEEPER_HOSTS:-"${HOSTNAME}:2181"}
 ZOOKEEPER_ID=${ZOOKEEPER_ID:-"0"}
 GOMAXPROCS=${GOMAXPROCS:-"4"}
@@ -89,7 +88,7 @@ MARATHON_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
 #
 MESOS_MASTER_PARAMS="--zk=zk://${ZOOKEEPER_HOSTS}/mesos \
  --work_dir=/var/lib/mesos \
- --quorum=1 \
+ --quorum=${MESOS_MASTER_QUORUM} \
  --ip=0.0.0.0 \
  --hostname=${FQDN} \
  --cluster=${MESOS_CLUSTER_NAME} \

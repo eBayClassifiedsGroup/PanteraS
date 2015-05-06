@@ -31,7 +31,7 @@ RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
 
 ENV DOCKER_APP_VERSION 1.5.0
 ENV CONSUL_APP_VERSION 0.5.0
-ENV CONSUL_TEMPLATE_APP_VERSION 0.8.0
+ENV CONSUL_TEMPLATE_APP_VERSION 0.9.0
 ENV ENVCONSUL_APP_VERSION 0.3.0
 ENV HAPROXY_APP_VERSION 1.5.3-1~ubuntu14.04.1
 ENV MESOS_APP_VERSION 0.21.1-1.1.ubuntu1404
@@ -125,14 +125,20 @@ RUN mkdir /opt/registrator
 ENV PATH ${PATH}:/opt/registrator
 WORKDIR /opt/registrator
 
+# [DISABLED temporaly]
+#
 # You can setup .golangrc with proxy setup if you wanna build behind proxy
-RUN [ -f ${HOME}/.golangrc ] && . ${HOME}/.golangrc; \
-    go get -u -tags ${REGISTRATOR_APP_VERSION} github.com/gliderlabs/registrator \
-    && cp ${GOPATH}/bin/registrator .
+#RUN [ -f ${HOME}/.golangrc ] && . ${HOME}/.golangrc; \
+#    go get -u -tags ${REGISTRATOR_APP_VERSION} github.com/gliderlabs/registrator \
+#    && cp ${GOPATH}/bin/registrator .
 
 # Binaries are not supported anymore
 #  && wget https://github.com/progrium/registrator/releases/download/v${REGISTRATOR_APP_VERSION}/registrator_${REGISTRATOR_APP_VERSION}_linux_x86_64.tgz \
 #  && tar zxf registrator_${REGISTRATOR_APP_VERSION}_linux_x86_64.tgz
+
+# Providing binaries by us - temporaly
+RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/${REGISTRATOR_APP_VERSION}/registrator.tgz \
+    && tar zxf registrator.tgz
 
 
 ADD consul_config.json /etc/consul.d/
