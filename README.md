@@ -77,11 +77,15 @@ everyhost# cd panteras
 everyhost# mkdir restricted
 everyhost# echo 'ZOOKEEPER_HOSTS="masterhost-1:2181,masterhost-2:2181,masterhost-3:2181"' >> restricted/host
 everyhost# echo 'CONSUL_HOSTS="-join=masterhost-1 -join=masterhost-2 -join=masterhost-3"' >> restricted/host
+everyhost# echo 'MESOS_MASTER_QUORUM=2' >> restricted/host
+
 ```
+##### Lets first master bootstrap consul
 ``` 
-masterhost-1# echo "ZOOKEEPER_ID=1" >> restricted/host
-masterhost-2# echo "ZOOKEEPER_ID=2" >> restricted/host
-masterhost-3# echo "ZOOKEEPER_ID=3" >> restricted/host
+masterhost-1# echo 'CONSUL_PARAMS="-bootstrap-expect 3"' >> restricted/host
+masterhost-1# echo 'ZOOKEEPER_ID=1' >> restricted/host
+masterhost-2# echo 'ZOOKEEPER_ID=2' >> restricted/host
+masterhost-3# echo 'ZOOKEEPER_ID=3' >> restricted/host
 ```    
 ##### Start containers:
 
