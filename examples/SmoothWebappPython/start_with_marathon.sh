@@ -1,6 +1,16 @@
 #!/bin/bash
-[ -z $DOCKER_HOST ] || IP=$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')
-IP=${IP:-$(ifconfig | awk '/inet .*10/{gsub(/.*:/,"",$2);print $2;exit}')}
+
+# detect DOCKERHOST IP if was not provided
+# boot2docker
+[ -n "${DOCKER_HOST}" ] && IP=${IP:-$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')}
+# outside vagrant
+which vagrant && IP=${IP:-$(vagrant ssh -c ifconfig 2>/dev/null| grep -oh "\w*192.168.10.10\w*")}
+# inside vagrant
+[ "$HOSTNAME" == "standalone" ] && IP=${IP:-192.168.10.10}
+# try to guess
+IP=${IP:-$(dig +short ${HOSTNAME})}
+
+[ -z ${IP} ] && echo "env IP variable missing" && exit 1
 
 if [ ! -n "$1" ]
 then
