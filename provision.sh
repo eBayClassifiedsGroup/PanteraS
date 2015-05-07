@@ -96,6 +96,7 @@ case "$MODE" in
 'vagrant-provision')
   echo "provisioning vagrant virtual machine with $paas components"
   ! isUbuntu && echo "error: $paas is only supported on an Ubuntu virtual machine host" && exit 1
+
   [ ! -f /etc/apt/sources.list.d/docker.list ] && {
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
     echo 'deb http://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
@@ -105,7 +106,9 @@ case "$MODE" in
 
   ! hasDockerCompose && {
     sudo apt-get install -y python-pip
-    sudo pip install docker-compose
+    # Fix for pip - Ubuntu provide incompatible version
+    sudo pip install pip --upgrade
+    sudo pip install docker-compose --upgrade
   }
   # verify:
   ! hasDocker && echo "error: docker not detected." >&2 && exit 1

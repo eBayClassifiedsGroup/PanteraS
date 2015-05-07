@@ -15,9 +15,13 @@ which boot2docker && {
 }
 
 # detect DOCKERHOST IP
-[ -z $DOCKER_HOST ] || IP=$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')
+[ -n "${DOCKER_HOST}" ] && IP=${IP:-$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')}
+# try guess
+#IP=${IP:-$(dig +short ${HOSTNAME})}
+# try final guess
 IP=${IP:-$(ifconfig | awk '/inet .*10/{gsub(/.*:/,"",$2);print $2;exit}')}
 
+[ -z ${IP} ] && echo "env IP variable missing" && exit 1
 
 # Defaults for stand alone mode
 MASTER=${MASTER:-"true"}
