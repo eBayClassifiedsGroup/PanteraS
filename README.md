@@ -57,38 +57,49 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
         
 
 ## Usage:
-
-##### Default: Stand alone mode (master and slave in one box)
+Clone it
+```
+git clone https://github.com/eBayClassifiedsGroup/PanteraS.git
+cd PanteraS
+```
+##### Default: Stand alone mode
+(master and slave in one box)
 ```
 # vagrant up
 ```
-
 or
 ```
-# IP=192.168.1.1 ./generate_yml.sh
+# IP=<DOCKER_HOST_IP> ./generate_yml.sh
 # docker-compose up -d
 ```
 
+
 #### 3 Masters + N slaves:
 
-##### Configure zookeeper and consul:
+Configure zookeeper and consul:
 ```
-everyhost# cd panteras
 everyhost# mkdir restricted
 everyhost# echo 'ZOOKEEPER_HOSTS="masterhost-1:2181,masterhost-2:2181,masterhost-3:2181"' >> restricted/host
 everyhost# echo 'CONSUL_HOSTS="-join=masterhost-1 -join=masterhost-2 -join=masterhost-3"' >> restricted/host
 everyhost# echo 'MESOS_MASTER_QUORUM=2' >> restricted/host
-
 ```
-##### Lets first master bootstrap consul
+Lets set only masterhost-1 to bootstrap the consul
 ``` 
 masterhost-1# echo 'CONSUL_PARAMS="-bootstrap-expect 3"' >> restricted/host
 masterhost-1# echo 'ZOOKEEPER_ID=1' >> restricted/host
 masterhost-2# echo 'ZOOKEEPER_ID=2' >> restricted/host
 masterhost-3# echo 'ZOOKEEPER_ID=3' >> restricted/host
 ```    
-##### Start containers:
+Optionally, if you have multiple IPs,  
+set an IP address of docker host (do not use docker0 interface IP)  
+if you don't set - it will try to guess `dig +short ${HOSTNAME}`
+``` 
+masterhost-1# echo 'IP=x.x.x.1' >> restricted/host
+masterhost-2# echo 'IP=x.x.x.2' >> restricted/host
+masterhost-3# echo 'IP=x.x.x.3' >> restricted/host
+```    
 
+##### Start containers:
 ```
 masterhost-n# ./generate_yml.sh
 masterhost-n# docker-compose up -d
