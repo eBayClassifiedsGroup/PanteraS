@@ -57,7 +57,11 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
         
 
 ## Usage:
-
+Clone it
+```
+git clone https://github.com/eBayClassifiedsGroup/PanteraS.git
+cd PanteraS
+```
 ##### Default: Stand alone mode
 (master and slave in one box)
 ```
@@ -74,7 +78,6 @@ or
 
 Configure zookeeper and consul:
 ```
-everyhost# cd panteras
 everyhost# mkdir restricted
 everyhost# echo 'ZOOKEEPER_HOSTS="masterhost-1:2181,masterhost-2:2181,masterhost-3:2181"' >> restricted/host
 everyhost# echo 'CONSUL_HOSTS="-join=masterhost-1 -join=masterhost-2 -join=masterhost-3"' >> restricted/host
