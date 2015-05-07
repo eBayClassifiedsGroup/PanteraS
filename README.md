@@ -149,19 +149,11 @@ so you might to try second option first.
 B. SSHuttle - use https://github.com/apenwarr/sshuttle project so you can tunnel DNS traffic over ssh
 but you have to have ssh daemon running in some container.
 
-### Running an example application inside PaaS
+### Running an example application
 
-```
-$ cd examples/SimpleWebappPython
-$ ./build-docker-image.sh
-$ ./start_with_marathon.sh
-```
-
-which gonna spawn 4 containers described in `deploy1_marathon.json` and `deploy2_marathon.json`
-2 services with 2 instances each, that can be accessed for humans via browser:
-
-http://python1.service.consul  
-http://python2.service.consul
+there are two examples:  
+`SimpleWebappPython` - basic one - spawn 2x2containers  
+`SmoothWebappPython` - simillar to previous, but with smooth scaling down  
 
 HAproxy gonna ballance services between ports,  
 which has been mapped and assigned by marathon.
@@ -170,13 +162,13 @@ For non human access, like services intercommunication, you can use direct acces
 using DNS consul SRV abilities, to verify answers:
 
 ```
-$ dig python1.service.consul +tcp SRV
+$ dig python.service.consul +tcp SRV
 ```
 
 or asking consul DNS directly:
 
 ```
-$ dig @$CONSUL_IP -p8600  python1.service.consul +tcp SRV
+$ dig @$CONSUL_IP -p8600  python.service.consul +tcp SRV
 ```
 
 remmeber to disable DNS caching in your future services.
