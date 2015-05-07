@@ -15,7 +15,7 @@
     "mem": 64.0,
     "instances": 1,
     "env": {
-      "SERVICE_TAGS" : "webapp,weight=30",
+      "SERVICE_TAGS" : "webapp,weight=1",
       "SERVICE_NAME" : "python-smooth",
       "SERVICE_8000_CHECK_SCRIPT" : "curl --silent $HOST_IP:$SERVICE_PORT/index.html"
     },

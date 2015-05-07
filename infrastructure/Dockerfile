@@ -24,7 +24,9 @@ RUN apt-get update \
       dnsutils \
       vim \
       golang \
-      git
+      git \
+      lolcat \
+      toilet
 
 RUN pip install supervisor-stdout
 RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
@@ -140,10 +142,13 @@ WORKDIR /opt/registrator
 RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/${REGISTRATOR_APP_VERSION}/registrator.tgz \
     && tar zxf registrator.tgz
 
+# Font for logo
+RUN wget https://raw.githubusercontent.com/patorjk/figlet.js/master/fonts/Elite.flf -O /usr/share/figlet/Elite.flf
 
 ADD consul_config.json /etc/consul.d/
 ADD supervisord.conf /etc/supervisord.conf
 ADD supervisord.sh /opt/
+ADD version /opt/
 
 WORKDIR /opt
 ENTRYPOINT [ "/opt/supervisord.sh" ]

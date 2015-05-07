@@ -15,7 +15,7 @@
    }
  },
  "env": {
-   "SERVICE_TAGS" : "python,webapp,http",
+   "SERVICE_TAGS" : "python,webapp,http,weight=100",
    "SERVICE_NAME" : "python"
  },
  "healthChecks": [
