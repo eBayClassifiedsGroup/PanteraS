@@ -87,8 +87,8 @@ masterhost-1# echo 'ZOOKEEPER_ID=1' >> restricted/host
 masterhost-2# echo 'ZOOKEEPER_ID=2' >> restricted/host
 masterhost-3# echo 'ZOOKEEPER_ID=3' >> restricted/host
 ```    
-Optionally, if you have multiple IPs,
-set an IP address of docker host (do not use docker0 interface IP)
+Optionally, if you have multiple IPs,  
+set an IP address of docker host (do not use docker0 interface IP)  
 if you don't set - it will try to guess `dig +short ${HOSTNAME}`
 ``` 
 masterhost-1# echo 'IP=x.x.x.1' >> restricted/host
