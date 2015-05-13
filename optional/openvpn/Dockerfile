@@ -1,5 +1,5 @@
 # Leaner build then Ubunutu
-ubuntu:14.04.2
+FROM ubuntu:14.04.2
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 

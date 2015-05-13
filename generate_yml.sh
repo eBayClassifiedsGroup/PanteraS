@@ -4,21 +4,30 @@
 [ -f ./restricted/host ]      && . ./restricted/host
 [ -f ./restricted/overwrite ] && . ./restricted/overwrite
 
-B2D=""
-which boot2docker && {
-  boot2docker init
-  boot2docker start
-  $(boot2docker shellinit)
-  HOSTNAME=boot2docker
-  B2D="boot2docker ssh"
-  FQDN=$HOSTNAME
-}
+echo "Keep in mind to not to occupy those ports on DOCKERHOST"
+echo "53, 80, 81, 2181, 2888, 3888, 5050, 5151, 8080, 8300-8302, 8400, 8500, 8600, 9000, 31000 - 32000"
 
 # detect DOCKERHOST IP if was not provided
+
 # boot2docker
-[ -n "${DOCKER_HOST}" ] && IP=${IP:-$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')}
+B2D=""
+which boot2docker >/dev/null && {
+  echo "Boot2docker detected, shall we use it (y/n)?"
+  read ANSWER
+  [ "$ANSWER" == "y" ] && {
+    boot2docker init
+    boot2docker start
+    $(boot2docker shellinit)
+    HOSTNAME=boot2docker
+    B2D="boot2docker ssh"
+    FQDN=$HOSTNAME
+    [ -n "${DOCKER_HOST}" ] && IP=${IP:-$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')}
+ }
+}
+
+# Try to detect IP
 # outside vagrant
-which vagrant && IP=${IP:-$(vagrant ssh -c ifconfig 2>/dev/null| grep -oh "\w*192.168.10.10\w*")}
+which vagrant >/dev/null && IP=${IP:-$(vagrant ssh -c ifconfig 2>/dev/null| grep -oh "\w*192.168.10.10\w*")}
 # inside vagrant
 [ "$HOSTNAME" == "standalone" ] && IP=${IP:-192.168.10.10}
 # try to guess
@@ -26,10 +35,12 @@ IP=${IP:-$(dig +short ${HOSTNAME})}
 
 [ -z ${IP} ] && echo "env IP variable missing" && exit 1
 
+
+
 # Defaults for stand alone mode
 MASTER=${MASTER:-"true"}
 SLAVE=${SLAVE:-"true"}
-#
+
 #COMMON
 START_CONSUL=${START_CONSUL:-"true"}
 #MASTER
