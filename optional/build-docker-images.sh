@@ -2,6 +2,7 @@
 
 [ -f ../restricted/common ] && . ../restricted/common
 PREFIX=.
+REGISTRY="${REGISTRY}panteras/"
 
 myexit(){
  echo "ERROR DURING BUILDING IMAGE"
