@@ -1,15 +1,23 @@
 #!/bin/bash
 
+[ -f ./restricted/common ]    && . ./restricted/common
+[ -f ./restricted/host ]      && . ./restricted/host
+[ -f ./restricted/overwrite ] && . ./restricted/overwrite
+
+# boot2docker
 B2D=""
-which boot2docker && {
-  boot2docker init
-  boot2docker start
-  $(boot2docker shellinit)
-  HOSTNAME=boot2docker
-  B2D="boot2docker ssh"
+which boot2docker >/dev/null && {
+  echo "Boot2docker detected, shall we use it (y/n)?"
+  read ANSWER
+  [ "$ANSWER" == "y" ] && {
+    boot2docker init
+    boot2docker start
+    $(boot2docker shellinit)
+    HOSTNAME=boot2docker
+    B2D="boot2docker ssh"
+ }
 }
 
-# Volumens for openvpn if needed - default no bind
 OPENVPN_VOL='- "/dev/null:/dev/null"'
 
 $B2D [ -d /etc/openvpn ]       2>/dev/null && OPENVPN_VOL='- "/etc/openvpn:/etc/openvpn"' && \

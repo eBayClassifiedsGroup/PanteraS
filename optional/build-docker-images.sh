@@ -2,7 +2,6 @@
 
 [ -f ../restricted/common ] && . ../restricted/common
 PREFIX=.
-REGISTRY="${REGISTRY}panteras/"
 
 myexit(){
  echo "ERROR DURING BUILDING IMAGE"
@@ -11,6 +10,6 @@ myexit(){
 
 IMAGES="openvpn"
 for image in $IMAGES; do
-  docker build --rm=true --tag=${REGISTRY}${image} $PREFIX/${image}|| myexit
-  docker tag -f ${REGISTRY}${image}:latest ${image}:latest || myexit
+  docker build --rm=true --tag=${REGISTRY}panteras/${image} $PREFIX/${image} || myexit
+  docker tag -f ${REGISTRY}panteras/${image}:latest panteras/${image}:latest || myexit
 done
