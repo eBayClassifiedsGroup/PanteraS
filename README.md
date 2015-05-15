@@ -19,7 +19,7 @@ Services supposed to be spawn in a second, fully scalable, easy to monitor, debu
 ![PanteraS Architecture](http://s3.amazonaws.com/easel.ly/all_easels/19186/panteras/image.jpg)
 
 
-##### Master+SLave mode Container
+##### Master+Slave mode Container
 This is the default configuration, that starts all components inside container.  
 It is recommended to run 3 or 5 master containers to ensure high availability of the PasteraS cluster.
 
