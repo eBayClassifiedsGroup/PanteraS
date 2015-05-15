@@ -62,7 +62,7 @@ Clone it
 git clone https://github.com/eBayClassifiedsGroup/PanteraS.git
 cd PanteraS
 ```
-##### Default: Stand alone mode
+#### Default: Stand alone mode
 (master and slave in one box)
 ```
 # vagrant up
@@ -109,7 +109,7 @@ slavehost-n# MASTER=false ./generate_yml.sh
 slavehost-n# docker-compose up -d
 ```
 
-### Web Interfaces
+## Web Interfaces
 
 You can reach the PaaS components
 on the following ports:
@@ -120,7 +120,7 @@ on the following ports:
 - Mesos: http://hostname:5050
 - Supervisord: http://hostname:9000
 
-### Services Accessibility
+## Services Accessibility
 
 You might want to access the PaaS and services
 with your browser directly via service name like:
@@ -149,7 +149,7 @@ so you might to try second option first.
 B. SSHuttle - use https://github.com/apenwarr/sshuttle project so you can tunnel DNS traffic over ssh
 but you have to have ssh daemon running in some container.
 
-### Running an example application
+## Running an example application
 
 there are two examples:  
 `SimpleWebappPython` - basic one - spawn 2x2containers  
