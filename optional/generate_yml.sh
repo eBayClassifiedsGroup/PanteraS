@@ -1,8 +1,8 @@
 #!/bin/bash
 
-[ -f ./restricted/common ]    && . ./restricted/common
-[ -f ./restricted/host ]      && . ./restricted/host
-[ -f ./restricted/overwrite ] && . ./restricted/overwrite
+[ -f ../restricted/common ]    && . ../restricted/common
+[ -f ../restricted/host ]      && . ../restricted/host
+[ -f ../restricted/overwrite ] && . ../restricted/overwrite
 
 # boot2docker
 B2D=""
