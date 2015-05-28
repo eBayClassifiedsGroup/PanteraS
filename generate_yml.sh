@@ -56,7 +56,7 @@ START_REGISTRATOR=${START_REGISTRATOR:-${SLAVE}}
 START_DNSMASQ=${START_DNSMASQ:-"true"}
 
 # Lets consul behave as a client but on slaves only
-[ "${SLAVE}" == "true" ] && [ "${MASTER}" == "false" ] && CONSUL_MODE=${CONSUL_MODE:-''}
+[ "${SLAVE}" == "true" ] && [ "${MASTER}" == "false" ] && CONSUL_MODE=${CONSUL_MODE:-' '}
 CONSUL_MODE=${CONSUL_MODE:-'-server'}
 
 HOST_IP=${IP}
