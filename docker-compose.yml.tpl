@@ -8,6 +8,7 @@ panteras:
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
     HOST_IP:                 "${HOST_IP}"
+    FQDN:                    "${FQDN}"
     GOMAXPROCS:              "${GOMAXPROCS}"
 
     START_CONSUL:            "${START_CONSUL}"
