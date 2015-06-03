@@ -4,8 +4,9 @@
 [ -f ./restricted/host ]      && . ./restricted/host
 [ -f ./restricted/overwrite ] && . ./restricted/overwrite
 
-echo "Keep in mind to not to occupy those ports on DOCKERHOST"
+echo "Keep in mind, to set free these ports on DOCKERHOST"
 echo "53, 80, 81, 2181, 2888, 3888, 5050, 5151, 8080, 8300-8302, 8400, 8500, 8600, 9000, 31000 - 32000"
+echo "and be sure that your hostname is resolvable, if not, add entry to /etc/resolv.conf"
 
 # detect DOCKERHOST IP if was not provided
 
@@ -70,6 +71,7 @@ ZOOKEEPER_HOSTS=${ZOOKEEPER_HOSTS:-"${HOSTNAME}:2181"}
 ZOOKEEPER_ID=${ZOOKEEPER_ID:-"0"}
 GOMAXPROCS=${GOMAXPROCS:-"4"}
 FQDN=${FQDN:-"`hostname -f`"}
+FQDN=${FQDN:-"${HOSTNAME}"}
 
 # Parameters for every supervisord command
 #
@@ -116,7 +118,9 @@ MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --containerizers=docker,mesos \
  --executor_registration_timeout=5mins \
  --hostname=${FQDN} \
+ --ip=0.0.0.0 \
  --docker_stop_timeout=5secs \
+ --gc_delay=1days \
  ${MESOS_SLAVE_PARAMS}"
 #
 REGISTRATOR_PARAMS="-ip=${HOST_IP} consul://${CONSUL_IP}:8500 \

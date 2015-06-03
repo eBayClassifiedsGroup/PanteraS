@@ -1,0 +1,149 @@
+HTTP/1.0 200 OK
+Cache-Control: no-cache
+Connection: close
+Content-Type: text/html
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>PaaS</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <style>
+            body {
+                background-color: white;
+                padding: 20px;
+            }
+            pre.small {
+                background-color: transparent;
+                border: none;
+                line-height: 10px;
+                font-size: 10px;
+                font-family: "Courier New", Monospace;
+                white-space: pre;
+            }
+            .glyphicon {
+                font-size: 20pt;
+                margin-right: 10px;
+                position: relative;
+                vertical-align: -20%;
+            }
+            .navbar-brand {
+                height: 70px;
+                overflow: hidden;
+            }
+            a > img {
+                margin-right: 5px;
+            }
+        </style>
+
+    </head>
+    <body>
+
+        <div class="container">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <pre class="small navbar-brand">
+<span style="color:#c30000;"> ▄▄▄· ▄▄▄·  ▐ ▄ ▄▄▄▄▄▄▄▄ .▄▄▄   ▄▄▄· .▄▄ · </span>
+<span style="color:#0c0c0c;">▐█ ▄█▐█ ▀█ •█▌▐█•██  ▀▄.▀·▀▄ █·▐█ ▀█ ▐█ ▀. </span>
+<span style="color:#2a2a2a;"> ██▀·▄█▀▀█ ▐█▐▐▌ ▐█.▪▐▀▀▪▄▐▀▀▄ ▄█▀▀█ ▄▀▀▀█▄</span>
+<span style="color:#616161;">▐█▪·•▐█ ▪▐▌██▐█▌ ▐█▌·▐█▄▄▌▐█•█▌▐█ ▪▐▌▐█▄▪▐█</span>
+<span style="color:#919191;">.▀    ▀  ▀ ▀▀ █▪ ▀▀▀  ▀▀▀ .▀  ▀ ▀  ▀  ▀▀▀▀ </span>
+                        </pre>
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <h2>Entire PaaS in a box</h2>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Common Services</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div id="consul" class="col-md-6 hidden">
+                    <a href="/" title="Service discovery"><img id="consul_p" width="32" height="32"/>Consul</a>
+                </div>
+                <div id="supervisord" class="col-md-6 hidden">
+                    <a href="/" title="Processes status"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>Supervisor</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Master Services</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div id="marathon" class="col-md-6 hidden">
+                    <a href="/" title="Deploy & manage containers"><img id="marathon_p" width="32" height="32"/>Marathon</a>
+                </div>
+                <div id="mesos-master" class="col-md-6 hidden">
+                    <a href="/" title="Cluster manager"><span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>Mesos</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h3>Slave Services</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div id="HAproxy" class="col-md-6 hidden">
+                    <a href="/" title="Load Balancer and proxy"><span class="glyphicon glyphicon-random" aria-hidden="true"></span>HAproxy</a>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script>
+
+            function ifUrlIsAvailable(url, callback) {
+                var $iframe = $('<iframe src="' + url + '" style="display:none"></iframe>');
+                $iframe.load(callback);
+                $("body").append($iframe);
+                window.setTimeout(function () {
+                    $iframe.remove();
+                }, 5000);
+            }
+
+            var links = [
+                {
+                    id: 'marathon',
+                    port: 8080
+                },
+                {
+                    id: 'consul',
+                    port: 8500
+                },
+                {
+                    id: 'supervisord',
+                    port: 9000
+                },
+                {
+                    id: 'HAproxy',
+                    port: 81
+                },
+                {
+                    id: 'mesos-master',
+                    port: 5050
+                },
+            ];
+
+            links.forEach(function (link) {
+                var url = window.location.origin + ':' + link.port;
+                ifUrlIsAvailable(url, function () {
+                    var $col = $("#" + link.id);
+                    $col.removeClass("hidden");
+                    $col.find("a").attr("href", url);
+                });
+            });
+
+            document.getElementById('marathon_p').src = window.location.origin + ':8080/img/marathon-favicon.ico';
+            document.getElementById('consul_p').src = window.location.origin + ':8500/ui/static/favicon.png';
+
+        </script>
+    </body>
+</html>
+

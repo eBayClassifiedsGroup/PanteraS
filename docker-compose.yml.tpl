@@ -8,6 +8,7 @@ panteras:
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
     HOST_IP:                 "${HOST_IP}"
+    FQDN:                    "${FQDN}"
     GOMAXPROCS:              "${GOMAXPROCS}"
 
     START_CONSUL:            "${START_CONSUL}"
@@ -33,7 +34,7 @@ panteras:
     ZOOKEEPER_ID:               "${ZOOKEEPER_ID}"
 
   volumes:
-    - "${RESOLV_CONF}:/etc/resolv.conf"
+#    - "${RESOLV_CONF}:/etc/resolv.conf"
     - "/var/spool/marathon/artifacts/store:/var/spool/store"
     - "/var/run/docker.sock:/tmp/docker.sock"
     - "/var/lib/docker:/var/lib/docker"
