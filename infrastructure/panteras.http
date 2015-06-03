@@ -65,10 +65,10 @@ Content-Type: text/html
             </div>
             <div class="row">
                 <div id="consul" class="col-md-6 hidden">
-                    <a href="/"><img id="consul_p" width="32" height="32"/>Consul</a>
+                    <a href="/" title="Service discovery"><img id="consul_p" width="32" height="32"/>Consul</a>
                 </div>
                 <div id="supervisord" class="col-md-6 hidden">
-                    <a href="/"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>(supervisor) processes status</a>
+                    <a href="/" title="Processes status"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>Supervisor</a>
                 </div>
             </div>
             <div class="row">
@@ -78,10 +78,10 @@ Content-Type: text/html
             </div>
             <div class="row">
                 <div id="marathon" class="col-md-6 hidden">
-                    <a href="/"><img id="marathon_p" width="32" height="32"/>Marathon</a>
+                    <a href="/" title="Deploy & manage containers"><img id="marathon_p" width="32" height="32"/>Marathon</a>
                 </div>
                 <div id="mesos-master" class="col-md-6 hidden">
-                    <a href="/"><span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>Mesos</a>
+                    <a href="/" title="Cluster manager"><span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>Mesos</a>
                 </div>
             </div>
             <div class="row">
@@ -91,7 +91,7 @@ Content-Type: text/html
             </div>
             <div class="row">
                 <div id="HAproxy" class="col-md-6 hidden">
-                    <a href="/"><span class="glyphicon glyphicon-random" aria-hidden="true"></span>HAproxy</a>
+                    <a href="/" title="Load Balancer and proxy"><span class="glyphicon glyphicon-random" aria-hidden="true"></span>HAproxy</a>
                 </div>
             </div>
         </div>
