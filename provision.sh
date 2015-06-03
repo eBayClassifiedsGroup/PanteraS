@@ -119,7 +119,8 @@ case "$MODE" in
     || docker pull ${IMAGE}
 
   LOCALIP=${LOCALIP:-$(hostname --ip-address| awk '{ print $2}')}
-  DNS_CONFIG="DOCKER_OPTS=\"\${DOCKER_OPTS} --dns $LOCALIP\""
+  # Add Google dns server first to prevent errors when building image (Err http://archive.ubuntu.com trusty InRelease) : https://robinwinslow.co.uk/2014/08/27/fix-docker-networking/
+  DNS_CONFIG="DOCKER_OPTS=\"\${DOCKER_OPTS} --dns 8.8.8.8 --dns $LOCALIP\""
   grep -q -- "$DNS_CONFIG" /etc/default/docker || echo $DNS_CONFIG >>/etc/default/docker && sudo service docker restart
 
   # evil hack to set a proper /etc/hosts entry (non localhost) for our hostname.
