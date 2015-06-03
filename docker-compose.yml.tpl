@@ -34,7 +34,7 @@ panteras:
     ZOOKEEPER_ID:               "${ZOOKEEPER_ID}"
 
   volumes:
-    - "${RESOLV_CONF}:/etc/resolv.conf"
+#    - "${RESOLV_CONF}:/etc/resolv.conf"
     - "/var/spool/marathon/artifacts/store:/var/spool/store"
     - "/var/run/docker.sock:/tmp/docker.sock"
     - "/var/lib/docker:/var/lib/docker"

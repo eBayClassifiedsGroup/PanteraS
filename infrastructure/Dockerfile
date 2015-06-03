@@ -17,6 +17,7 @@ ENV GOPATH ${HOME}/go
 
 RUN apt-get update \
     && apt-get install -y \
+      apt-transport-https \
       python-pip \
       wget \
       curl \
@@ -34,7 +35,7 @@ RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
 ENV DOCKER_APP_VERSION 1.6.2
 ENV CONSUL_APP_VERSION 0.5.2
 ENV CONSUL_TEMPLATE_APP_VERSION 0.9.0
-ENV ENVCONSUL_APP_VERSION 0.3.0
+ENV ENVCONSUL_APP_VERSION 0.5.0
 ENV HAPROXY_APP_VERSION 1.5.3-1~ubuntu14.04.1
 ENV MESOS_APP_VERSION 0.22.1-1.0.ubuntu1404
 ENV MARATHON_APP_VERSION 0.8.1-1.0.171.ubuntu1404
