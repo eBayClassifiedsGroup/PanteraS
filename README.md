@@ -179,15 +179,15 @@ In order to put service into loadbalancer (HAproxy), you need to create service 
 
 ## Create A/B test services (AKA canaries services)
 
-1. You need to create services with the same consul name (ENV `SERVICE_NAME="consul_service"`), but different marathon `id` in JSON deployment plan (see examples)
-2. You need to set different [weights](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html#weight) for those services. You can propagate weight using consul tag (ENV `SERVICE_TAGS="haproxy,weight=1"`)
-3. We set default weight for `100` of `256`
+1. You need to create services with the same consul name (ENV `SERVICE_NAME="consul_service"`), but different marathon `id` in every JSON deployment plan (see examples)
+2. You need to set different [weights](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html#weight) for those services. You can propagate weight value using consul tag (ENV `SERVICE_TAGS="haproxy,weight=1"`)
+3. We set the default weight value for `100` (max is `256`).
 
-## marathon_deploy
+## Deploy using marathon_deploy
 
 You can deploy your services using `marathon_deploy`, which also understand YAML and JSON files.
 As a benefit, you can have static part in YAML deployment plans, and dynamic part (like version or URL)
-set with `ENV` variables, specified with `%%MACROS%` in deployment plan.
+set with `ENV` variables, specified with `%%MACROS%%` in deployment plan.
 
 ```apt-get install ruby1.9.1-dev```
 ```gem install marathon_deploy```
