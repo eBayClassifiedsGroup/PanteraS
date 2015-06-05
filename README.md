@@ -189,8 +189,8 @@ You can deploy your services using `marathon_deploy`, which also understand YAML
 As a benefit, you can have static part in YAML deployment plans, and dynamic part (like version or URL)
 set with `ENV` variables, specified with `%%MACROS%%` in deployment plan.
 
-```apt-get install ruby1.9.1-dev```
-```gem install marathon_deploy```
+```apt-get install ruby1.9.1-dev```  
+```gem install marathon_deploy```  
 
 more info: https://github.com/eBayClassifiedsGroup/marathon_deploy
 
