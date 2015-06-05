@@ -175,12 +175,14 @@ remmeber to disable DNS caching in your future services.
 
 ## Put service into HAproxy loadbalancer
 
-In order to put service into loadbalancer (HAproxy), you need to create service with specific consul tag (ENV `SERVICE_TAGS="haproxy"`) in JSON deployment plan (see examples).
+In order to put service into loadbalancer (HAproxy), you need to create service with specific consul tag  
+(ENV `SERVICE_TAGS="haproxy"`) in JSON deployment plan (see examples).
 
 ## Create A/B test services (AKA canaries services)
 
 1. You need to create services with the same consul name (ENV `SERVICE_NAME="consul_service"`), but different marathon `id` in every JSON deployment plan (see examples)
-2. You need to set different [weights](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html#weight) for those services. You can propagate weight value using consul tag (ENV `SERVICE_TAGS="haproxy,weight=1"`)
+2. You need to set different [weights](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html#weight) for those services. You can propagate weight value using consul tag  
+(ENV `SERVICE_TAGS="haproxy,weight=1"`)
 3. We set the default weight value for `100` (max is `256`).
 
 ## Deploy using marathon_deploy
