@@ -104,6 +104,7 @@ HAPROXY_RELOAD_COMMAND="/usr/sbin/haproxy -p /tmp/haproxy.pid -f /etc/haproxy/ha
 MARATHON_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --zk zk://${ZOOKEEPER_HOSTS}/marathon \
  --hostname ${HOSTNAME} \
+ --no-logger \
  ${MARATHON_PARAMS}"
 #
 MESOS_MASTER_PARAMS="--zk=zk://${ZOOKEEPER_HOSTS}/mesos \
