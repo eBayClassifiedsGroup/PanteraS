@@ -173,10 +173,18 @@ $ dig @$CONSUL_IP -p8600  python.service.consul +tcp SRV
 
 remmeber to disable DNS caching in your future services.
 
-## Put service into HAproxy loadbalancer
+## Put service into HAproxy HTTP loadbalancer
 
-In order to put service into loadbalancer (HAproxy), you need to create service with specific consul tag  
-(ENV `SERVICE_TAGS="haproxy"`) in JSON deployment plan (see examples).
+In order to put a service `my_service` into the `HTTP` loadbalancer (HAproxy), you need to add a `consul` tag `haproxy` 
+(ENV `SERVICE_TAGS="haproxy"`) to the JSON deployment plan for `my_service` (see examples). `my_service` is then accessible
+on port `80` via `my_service.service.consul:80` and/or `my_service.service.<my_dc>.consul:80`.
+
+## Put service into HAproxy TCP loadbalancer
+
+In order to put a service `my_service` into the `TCP` loadbalancer (HAproxy), you need to add a `consul` tag `haproxy_tcp` specifying
+the specific `<port>` (ENV `SERVICE_TAGS="haproxy_tcp=<port>"`) to the JSON deployment plan for `my_service`. It is also recommended
+to set the same `<port>` as the `servicePort` in the `docker` part of the JSON deployment plan. `my_service` is then accessible on
+the specific `<port>` on all cluster nodes, e.g., `my_service.service.consul:<port>` and/or `my_service.service.<my_dc>.consul:<port>`.
 
 ## Create A/B test services (AKA canaries services)
 
