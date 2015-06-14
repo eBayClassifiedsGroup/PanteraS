@@ -73,6 +73,10 @@ GOMAXPROCS=${GOMAXPROCS:-"4"}
 FQDN=${FQDN:-"`hostname -f`"}
 FQDN=${FQDN:-"${HOSTNAME}"}
 
+# Disable dnsmasq address re-mapping on non slaves - no HAProxy there
+[ "${SLAVE}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
+DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
+
 # Parameters for every supervisord command
 #
 # -config-dir=/etc/consul.d/ \
@@ -95,8 +99,8 @@ DNSMASQ_PARAMS="-d \
  -r /etc/resolv.conf \
  -7 /etc/dnsmasq.d \
  --server=/consul/${CONSUL_IP}#8600 \
- --address=/consul/${CONSUL_IP} \
  --host-record=${HOSTNAME},${CONSUL_IP} \
+ ${DNSMASQ_ADDRESS} \
  ${DNSMASQ_PARAMS}"
 #
 HAPROXY_RELOAD_COMMAND="/usr/sbin/haproxy -p /tmp/haproxy.pid -f /etc/haproxy/haproxy.cfg -sf \$(pidof /usr/sbin/haproxy) || true"
