@@ -179,6 +179,11 @@ In order to put a service `my_service` into the `HTTP` loadbalancer (HAproxy), y
 (ENV `SERVICE_TAGS="haproxy"`) to the JSON deployment plan for `my_service` (see examples). `my_service` is then accessible
 on port `80` via `my_service.service.consul:80` and/or `my_service.service.<my_dc>.consul:80`.
 
+If you provide an additional environment variable `HAPROXY_ADD_DOMAIN` during the configuration phase you can access the
+service with that domain appended to the service name as well, e.g., with `HAPROXY_ADD_DOMAIN=".my.own.domain.com"` you
+can access the service `my_service` via `my_service.my.own.domain.com:80` (if the IP address returned by a DNS query for
+`*.my.own.domain.com` is pointing to one of the nodes running an `HAProxy` instance).
+
 ## Put service into HAproxy TCP loadbalancer
 
 In order to put a service `my_service` into the `TCP` loadbalancer (HAproxy), you need to add a `consul` tag `haproxy_tcp` specifying
