@@ -78,9 +78,10 @@ FQDN=${FQDN:-"${HOSTNAME}"}
 [ "${SLAVE}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
 DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 
-# enable keepalived if a virtual IP address is specified
-[ -z ${KEEPALIVED_VIP} ] || \
-    KEEPALIVED_CONSUL_TEMPLATE="-template keepalived.conf:/etc/keepalived/keepalived.conf:/opt/consul-template/keepalive_reload.sh"
+# enable keepalived if the HAProxy gets started and a
+# virtual IP address is specified
+[ "${START_HAPROXY}" == "true" ] && [ ${KEEPALIVED_VIP} ] && \
+    KEEPALIVED_CONSUL_TEMPLATE="-template=./keepalived.conf:/etc/keepalived/keepalived.conf:./keepalive_reload.sh"
 
 # Parameters for every supervisord command
 #
