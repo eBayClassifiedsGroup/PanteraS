@@ -27,7 +27,8 @@ RUN apt-get update \
       golang \
       git \
       lolcat \
-      toilet
+      toilet \
+      keepalived
 
 RUN pip install supervisor-stdout
 RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
@@ -79,7 +80,7 @@ RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
     && rm -rf /var/lib/apt/lists/*
 
 
-# consul-haproxy
+# consul-template
 RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
     && tar zxf consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
     && ln -s consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64/consul-template .
@@ -87,14 +88,20 @@ RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSU
 #RUN go get -u github.com/hashicorp/consul-template \
 #    && ln -s ${GOPATH}/bin/consul-template .
 
+# HAPROXY config
+#
 # Add files
-ADD haproxy.cfg /etc/haproxy/haproxy.cfg
+ADD haproxy.cfg        /etc/haproxy/haproxy.cfg
 # same file for an "empty template"
 ADD haproxy.cfg        /opt/consul-template/
 ADD template.conf      /opt/consul-template/
 ADD haproxy_watcher.sh /opt/consul-template/
 ADD haproxy_reload.sh  /opt/consul-template/
 
+# KEEPALIVED config
+#
+ADD keepalived.conf      /opt/consul-template/
+ADD keepalived_reload.sh /opt/consul-template/
 
 # ZOOKEEPER MESOS MARATHON
 #
@@ -147,10 +154,10 @@ RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/$
 RUN wget https://raw.githubusercontent.com/patorjk/figlet.js/master/fonts/Elite.flf -O /usr/share/figlet/Elite.flf
 
 ADD consul_config.json /etc/consul.d/
-ADD supervisord.conf /etc/supervisord.conf
-ADD supervisord.sh /opt/
-ADD panteras.http /etc/haproxy/errors/
-ADD version /opt/
+ADD supervisord.conf   /etc/supervisord.conf
+ADD supervisord.sh     /opt/
+ADD panteras.http      /etc/haproxy/errors/
+ADD version            /opt/
 
 WORKDIR /opt
 ENTRYPOINT [ "/opt/supervisord.sh" ]

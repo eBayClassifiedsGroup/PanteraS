@@ -33,6 +33,7 @@ panteras:
     ZOOKEEPER_APP_PARAMS:       "${ZOOKEEPER_APP_PARAMS}"
     ZOOKEEPER_HOSTS:            "${ZOOKEEPER_HOSTS}"
     ZOOKEEPER_ID:               "${ZOOKEEPER_ID}"
+    KEEPALIVED_VIP:             "${KEEPALIVED_VIP}"
 
   volumes:
     - "/var/spool/marathon/artifacts/store:/var/spool/store"
