@@ -102,6 +102,9 @@ case "$MODE" in
     echo 'deb http://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
     sudo apt-get update
   }
+
+  # ensure that "aufs" will be used within vagrant; see: https://forums.docker.com/t/docker-1-7-0-is-using-huge-amount-of-disk-space/2046
+  sudo apt-get -q -y install linux-image-extra-$(uname -r)
   sudo apt-get -q -y install lxc-docker-${DOCKER_VERSION}
 
   ! hasDockerCompose && {
