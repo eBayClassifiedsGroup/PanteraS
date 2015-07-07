@@ -72,7 +72,7 @@ ZOOKEEPER_HOSTS=${ZOOKEEPER_HOSTS:-"${HOSTNAME}:2181"}
 ZOOKEEPER_ID=${ZOOKEEPER_ID:-"0"}
 GOMAXPROCS=${GOMAXPROCS:-"4"}
 FQDN=${FQDN:-"`hostname -f`"}
-FQDN=${FQDN:-"${HOSTNAME}"}
+FQDN=${FQDN:-${HOSTNAME}}
 
 # Disable dnsmasq address re-mapping on non slaves - no HAProxy there
 [ "${SLAVE}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
@@ -103,7 +103,7 @@ CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
 #
 DNSMASQ_PARAMS="-d \
  -u dnsmasq \
- -r /etc/resolv.conf \
+ -r /etc/resolv.conf.orig \
  -7 /etc/dnsmasq.d \
  --server=/consul/${CONSUL_IP}#8600 \
  --host-record=${HOSTNAME},${CONSUL_IP} \
@@ -151,11 +151,5 @@ MESOS_SLAVE_APP_PARAMS=${MESOS_SLAVE_APP_PARAMS:-$MESOS_SLAVE_PARAMS}
 REGISTRATOR_APP_PARAMS=${REGISTRATOR_APP_PARAMS:-$REGISTRATOR_PARAMS}
 ZOOKEEPER_APP_PARAMS=${ZOOKEEPER_APP_PARAMS:-$ZOOKEEPER_PARAMS}
 
-# DNS manipulation
-# You can change your resolv.conf inside panetras image
-# just cerate /etc/resolv.conf.paas on docker host wih your content
-#
-RESOLV_CONF='/etc/resolv.conf'
-$B2D [ -f /etc/resolv.conf.paas ] 2>/dev/null && RESOLV_CONF='/etc/resolv.conf.paas'
 
 eval "$(cat docker-compose.yml.tpl| sed 's/"/+++/g'|sed  's/^\(.*\)$/echo "\1"/')" |sed 's/+++/"/g'|sed 's;\\";";g' > docker-compose.yml

@@ -36,6 +36,7 @@ panteras:
     KEEPALIVED_VIP:             "${KEEPALIVED_VIP}"
 
   volumes:
+    - "/etc/resolv.conf:/etc/resolv.conf.orig"
     - "/var/spool/marathon/artifacts/store:/var/spool/store"
     - "/var/run/docker.sock:/tmp/docker.sock"
     - "/var/lib/docker:/var/lib/docker"
