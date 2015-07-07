@@ -17,6 +17,7 @@ ENV GOPATH ${HOME}/go
 
 RUN apt-get update \
     && apt-get install -y \
+      libnl-utils \
       apt-transport-https \
       python-pip \
       wget \
