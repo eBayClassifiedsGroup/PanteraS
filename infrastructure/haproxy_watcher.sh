@@ -5,7 +5,6 @@
 set -eu
 
 pidfile="/tmp/haproxy.pid"
-command="/usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg -p ${pidfile} -sf \$(pidof /usr/bin/haproxy)"
 
 function kill_haproxy(){
     kill $(cat $pidfile)
@@ -13,7 +12,7 @@ function kill_haproxy(){
 }
 trap 'kill_haproxy' SIGINT SIGTERM
 
-eval "$command"
+/opt/consul-template/haproxy_reload.sh
 sleep 2
 
 while [ -f $pidfile ] && kill -0 $(cat $pidfile) ; do
