@@ -110,8 +110,8 @@ DNSMASQ_PARAMS="-d \
  ${DNSMASQ_ADDRESS} \
  ${DNSMASQ_PARAMS}"
 #
-#HAPROXY_RELOAD_COMMAND="/usr/sbin/haproxy -p /tmp/haproxy.pid -f /etc/haproxy/haproxy.cfg -sf \$(pidof /usr/sbin/haproxy) || true"
-HAPROXY_RELOAD_COMMAND="nl-qdisc-add --dev=eth0 --parent=1:4 --id=40: --update plug --buffer &> /dev/null; /usr/sbin/haproxy -p /tmp/haproxy.pid -f /etc/haproxy/haproxy.cfg -sf \$(pidof /usr/sbin/haproxy); nl-qdisc-add --dev=eth0 --parent=1:4 --id=40: --update plug--release-indefinite &> /dev/null || true"
+HAPROXY_RELOAD_COMMAND="/usr/sbin/haproxy -p /tmp/haproxy.pid -f /etc/haproxy/haproxy.cfg -sf \$(pidof /usr/sbin/haproxy) || true"
+#HAPROXY_RELOAD_COMMAND="nl-qdisc-add --dev=eth0 --parent=1:4 --id=40: --update plug --buffer &> /dev/null; /usr/sbin/haproxy -p /tmp/haproxy.pid -f /etc/haproxy/haproxy.cfg -sf \$(pidof /usr/sbin/haproxy); nl-qdisc-add --dev=eth0 --parent=1:4 --id=40: --update plug--release-indefinite &> /dev/null || true"
 #
 MARATHON_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --zk zk://${ZOOKEEPER_HOSTS}/marathon \
