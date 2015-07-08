@@ -7,7 +7,7 @@ set -eu
 pidfile="/tmp/haproxy.pid"
 
 iptables -n -t mangle -L OUTPUT | grep -E "$HOST_IP.*dpt:80" || {
-  iptables -t mangle -I OUTPUT -p tcp -s $HOST_IP. --dport 80  --syn -j MARK --set-mark 1
+  iptables -t mangle -I OUTPUT -p tcp -s $HOST_IP --dport 80  --syn -j MARK --set-mark 1
 }
 
 nl-qdisc-list | grep -q "dev lo id 1: parent root bands 4" || {
