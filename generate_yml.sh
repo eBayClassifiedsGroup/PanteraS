@@ -104,9 +104,6 @@ DNSMASQ_PARAMS="-d \
  ${DNSMASQ_ADDRESS} \
  ${DNSMASQ_PARAMS}"
 #
-#HAPROXY_RELOAD_COMMAND="/usr/sbin/haproxy -p /tmp/haproxy.pid -f /etc/haproxy/haproxy.cfg -sf \$(pidof /usr/sbin/haproxy) || true"
-HAPROXY_RELOAD_COMMAND="nl-qdisc-add --dev=lo --parent=1:4 --id=40: --update plug --buffer &> /dev/null; /usr/sbin/haproxy -p /tmp/haproxy.pid -f /etc/haproxy/haproxy.cfg -sf \$(pidof /usr/sbin/haproxy); nl-qdisc-add --dev=lo --parent=1:4 --id=40: --update plug --release-indefinite &> /dev/null || true"
-#
 MARATHON_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --zk zk://${ZOOKEEPER_HOSTS}/marathon \
  --hostname ${HOSTNAME} \
@@ -139,7 +136,6 @@ ZOOKEEPER_PARAMS="start-foreground"
 CONSUL_APP_PARAMS=${CONSUL_APP_PARAMS:-$CONSUL_PARAMS}
 CONSUL_TEMPLATE_APP_PARAMS=${CONSUL_TEMPLATE_APP_PARAMS:-$CONSUL_TEMPLATE_PARAMS}
 DNSMASQ_APP_PARAMS=${DNSMASQ_APP_PARAMS:-$DNSMASQ_PARAMS}
-HAPROXY_RELOAD_COMMAND=${HAPROXY_RELOAD_APP_COMMAND:-$HAPROXY_RELOAD_COMMAND}
 MARATHON_APP_PARAMS=${MARATHON_APP_PARAMS:-$MARATHON_PARAMS}
 MESOS_MASTER_APP_PARAMS=${MESOS_MASTER_APP_PARAMS:-$MESOS_MASTER_PARAMS}
 MESOS_SLAVE_APP_PARAMS=${MESOS_SLAVE_APP_PARAMS:-$MESOS_SLAVE_PARAMS}
