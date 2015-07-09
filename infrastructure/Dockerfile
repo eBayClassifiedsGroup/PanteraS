@@ -95,6 +95,8 @@ ADD haproxy.cfg /etc/haproxy/haproxy.cfg
 ADD haproxy.cfg        /opt/consul-template/
 ADD template.conf      /opt/consul-template/
 ADD haproxy_reload.sh  /opt/consul-template/
+ADD consul-template.sh /opt/consul-template/
+ADD consul_config.json /etc/consul.d/
 
 
 # ZOOKEEPER MESOS MARATHON
@@ -147,8 +149,6 @@ RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/$
 # Font for logo
 RUN wget https://raw.githubusercontent.com/patorjk/figlet.js/master/fonts/Elite.flf -O /usr/share/figlet/Elite.flf
 
-ADD consul_config.json /etc/consul.d/
-ADD consul-template.sh /opt/consul-template/
 ADD supervisord.conf /etc/supervisord.conf
 ADD supervisord.sh /opt/
 ADD panteras.http /etc/haproxy/errors/

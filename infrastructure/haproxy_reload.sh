@@ -51,6 +51,8 @@ service_restart() {
   /usr/sbin/haproxy_$1 -p /tmp/haproxy_$1.pid -f /etc/haproxy/haproxy_$1.cfg -sf $(pidof haproxy_$1)
 }
 
+[[ $1 == "cleanup" ]] && ( remove a; remove b ; true) && exit
+
 status=$(iptables_status)
 echo "Currently: ${status}"
 
