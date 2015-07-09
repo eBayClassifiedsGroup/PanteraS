@@ -4,7 +4,6 @@ panteras:
   name:       panteras
   net:        host
   privileged: true
-  hostname:   "${PANTERAS_HOSTNAME}"
 
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
@@ -35,6 +34,8 @@ panteras:
     ZOOKEEPER_HOSTS:            "${ZOOKEEPER_HOSTS}"
     ZOOKEEPER_ID:               "${ZOOKEEPER_ID}"
     KEEPALIVED_VIP:             "${KEEPALIVED_VIP}"
+
+    HOSTNAME:                   "${PANTERAS_HOSTNAME}"
 
   volumes:
     - "/etc/resolv.conf:/etc/resolv.conf.orig"
