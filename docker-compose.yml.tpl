@@ -4,7 +4,8 @@ panteras:
   name: panteras
   net: host
   privileged: true
-
+  hostname: ${HOSTNAME}
+  
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
     HOST_IP:                 "${HOST_IP}"
