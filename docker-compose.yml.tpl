@@ -1,11 +1,11 @@
 panteras:
-  dns: ${DNS_IP}
-  image: ${REGISTRY}panteras/paas-in-a-box
-  name: panteras
-  net: host
+  dns:        ${DNS_IP}
+  image:      "${REGISTRY}panteras/paas-in-a-box"
+  name:       panteras
+  net:        host
   privileged: true
-  hostname: ${HOSTNAME}
-  
+  hostname:   "${PANTERAS_HOSTNAME}"
+
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
     HOST_IP:                 "${HOST_IP}"
