@@ -17,7 +17,6 @@ ENV GOPATH ${HOME}/go
 
 RUN apt-get update \
     && apt-get install -y \
-      libnl-utils \
       apt-transport-https \
       python-pip \
       wget \
@@ -80,6 +79,8 @@ RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
 RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
     && rm -rf /var/lib/apt/lists/*
 
+RUN ln -s /usr/sbin/haproxy /usr/sbin/haproxy_a
+RUN ln -s /usr/sbin/haproxy /usr/sbin/haproxy_b
 
 # consul-template
 RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
@@ -96,8 +97,9 @@ ADD haproxy.cfg        /etc/haproxy/haproxy.cfg
 # same file for an "empty template"
 ADD haproxy.cfg        /opt/consul-template/
 ADD template.conf      /opt/consul-template/
-ADD haproxy_watcher.sh /opt/consul-template/
 ADD haproxy_reload.sh  /opt/consul-template/
+ADD consul-template.sh /opt/consul-template/
+ADD consul_config.json /etc/consul.d/
 
 # KEEPALIVED config
 #
@@ -154,7 +156,6 @@ RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/$
 # Font for logo
 RUN wget https://raw.githubusercontent.com/patorjk/figlet.js/master/fonts/Elite.flf -O /usr/share/figlet/Elite.flf
 
-ADD consul_config.json /etc/consul.d/
 ADD supervisord.conf   /etc/supervisord.conf
 ADD supervisord.sh     /opt/
 ADD panteras.http      /etc/haproxy/errors/
