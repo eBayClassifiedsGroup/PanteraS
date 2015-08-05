@@ -32,13 +32,13 @@ RUN apt-get update \
 RUN pip install supervisor-stdout
 RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
 
-ENV DOCKER_APP_VERSION 1.7.0
+ENV DOCKER_APP_VERSION 1.7.1-0~trusty
 ENV CONSUL_APP_VERSION 0.5.2
 ENV CONSUL_TEMPLATE_APP_VERSION 0.10.0
 ENV ENVCONSUL_APP_VERSION 0.5.0
 ENV HAPROXY_APP_VERSION 1.5.3-1~ubuntu14.04.1
 ENV MESOS_APP_VERSION 0.22.1-1.0.ubuntu1404
-ENV MARATHON_APP_VERSION 0.8.2-1.0.306.ubuntu1404
+ENV MARATHON_APP_VERSION 0.9.1-1.0.393.ubuntu1404
 ENV REGISTRATOR_APP_VERSION v5
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
@@ -114,11 +114,14 @@ RUN apt-get update \
 ADD zkStart.sh /opt/zkStart.sh
 RUN rm /etc/mesos/zk
 
-RUN echo 'deb http://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
+#RUN echo 'deb http://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
 #RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv D8576A8BA88D21E9
-RUN gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv D8576A8BA88D21E9 && gpg --export --armor D8576A8BA88D21E9 | apt-key add -
+#RUN gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv D8576A8BA88D21E9 && gpg --export --armor D8576A8BA88D21E9 | apt-key add -
+
+RUN echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /etc/apt/sources.list.d/docker.list
+RUN gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv F76221572C52609D && gpg --export --armor F76221572C52609D | apt-key add -
 RUN apt-get update \
-    && apt-get install -y lxc-docker-${DOCKER_APP_VERSION}
+    && apt-get install -y docker-engine=${DOCKER_APP_VERSION}
 
 # Adding docker wrapper, so CONTAINER_NAME
 # will be available for every mesos containers
