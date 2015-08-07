@@ -24,8 +24,18 @@ add() {
   instance_prefix="${instance}_prefix"
   real_port="${!instance_prefix}${real}"
   stats_port="${!instance_prefix}${stats}"
+  # external traffic
   iptables -t nat -A PREROUTING -m state --state NEW -p tcp -d ${HOST_IP} --dport 80 -j REDIRECT --to ${real_port}
   iptables -t nat -A PREROUTING -m state --state NEW -p tcp -d ${HOST_IP} --dport 81 -j REDIRECT --to ${stats_port}
+  # internal traffic
+  iptables -t nat -A OUTPUT     -m state --state NEW -p tcp -d ${HOST_IP} --dport 80 -j REDIRECT --to ${real_port}
+
+  [ -n "${KEEPALIVED_VIP}" ] && {
+    iptables -t nat -A PREROUTING -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 80 -j REDIRECT --to ${real_port}
+    iptables -t nat -A PREROUTING -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 81 -j REDIRECT --to ${stats_port}
+    iptables -t nat -A OUTPUT     -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 80 -j REDIRECT --to ${real_port}
+  }
+  
 }
 
 remove() {
@@ -33,8 +43,17 @@ remove() {
   instance_prefix="${instance}_prefix"
   real_port="${!instance_prefix}${real}"
   stats_port="${!instance_prefix}${stats}"
+  # external traffic
   iptables -t nat -D PREROUTING -m state --state NEW -p tcp -d ${HOST_IP} --dport 80 -j REDIRECT --to ${real_port}
   iptables -t nat -D PREROUTING -m state --state NEW -p tcp -d ${HOST_IP} --dport 81 -j REDIRECT --to ${stats_port}
+  # internal traffic
+  iptables -t nat -D OUTPUT     -m state --state NEW -p tcp -d ${HOST_IP} --dport 80 -j REDIRECT --to ${real_port}
+
+  [ -n "${KEEPALIVED_VIP}" ] && {
+    iptables -t nat -D PREROUTING -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 80 -j REDIRECT --to ${real_port}
+    iptables -t nat -D PREROUTING -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 81 -j REDIRECT --to ${stats_port}
+    iptables -t nat -D OUTPUT     -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 80 -j REDIRECT --to ${real_port}
+  }
 }
 
 prepare_config() {
