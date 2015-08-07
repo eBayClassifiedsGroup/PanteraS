@@ -1,6 +1,6 @@
 #!/bin/bash
 
-num_rules=2
+num_rules=3
 real=0
 stats=1
 
@@ -8,8 +8,9 @@ a_prefix=855
 b_prefix=866
 
 iptables_status() {
-   a=$(iptables -t nat -L -n -v | grep -c REDIRECT.*${a_prefix})
-   b=$(iptables -t nat -L -n -v | grep -c REDIRECT.*${b_prefix})
+   a=$(iptables -t nat -L -n -v | grep -c REDIRECT.*${HOST_IP}.*${a_prefix})
+   b=$(iptables -t nat -L -n -v | grep -c REDIRECT.*${HOST_IP}.*${b_prefix})
+
 
    if   [[ ${a} == 0 && ${b} == 0 ]]; then echo "none"
    elif [[ ${a} == ${num_rules} && ${b} == ${num_rules} ]]; then echo "both"
