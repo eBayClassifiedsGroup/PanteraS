@@ -1,6 +1,6 @@
 #!/bin/bash
 
-num_rules=2
+num_rules=3
 real=0
 stats=1
 
@@ -8,8 +8,9 @@ a_prefix=855
 b_prefix=866
 
 iptables_status() {
-   a=$(iptables -t nat -L -n -v | grep -c REDIRECT.*${a_prefix})
-   b=$(iptables -t nat -L -n -v | grep -c REDIRECT.*${b_prefix})
+   a=$(iptables -t nat -L -n -v | grep -c REDIRECT.*${HOST_IP}.*${a_prefix})
+   b=$(iptables -t nat -L -n -v | grep -c REDIRECT.*${HOST_IP}.*${b_prefix})
+
 
    if   [[ ${a} == 0 && ${b} == 0 ]]; then echo "none"
    elif [[ ${a} == ${num_rules} && ${b} == ${num_rules} ]]; then echo "both"
@@ -24,8 +25,18 @@ add() {
   instance_prefix="${instance}_prefix"
   real_port="${!instance_prefix}${real}"
   stats_port="${!instance_prefix}${stats}"
+  # external traffic
   iptables -t nat -A PREROUTING -m state --state NEW -p tcp -d ${HOST_IP} --dport 80 -j REDIRECT --to ${real_port}
   iptables -t nat -A PREROUTING -m state --state NEW -p tcp -d ${HOST_IP} --dport 81 -j REDIRECT --to ${stats_port}
+  # internal traffic
+  iptables -t nat -A OUTPUT     -m state --state NEW -p tcp -d ${HOST_IP} --dport 80 -j REDIRECT --to ${real_port}
+
+  [ -n "${KEEPALIVED_VIP}" ] && {
+    iptables -t nat -A PREROUTING -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 80 -j REDIRECT --to ${real_port}
+    iptables -t nat -A PREROUTING -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 81 -j REDIRECT --to ${stats_port}
+    iptables -t nat -A OUTPUT     -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 80 -j REDIRECT --to ${real_port}
+  }
+  
 }
 
 remove() {
@@ -33,8 +44,17 @@ remove() {
   instance_prefix="${instance}_prefix"
   real_port="${!instance_prefix}${real}"
   stats_port="${!instance_prefix}${stats}"
+  # external traffic
   iptables -t nat -D PREROUTING -m state --state NEW -p tcp -d ${HOST_IP} --dport 80 -j REDIRECT --to ${real_port}
   iptables -t nat -D PREROUTING -m state --state NEW -p tcp -d ${HOST_IP} --dport 81 -j REDIRECT --to ${stats_port}
+  # internal traffic
+  iptables -t nat -D OUTPUT     -m state --state NEW -p tcp -d ${HOST_IP} --dport 80 -j REDIRECT --to ${real_port}
+
+  [ -n "${KEEPALIVED_VIP}" ] && {
+    iptables -t nat -D PREROUTING -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 80 -j REDIRECT --to ${real_port}
+    iptables -t nat -D PREROUTING -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 81 -j REDIRECT --to ${stats_port}
+    iptables -t nat -D OUTPUT     -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 80 -j REDIRECT --to ${real_port}
+  }
 }
 
 prepare_config() {
