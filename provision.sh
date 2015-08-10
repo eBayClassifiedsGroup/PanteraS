@@ -98,14 +98,14 @@ case "$MODE" in
   ! isUbuntu && echo "error: $paas is only supported on an Ubuntu virtual machine host" && exit 1
 
   [ ! -f /etc/apt/sources.list.d/docker.list ] && {
-    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 36A1D7869245C8950F966E92D8576A8BA88D21E9
-    echo 'deb http://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
+    sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv F76221572C52609D
+    echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /etc/apt/sources.list.d/docker.list
     sudo apt-get update
   }
 
   # ensure that "aufs" will be used within vagrant; see: https://forums.docker.com/t/docker-1-7-0-is-using-huge-amount-of-disk-space/2046
   sudo apt-get -q -y install linux-image-extra-$(uname -r)
-  sudo apt-get -q -y install lxc-docker-${DOCKER_VERSION}
+  sudo apt-get -q -y install docker-engine=${DOCKER_VERSION}
 
   ! hasDockerCompose && {
     sudo apt-get install -y python-pip
