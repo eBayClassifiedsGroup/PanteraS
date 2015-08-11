@@ -32,6 +32,14 @@ RUN apt-get update \
 RUN pip install supervisor-stdout
 RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
 
+# Java 8 (required for marathon >=11.x)
+RUN apt-get install -y software-properties-common \
+    && add-apt-repository ppa:webupd8team/java \
+    && apt-get update -y
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+RUN apt-get install -y oracle-java8-installer
+RUN update-java-alternatives -s java-8-oracle
+
 ENV DOCKER_APP_VERSION 1.7.1-0~trusty
 ENV CONSUL_APP_VERSION 0.5.2
 ENV CONSUL_TEMPLATE_APP_VERSION 0.10.0
