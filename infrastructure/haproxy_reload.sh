@@ -36,7 +36,7 @@ add() {
     iptables -t nat -A PREROUTING -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 81 -j REDIRECT --to ${stats_port}
     iptables -t nat -A OUTPUT     -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 80 -j REDIRECT --to ${real_port}
   }
-  
+  return 0
 }
 
 remove() {
@@ -55,6 +55,7 @@ remove() {
     iptables -t nat -D PREROUTING -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 81 -j REDIRECT --to ${stats_port}
     iptables -t nat -D OUTPUT     -m state --state NEW -p tcp -d ${KEEPALIVED_VIP} --dport 80 -j REDIRECT --to ${real_port}
   }
+  return 0
 }
 
 prepare_config() {
@@ -96,4 +97,6 @@ elif [[ ${status} == "a" ]]; then
 else
   echo "[ERROR] unknown ipfilters state!"
   iptables -t nat -L -n -v
+  exit 1
 fi
+exit 0
