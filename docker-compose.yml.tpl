@@ -1,6 +1,6 @@
 panteras:
   dns:        ${DNS_IP}
-  image:      "${REGISTRY}panteras/paas-in-a-box"
+  image:      ${PANTERAS_DOCKER_IMAGE}
   name:       panteras
   net:        host
   privileged: true
