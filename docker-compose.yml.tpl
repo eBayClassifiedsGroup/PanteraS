@@ -1,10 +1,11 @@
 panteras:
-  dns: ${DNS_IP}
-  image: ${REGISTRY}panteras/paas-in-a-box
-  name: panteras
-  net: host
+  dns:        ${DNS_IP}
+  image:      "${REGISTRY}panteras/paas-in-a-box"
+  name:       panteras
+  net:        host
   privileged: true
-
+  restart:    ${PANTERAS_RESTART}
+  
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
     HOST_IP:                 "${HOST_IP}"
@@ -33,6 +34,9 @@ panteras:
     ZOOKEEPER_APP_PARAMS:       "${ZOOKEEPER_APP_PARAMS}"
     ZOOKEEPER_HOSTS:            "${ZOOKEEPER_HOSTS}"
     ZOOKEEPER_ID:               "${ZOOKEEPER_ID}"
+    KEEPALIVED_VIP:             "${KEEPALIVED_VIP}"
+
+    HOSTNAME:                   "${PANTERAS_HOSTNAME}"
 
   volumes:
     - "/etc/resolv.conf:/etc/resolv.conf.orig"

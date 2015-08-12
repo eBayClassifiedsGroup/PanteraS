@@ -48,7 +48,7 @@ START_CONSUL=${START_CONSUL:-"true"}
 START_MESOS_MASTER=${START_MESOS_MASTER:-${MASTER}}
 START_MARATHON=${START_MARATHON:-${MASTER}}
 START_ZOOKEEPER=${START_ZOOKEEPER:-${MASTER}}
-#SLAVE 
+#SLAVE
 START_CONSUL_TEMPLATE=${START_CONSUL_TEMPLATE:-${SLAVE}}
 START_HAPROXY=${START_HAPROXY:-${SLAVE}}
 START_MESOS_SLAVE=${START_MESOS_SLAVE:-${SLAVE}}
@@ -78,6 +78,11 @@ FQDN=${FQDN:-${HOSTNAME}}
 [ "${SLAVE}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
 DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 
+# enable keepalived if the HAProxy gets started and a
+# virtual IP address is specified
+[ "${START_HAPROXY}" == "true" ] && [ ${KEEPALIVED_VIP} ] && \
+    KEEPALIVED_CONSUL_TEMPLATE="-template=./keepalived.conf:/etc/keepalived/keepalived.conf:./keepalived_reload.sh"
+
 # Parameters for every supervisord command
 #
 # -config-dir=/etc/consul.d/ \
@@ -93,7 +98,8 @@ CONSUL_PARAMS="agent \
  ${CONSUL_PARAMS}"
 #
 CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
- -template template.conf:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh"
+ -template template.conf:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh \
+ ${KEEPALIVED_CONSUL_TEMPLATE}"
 #
 DNSMASQ_PARAMS="-d \
  -u dnsmasq \
@@ -142,5 +148,8 @@ MESOS_SLAVE_APP_PARAMS=${MESOS_SLAVE_APP_PARAMS:-$MESOS_SLAVE_PARAMS}
 REGISTRATOR_APP_PARAMS=${REGISTRATOR_APP_PARAMS:-$REGISTRATOR_PARAMS}
 ZOOKEEPER_APP_PARAMS=${ZOOKEEPER_APP_PARAMS:-$ZOOKEEPER_PARAMS}
 
+PANTERAS_HOSTNAME=${PANTERAS_HOSTNAME:-${HOSTNAME}}
+
+PANTERAS_RESTART=${PANTERAS_RESTART:-"no"}
 
 eval "$(cat docker-compose.yml.tpl| sed 's/"/+++/g'|sed  's/^\(.*\)$/echo "\1"/')" |sed 's/+++/"/g'|sed 's;\\";";g' > docker-compose.yml
