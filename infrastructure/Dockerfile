@@ -1,7 +1,7 @@
 # PanteraS
 # Platform as a Service based on Paas in a box project
 #
-FROM ubuntu:14.04.2
+FROM ubuntu:14.04.3
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
