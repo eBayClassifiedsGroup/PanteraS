@@ -3,10 +3,13 @@
 [ -f ./restricted/common ] && . ./restricted/common
 [ -f ./restricted/common ] && . ./restricted/host
 
-myexit(){
- echo "ERROR DURING BUILDING IMAGE"
- exit 1
+error_exit() {
+    echo "ERROR DURING BUILDING IMAGE"
+    exit 1
 }
-image=panteras/paas-in-a-box
-docker build --rm=true --tag=${REGISTRY}${image} infrastructure|| myexit
-docker tag -f ${REGISTRY}${image}:latest ${image}:latest || myexit
+
+TAG=${TAG:-"latest"}
+IMAGE=${IMAGE:-"panteras/paas-in-a-box:${TAG}"}
+
+docker build --rm=true --tag=${REGISTRY}${IMAGE} infrastructure || error_exit
+docker tag             -f    ${REGISTRY}${IMAGE} ${IMAGE}       || error_exit
