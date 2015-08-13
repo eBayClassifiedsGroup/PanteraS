@@ -42,6 +42,10 @@ IP=${IP:-$(dig +short ${HOSTNAME})}
 MASTER=${MASTER:-"true"}
 SLAVE=${SLAVE:-"true"}
 
+# allow to specify a specific docker image or a specific tag of the pass-in-a-box image
+PANTERAS_IMAGE_TAG=${PANTERAS_IMAGE_TAG:-"latest"}
+PANTERAS_DOCKER_IMAGE=${PANTERAS_DOCKER_IMAGE:-${REGISTRY}panteras/paas-in-a-box:${PANTERAS_IMAGE_TAG}}
+
 #COMMON
 START_CONSUL=${START_CONSUL:-"true"}
 #MASTER
