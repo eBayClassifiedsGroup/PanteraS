@@ -138,7 +138,9 @@ RUN rm /etc/mesos/zk
 RUN echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /etc/apt/sources.list.d/docker.list
 RUN gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv F76221572C52609D && gpg --export --armor F76221572C52609D | apt-key add -
 RUN apt-get update \
-    && apt-get install -y docker-engine=${DOCKER_APP_VERSION}
+    && apt-get install -y docker-engine=${DOCKER_APP_VERSION} \
+    || { wget http://apt.dockerproject.org/repo/pool/main/d/docker-engine/docker-engine_${DOCKER_APP_VERSION}_amd64.deb \
+    && dpkg -i docker-engine_${DOCKER_APP_VERSION}_amd64.deb; }
 
 # Adding docker wrapper, so CONTAINER_NAME
 # will be available for every mesos containers

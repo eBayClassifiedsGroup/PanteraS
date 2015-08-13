@@ -105,7 +105,10 @@ case "$MODE" in
 
   # ensure that "aufs" will be used within vagrant; see: https://forums.docker.com/t/docker-1-7-0-is-using-huge-amount-of-disk-space/2046
   sudo apt-get -q -y install linux-image-extra-$(uname -r)
-  sudo apt-get -q -y install docker-engine=${DOCKER_VERSION}
+  sudo apt-get -q -y install docker-engine=${DOCKER_VERSION} \
+    || { wget http://apt.dockerproject.org/repo/pool/main/d/docker-engine/docker-engine_${DOCKER_VERSION}_amd64.deb \
+    && dpkg -i docker-engine_${DOCKER_VERSION}_amd64.deb; }
+
 
   ! hasDockerCompose && {
     sudo apt-get install -y python-pip
