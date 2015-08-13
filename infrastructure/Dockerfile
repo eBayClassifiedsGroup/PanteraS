@@ -28,7 +28,9 @@ RUN apt-get update \
       git \
       lolcat \
       toilet \
-      keepalived
+      keepalived \
+      iptables \
+      libapparmor1
 
 RUN pip install supervisor-stdout
 RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
