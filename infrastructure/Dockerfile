@@ -33,14 +33,24 @@ RUN apt-get update \
 RUN pip install supervisor-stdout
 RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
 
-ENV DOCKER_APP_VERSION 1.7.1-0~trusty
-ENV CONSUL_APP_VERSION 0.5.2
-ENV CONSUL_TEMPLATE_APP_VERSION 0.10.0
-ENV ENVCONSUL_APP_VERSION 0.5.0
-ENV HAPROXY_APP_VERSION 1.5.3-1~ubuntu14.04.1
-ENV MESOS_APP_VERSION 0.22.1-1.0.ubuntu1404
-ENV MARATHON_APP_VERSION 0.9.1-1.0.393.ubuntu1404
-ENV REGISTRATOR_APP_VERSION v6
+# install Java 8
+RUN    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /etc/apt/sources.list.d/java-trusty.list \
+    && gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv EEA14886 && gpg --export --armor EEA14886 | apt-key add - \
+    && apt-get update \
+    && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
+    && apt-get -y install oracle-java8-installer \
+    && apt-get clean \
+    && update-alternatives --display java \
+    && echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
+
+ENV DOCKER_APP_VERSION            1.7.1-0~trusty
+ENV CONSUL_APP_VERSION            0.5.2
+ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
+ENV ENVCONSUL_APP_VERSION         0.5.0
+ENV HAPROXY_APP_VERSION           1.5.3-1~ubuntu14.04.1
+ENV MESOS_APP_VERSION             0.22.1-1.0.ubuntu1404
+ENV MARATHON_APP_VERSION          0.9.1-1.0.393.ubuntu1404
+ENV REGISTRATOR_APP_VERSION       v6
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
