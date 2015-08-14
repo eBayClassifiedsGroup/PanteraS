@@ -1,4 +1,4 @@
-FROM alpine-glibc
+FROM panteras/alpine-glibc
 
 MAINTAINER Wojciech Sielski <wsielski@team.mobile.de>
 
