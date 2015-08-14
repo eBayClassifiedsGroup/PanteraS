@@ -7,7 +7,7 @@ myexit(){
  exit 1
 }
 
-IMAGES="java7 java8"
+IMAGES="alpine-glibc java7 java8"
 for image in $IMAGES; do
   docker build --rm=true --tag=${REGISTRY}${image} ${image}|| myexit
   docker tag -f ${REGISTRY}${image}:latest ${image}:latest || myexit

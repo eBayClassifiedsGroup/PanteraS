@@ -1,4 +1,46 @@
 #!/bin/bash
+usage(){
+  cat << EOF
+  This container works better when started with marathon
+  Example usage:
+  # cat deploy.json
+  {
+    "id": "foo", 
+    "container": {
+	"docker": {
+	    "image": "${IMAGE}"
+	},
+	"type": "DOCKER",
+	"volumes": []
+    },
+    "args": ["your_appliactino_here with arguments || sleep 300"],
+    "cpus": 0.1,
+    "mem": 32.0,
+    "instances": 1
+  }
+
+  # curl -X POST -H "Content-Type: application/json" http://\$MARATHON_IP:8080/v2/apps/ -d@deploy.json
+
+  or with marathon_deploy
+
+  # json2yaml deploy.json > deploy.yml
+  # cat deploy.yml 
+  ---
+  id: foo
+  container:
+    docker:
+      image: ${IMAGE}
+    type: DOCKER
+    volumes: []
+  args:
+  - your_appliactino_here with arguments || sleep 300
+  cpus: 0.1
+  mem: 32.0
+  instances: 1
+
+  # marathon_deploy -e PRODUCTION 
+EOF
+}
 
 maintenance(){
   # Mesos provides external ports in coma separated $PORTS
@@ -15,6 +57,8 @@ maintenance(){
 }
 
 trap 'maintenance && sleep 2 && kill -TERM $PID $PID_CUSTOM' TERM INT
+
+[ "$1" ] || { usage; exit 1; }
 
 # You can start your additional application
 # like supervisord etc.
