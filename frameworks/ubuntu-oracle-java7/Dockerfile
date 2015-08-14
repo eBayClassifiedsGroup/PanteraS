@@ -1,6 +1,6 @@
 FROM ubuntu:14.04
 
-MAINTAINER <siteops@team.mobile.de>
+MAINTAINER Wojciech Sielski <wsielski@team.mobile.de>
 
 RUN apt-get update
 RUN dpkg-divert --local --rename --add /sbin/initctl
