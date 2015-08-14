@@ -1,5 +1,7 @@
 FROM alpine-glibc
 
+MAINTAINER Wojciech Sielski <wsielski@team.mobile.de>
+
 ENV JAVA_HOME /usr/jre1.8.0_51
 RUN curl \
   --location \

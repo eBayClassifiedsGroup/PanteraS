@@ -1,6 +1,6 @@
 FROM ubuntu:14.04
 
-MAINTAINER <siteops@team.mobile.de>
+MAINTAINER Wojciech Sielski <wsielski@team.mobile.de>
 
 RUN apt-get update
 RUN dpkg-divert --local --rename --add /sbin/initctl
@@ -24,7 +24,7 @@ RUN ln -sf /proc/self/mounts /etc/mtab
 RUN cd /usr/local/bin/ && curl -O https://raw.githubusercontent.com/eBayClassifiedsGroup/PanteraS/master/frameworks/start.sh
 RUN chmod +x /usr/local/bin/start.sh
 
-ENV IMAGE panteras/alpine-glibc
+ENV IMAGE panteras/ubuntu-oracle-java8
 ENV HOME  /
 WORKDIR /
 
