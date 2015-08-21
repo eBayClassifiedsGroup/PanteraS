@@ -173,9 +173,9 @@ $ dig @$CONSUL_IP -p8600  python.service.consul +tcp SRV
 
 remmeber to disable DNS caching in your future services.
 
-## Put service into HAproxy HTTP loadbalancer
+## Put service into HAproxy HTTP load-balancer
 
-In order to put a service `my_service` into the `HTTP` loadbalancer (HAproxy), you need to add a `consul` tag `haproxy` 
+In order to put a service `my_service` into the `HTTP` load-balancer (`HAproxy`), you need to add a `consul` tag `haproxy` 
 (ENV `SERVICE_TAGS="haproxy"`) to the JSON deployment plan for `my_service` (see examples). `my_service` is then accessible
 on port `80` via `my_service.service.consul:80` and/or `my_service.service.<my_dc>.consul:80`.
 
@@ -184,9 +184,15 @@ service with that domain appended to the service name as well, e.g., with `HAPRO
 can access the service `my_service` via `my_service.my.own.domain.com:80` (if the IP address returned by a DNS query for
 `*.my.own.domain.com` is pointing to one of the nodes running an `HAProxy` instance).
 
-## Put service into HAproxy TCP loadbalancer
+You can also provide the additional `consul` tag `haproxy_route` with a corresponding value in order to dispatch the
+service based on the beginning of the `URL`; e.g., if you add the additional tag `haproxy_route=/minions` to the service
+definition for service `gru`, all `HTTP` requests against any of the cluster nodes on port `80` starting with `/minions/`
+will be re-routed to and load-balanced for the service `gru` (e.g., `http://cluster_node.my_company.com/minions/say/banana`).
+Note that no `URL` rewrite happens, so the service gets the full `URL` (`/minions/say/banana`) passed in.
 
-In order to put a service `my_service` into the `TCP` loadbalancer (HAproxy), you need to add a `consul` tag `haproxy_tcp` specifying
+## Put service into HAproxy TCP load-balancer
+
+In order to put a service `my_service` into the `TCP` load-balancer (`HAproxy`), you need to add a `consul` tag `haproxy_tcp` specifying
 the specific `<port>` (ENV `SERVICE_TAGS="haproxy_tcp=<port>"`) to the JSON deployment plan for `my_service`. It is also recommended
 to set the same `<port>` as the `servicePort` in the `docker` part of the JSON deployment plan. `my_service` is then accessible on
 the specific `<port>` on all cluster nodes, e.g., `my_service.service.consul:<port>` and/or `my_service.service.<my_dc>.consul:<port>`.
