@@ -18,7 +18,7 @@ before_install:
   - echo $IP
   - export START_DNSMASQ=false
   - export ZOOKEEPER_HOSTS=${IP}:2181
-  - TEST_SERVICE=$(echo curl --fail -H 'Host python.service.consul' $IP)
+  - TEST_SERVICE=$(echo curl --fail -H \'HostDP python.service.consul\' $IP|sed 's/DP/:/')
   - echo $TEST_SERVICE
   - ./generate_yml.sh
   - cat docker-compose.yml
