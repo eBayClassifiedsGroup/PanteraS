@@ -18,7 +18,7 @@ before_install:
   - echo $IP
   - export START_DNSMASQ=false
   - export ZOOKEEPER_HOSTS=${IP}:2181
-  - echo "curl --fail -H 'Host: python.service.consul' $IP" >> ./test_service.sh
+  - echo "curl --fail -H 'Host: python.service.consul' $IP" > ./test_service.sh
   - chmod +x ./test_service.sh
   - cat ./test_service.sh
   - ./generate_yml.sh
