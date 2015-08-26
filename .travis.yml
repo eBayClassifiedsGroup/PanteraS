@@ -1,9 +1,11 @@
 sudo: required
 
-notifications:
-  slack: ebayclassifiedsgroup:WQ6qXgtYQwyIfuu8KI7DnVxb
+#notifications:
+#  slack: ebayclassifiedsgroup:WQ6qXgtYQwyIfuu8KI7DnVxb
 
 language: ruby
+ruby:
+- 2.2
 
 services:
   - docker
@@ -14,6 +16,8 @@ before_install:
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
   - sudo gem install marathon_deploy
+  - cd examples/SimpleWebappPython
+  - ./test_service.sh
   - ./build-docker-images.sh
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
