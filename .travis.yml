@@ -1,0 +1,40 @@
+sudo: required
+
+notifications:
+  slack: ebayclassifiedsgroup:WQ6qXgtYQwyIfuu8KI7DnVxb
+
+language: ruby
+ruby:
+- 2.2
+
+services:
+  - docker
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y curl python-pip ruby-dev
+  - sudo pip install pip --upgrade
+  - sudo pip install docker-compose --upgrade
+  - gem install marathon_deploy
+  - ./build-docker-images.sh
+  - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
+  - echo $IP
+  - export START_DNSMASQ=false
+  - export ZOOKEEPER_HOSTS=${IP}:2181
+  - ./generate_yml.sh
+  - cat docker-compose.yml
+  - sudo netstat -tulpen
+  - docker-compose up -d
+
+script:
+  - docker ps
+  - sleep 10
+  - docker exec -ti panteras_panteras_1 supervisorctl status
+  - #docker logs --tail=4000 panteras_panteras_1
+  - #sudo netstat -tulpen
+  - cd examples/SimpleWebappPython
+  - #./start_with_marathon.sh deploy0_marathon.json
+  - #sleep 5
+  - #docker ps
+  - #docker exec -ti panteras_panteras_1 supervisorctl status
+  - ./test_service.sh
