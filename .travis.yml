@@ -10,7 +10,12 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - ./build-docker-images.sh
+  - ./generate_yml.sh
+  - cat docker-compose.yml.tpl
+  - docker-compose up -d
 
 script:
   - docker ps
-
+  - cd examples/SimpleWebappPython
+  - ./start_with_marathon.sh deploy0_marathon.json
+  - curl --fail -H 'Host: python.service.consul' localhost
