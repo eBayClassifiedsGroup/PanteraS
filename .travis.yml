@@ -6,6 +6,7 @@ sudo: required
 language: ruby
 ruby:
 - 2.2
+- marathon_deploy
 
 services:
   - docker
@@ -15,7 +16,7 @@ before_install:
   - sudo apt-get install -y curl python-pip ruby-dev
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
-  - sudo gem install marathon_deploy travis
+  - #sudo gem install marathon_deploy travis
   - cd examples/SimpleWebappPython
   - ./test_service.sh
   - ./build-docker-images.sh
