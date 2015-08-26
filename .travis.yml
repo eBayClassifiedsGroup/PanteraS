@@ -12,7 +12,6 @@ before_install:
   - #./build-docker-images.sh
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
-  - sudo service dnsmasq stop 
   - export START_DNSMASQ=false
   - ./generate_yml.sh
   - cat docker-compose.yml
