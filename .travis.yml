@@ -1,5 +1,8 @@
 sudo: required
 
+notifications:
+  slack: ebayclassifiedsgroup:WQ6qXgtYQwyIfuu8KI7DnVxb
+
 language: ruby
 
 services:
@@ -32,4 +35,4 @@ script:
   - sleep 5
   - docker ps
   - docker exec -ti panteras_panteras_1 supervisorctl status
-  - curl --fail -H 'Host: python.service.consul' $IP
+  - curl --fail -H "Host: python.service.consul" $IP
