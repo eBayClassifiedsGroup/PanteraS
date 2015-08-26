@@ -18,6 +18,10 @@ before_install:
 
 script:
   - docker ps
+  - sleep 5
+  - docker exec -ti panteras_panteras_1 supervisorctl status
+  - docker exec -ti panteras_panteras_1 /sbin/ifconfig 
+  - sleep 5
   - cd examples/SimpleWebappPython
   - ./start_with_marathon.sh deploy0_marathon.json
   - curl --fail -H 'Host: python.service.consul' localhost
