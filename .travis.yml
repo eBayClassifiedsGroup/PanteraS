@@ -9,7 +9,10 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/1.4.0/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
-  - ./build-docker-images.sh
+  - #./build-docker-images.sh
+  - hostname
+  - uname -a
+  - /sbin/ifconfig
   - ./generate_yml.sh
   - cat docker-compose.yml.tpl
   - docker-compose up -d
