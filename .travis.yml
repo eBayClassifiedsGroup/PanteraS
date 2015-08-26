@@ -18,9 +18,8 @@ before_install:
   - echo $IP
   - export START_DNSMASQ=false
   - export ZOOKEEPER_HOSTS=${IP}:2181
-  - echo "curl --fail -H 'Host: python.service.consul' $IP" >| /tmp/test_service.sh
-  - chmod +x /tmp/test_service.sh
-  - cat /tmp/test_service.sh
+  - TEST_SERVICE=$(echo curl --fail -H 'Host: python.service.consul' $IP)
+  - echo $TEST_SERVICE
   - ./generate_yml.sh
   - cat docker-compose.yml
   - sudo netstat -tulpen
@@ -38,4 +37,4 @@ script:
   - sleep 5
   - docker ps
   - docker exec -ti panteras_panteras_1 supervisorctl status
-  - curl --fail -H "Host\: python.service.consul" $IP
+  - $TEST_SERVICE
