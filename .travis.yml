@@ -10,16 +10,15 @@ services:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y curl python-pip
+  - sudo apt-get install -y curl python-pip ruby-dev
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
+  - sudo gem install marathon_deploy
   - ./build-docker-images.sh
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
   - export START_DNSMASQ=false
   - export ZOOKEEPER_HOSTS=${IP}:2181
-  - TEST_SERVICE=$(echo curl --fail -H \'HostDP python.service.consul\' $IP|sed 's/DP/:/')
-  - echo $TEST_SERVICE
   - ./generate_yml.sh
   - cat docker-compose.yml
   - sudo netstat -tulpen
@@ -27,14 +26,13 @@ before_install:
 
 script:
   - docker ps
-  - sleep 5
+  - sleep 10
   - docker exec -ti panteras_panteras_1 supervisorctl status
-  - sleep 5
-  - docker logs --tail=4000 panteras_panteras_1
-  - sudo netstat -tulpen
+  - #docker logs --tail=4000 panteras_panteras_1
+  - #sudo netstat -tulpen
   - cd examples/SimpleWebappPython
-  - ./start_with_marathon.sh deploy0_marathon.json
-  - sleep 5
-  - docker ps
-  - docker exec -ti panteras_panteras_1 supervisorctl status
-  - $TEST_SERVICE
+  - #./start_with_marathon.sh deploy0_marathon.json
+  - #sleep 5
+  - #docker ps
+  - #docker exec -ti panteras_panteras_1 supervisorctl status
+  - ./test_service.sh
