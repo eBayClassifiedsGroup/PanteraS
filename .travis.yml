@@ -33,6 +33,7 @@ script:
   - docker exec -ti panteras_panteras_1 supervisorctl status
   - sleep 5
   - docker exec -ti panteras_panteras_1 supervisorctl status
+  - docker logs --tail=2000 panteras_panteras_1
   - cd examples/SimpleWebappPython
   - ./start_with_marathon.sh deploy0_marathon.json
   - curl --fail -H 'Host: python.service.consul' localhost
