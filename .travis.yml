@@ -12,10 +12,13 @@ before_install:
   - #./build-docker-images.sh
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
-  - netstat -tulpen
+  - sudo netstat -tulpen
+  - sudo ps axuf | grep dns[s]
+  - sudo service dnsmasq stop 
   - ./generate_yml.sh
   - cat docker-compose.yml
   - docker-compose up -d
+  - exit 1
 
 script:
   - docker ps
