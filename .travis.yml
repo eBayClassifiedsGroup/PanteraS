@@ -15,14 +15,23 @@ before_install:
   - export START_DNSMASQ=false
   - ./generate_yml.sh
   - cat docker-compose.yml
+  - sudo netstat -tulpen
   - docker-compose up -d
 
 script:
   - docker ps
   - sleep 5
   - docker exec -ti panteras_panteras_1 supervisorctl status
-  - docker exec -ti panteras_panteras_1 /sbin/ifconfig 
   - sleep 5
+  - docker exec -ti panteras_panteras_1 supervisorctl status
+  - sleep 5
+  - docker exec -ti panteras_panteras_1 supervisorctl status
+  - sleep 5
+  - docker exec -ti panteras_panteras_1 supervisorctl status
+  - sleep 5
+  - docker exec -ti panteras_panteras_1 supervisorctl status
+  - sleep 5
+  - docker exec -ti panteras_panteras_1 supervisorctl status
   - cd examples/SimpleWebappPython
   - ./start_with_marathon.sh deploy0_marathon.json
   - curl --fail -H 'Host: python.service.consul' localhost
