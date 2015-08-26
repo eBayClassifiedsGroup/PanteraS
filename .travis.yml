@@ -10,9 +10,7 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   - #./build-docker-images.sh
-  - hostname
-  - uname -a
-  - /sbin/ifconfig
+  - IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - ./generate_yml.sh
   - cat docker-compose.yml.tpl
   - docker-compose up -d
