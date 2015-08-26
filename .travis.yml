@@ -1,7 +1,7 @@
 sudo: required
 
-notifications:
-  slack: ebayclassifiedsgroup:WQ6qXgtYQwyIfuu8KI7DnVxb
+#notifications:
+#  slack: ebayclassifiedsgroup:WQ6qXgtYQwyIfuu8KI7DnVxb
 
 language: ruby
 
@@ -13,15 +13,18 @@ before_install:
   - sudo apt-get install -y curl python-pip
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
-  - ./build-docker-images.sh
+  - #./build-docker-images.sh
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
   - export START_DNSMASQ=false
   - export ZOOKEEPER_HOSTS=${IP}:2181
+  - echo "curl --fail -H 'Host: python.service.consul' $IP" >> ./test_service.sh
+  - chmod +x ./test_service.sh
+  - cat ./test_service.sh
   - ./generate_yml.sh
   - cat docker-compose.yml
   - sudo netstat -tulpen
-  - docker-compose up -d
+  - #docker-compose up -d
 
 script:
   - docker ps
