@@ -6,9 +6,13 @@ services:
   - docker
 
 before_install:
-  - curl -L https://github.com/docker/compose/releases/download/1.4.0/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
+  - sudo apt-get update
+  - sudo apt-get install -y curl python-pip
+  - sudo pip install pip --upgrade
+  - sudo pip install docker-compose --upgrade
+  - #curl -L https://github.com/docker/compose/releases/download/1.4.0/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - #chmod +x docker-compose
+  - #sudo mv docker-compose /usr/local/bin
   - ./build-docker-images.sh
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
@@ -23,17 +27,7 @@ script:
   - docker ps
   - sleep 5
   - docker exec -ti panteras_panteras_1 supervisorctl status
-  - sleep 5
-  - docker exec -ti panteras_panteras_1 supervisorctl status
-  - sleep 5
-  - docker exec -ti panteras_panteras_1 supervisorctl status
-  - sleep 5
-  - docker exec -ti panteras_panteras_1 supervisorctl status
-  - sleep 5
-  - docker exec -ti panteras_panteras_1 supervisorctl status
-  - sleep 5
-  - docker exec -ti panteras_panteras_1 supervisorctl status
-  - docker logs --tail=2000 panteras_panteras_1
+  - #docker logs --tail=2000 panteras_panteras_1
   - cd examples/SimpleWebappPython
   - ./start_with_marathon.sh deploy0_marathon.json
-  - curl --fail -H 'Host: python.service.consul' localhost
+  - curl --fail -H 'Host: python.service.consul' $IP
