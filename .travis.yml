@@ -11,11 +11,11 @@ services:
   - docker
 
 before_install:
-  - apt-get update
-  - apt-get install -y curl python-pip ruby-dev
-  - pip install pip --upgrade
-  - pip install docker-compose --upgrade
-  - gem install marathon_deploy
+  - sudo apt-get update
+  - sudo apt-get install -y curl python-pip ruby-dev
+  - sudo pip install pip --upgrade
+  - sudo pip install docker-compose --upgrade
+  - sudo gem install marathon_deploy travis
   - cd examples/SimpleWebappPython
   - ./test_service.sh
   - ./build-docker-images.sh
