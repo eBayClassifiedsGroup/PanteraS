@@ -149,7 +149,7 @@ then you have two options:
 A. use OpenVPN client
 an example server we have created for you (in optional),
 but you need to provide certificates and config file,
-it might be little bit complex for the beginers,
+it might be little bit complex for the beginners,
 so you might to try second option first.
 
 B. SSHuttle - use https://github.com/apenwarr/sshuttle project so you can tunnel DNS traffic over ssh
@@ -159,7 +159,7 @@ but you have to have ssh daemon running in some container.
 
 there are two examples:  
 `SimpleWebappPython` - basic one - spawn 2x2containers  
-`SmoothWebappPython` - simillar to previous, but with smooth scaling down  
+`SmoothWebappPython` - similar to previous, but with smooth scaling down  
 
 HAproxy gonna ballance services between ports,  
 which has been mapped and assigned by marathon.
@@ -177,7 +177,7 @@ or asking consul DNS directly:
 $ dig @$CONSUL_IP -p8600  python.service.consul +tcp SRV
 ```
 
-remmeber to disable DNS caching in your future services.
+remember to disable DNS caching in your future services.
 
 ## Put service into HAproxy HTTP load-balancer
 
