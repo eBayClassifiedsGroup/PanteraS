@@ -1,4 +1,4 @@
-![Travis Build Status](https://travis-ci.org/eBayClassifiedsGroup/PanteraS.svg?branch=master)
+[![Build Status](https://travis-ci.org/eBayClassifiedsGroup/PanteraS.svg?branch=master)](https://travis-ci.org/eBayClassifiedsGroup/PanteraS)
 
 # PanteraS - Platform as a Service in a box
 "One container to rule them all"
