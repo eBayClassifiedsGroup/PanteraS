@@ -1,6 +1,6 @@
 # Simplest web app ever
 
-FROM ubuntu:14.04.2
+FROM ubuntu:14.04
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
