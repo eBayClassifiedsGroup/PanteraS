@@ -2,8 +2,8 @@
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/panteras/paas-in-a-box/)
 [![Current Release](http://img.shields.io/badge/release-1.1.5-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/0.1.5)
 
-# PanteraS - Platform as a Service in a box
-"One container to rule them all"
+# PanteraS <br> _entire_ Platform as a Service, in a box
+_"One container to rule them all"_
 
 ## Goal
 The goal is to spawn a complete dockerized environment,  
@@ -12,6 +12,8 @@ fully transferable between any kind of development stage: laptop / integration /
 highly robust, highly available, fail tolerance,  
 where deployment part is fully independent from a running part.  
 Services supposed to be spawn in a second, fully scalable, easy to monitor, debug and orchestrate.
+
+_"You shall ~~not~~ PaaS"_
 
 ## Architecture
 
