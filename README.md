@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/eBayClassifiedsGroup/PanteraS.svg?branch=master)](https://travis-ci.org/eBayClassifiedsGroup/PanteraS)
+[![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/panteras/paas-in-a-box/)
+[![Current Release](http://img.shields.io/badge/release-1.1.5-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/0.1.5)
 
 # PanteraS - Platform as a Service in a box
 "One container to rule them all"
