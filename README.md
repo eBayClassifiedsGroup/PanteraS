@@ -33,17 +33,17 @@ It is recommended to run 3 or 5 master containers to ensure high availability of
 
 ##### Only Slave mode Container
 Slave mode is enabled by `MASTER=false`  
-In this mode starts only slave components, (master part is excluded)  
+In this mode start only slave components, (master part is excluded)  
 You can run as many slaves as you wish - this is fully scalable.
 
 ![Slave Mode](http://s3.amazonaws.com/easel.ly/all_easels/19186/SlaveMode/image.jpg)
 
-##### Multiple Datacenter supporeted by Consul
+##### Multiple Datacenter supported by Consul
 To connect multiple datacenter use `consul join -wan <server 1> <server 2>`
 
 ![Consul multi DC](https://s3.amazonaws.com/easel.ly/all_easels/19186/consul/image.jpg)
 
-##### Combination of deamons startup
+##### Combination of daemons startup
 
 Depending on `MASTER` and `SLAVE` you can define role of the container
 
