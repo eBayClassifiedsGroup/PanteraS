@@ -85,7 +85,7 @@ DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 # enable keepalived if the HAProxy gets started and a
 # virtual IP address is specified
 [ "${START_HAPROXY}" == "true" ] && [ ${KEEPALIVED_VIP} ] && \
-    KEEPALIVED_CONSUL_TEMPLATE="-template=./keepalived.conf:/etc/keepalived/keepalived.conf:./keepalived_reload.sh"
+    KEEPALIVED_CONSUL_TEMPLATE="-template=./keepalived.conf.ctmpl:/etc/keepalived/keepalived.conf:./keepalived_reload.sh"
 
 # Parameters for every supervisord command
 #
@@ -102,7 +102,7 @@ CONSUL_PARAMS="agent \
  ${CONSUL_PARAMS}"
 #
 CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
- -template template.conf:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh \
+ -template haproxy.conf.ctmpl:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh \
  ${KEEPALIVED_CONSUL_TEMPLATE}"
 #
 DNSMASQ_PARAMS="-d \

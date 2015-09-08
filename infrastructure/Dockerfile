@@ -15,7 +15,7 @@ ENV TERM xterm
 ENV HOME /root
 ENV GOPATH ${HOME}/go
 
-RUN apt-get update \
+RUN apt-get update -y \
     && apt-get install -y \
       apt-transport-https \
       python-pip \
@@ -32,8 +32,9 @@ RUN apt-get update \
       iptables \
       libapparmor1
 
-RUN pip install supervisor-stdout
-RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
+RUN pip install \
+      supervisor-stdout \
+      https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
 
 # install Java 8
 RUN    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /etc/apt/sources.list.d/java-trusty.list \
@@ -91,8 +92,8 @@ RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
 RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
     && rm -rf /var/lib/apt/lists/*
 
-RUN ln -s /usr/sbin/haproxy /usr/sbin/haproxy_a
-RUN ln -s /usr/sbin/haproxy /usr/sbin/haproxy_b
+RUN    ln -s /usr/sbin/haproxy /usr/sbin/haproxy_a \
+    && ln -s /usr/sbin/haproxy /usr/sbin/haproxy_b
 
 # consul-template
 RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
@@ -105,18 +106,18 @@ RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSU
 # HAPROXY config
 #
 # Add files
-ADD haproxy.cfg        /etc/haproxy/haproxy.cfg
-# same file for an "empty template"
-ADD haproxy.cfg        /opt/consul-template/
-ADD template.conf      /opt/consul-template/
-ADD haproxy_reload.sh  /opt/consul-template/
-ADD consul-template.sh /opt/consul-template/
-ADD consul_config.json /etc/consul.d/
+RUN rm /etc/haproxy/haproxy.cfg                                 \
+    && ln -s /panteras/haproxy.cfg        /etc/haproxy/         \
+    && ln -s /panteras/haproxy.cfg        /opt/consul-template/ \
+    && ln -s /panteras/haproxy.conf.ctmpl /opt/consul-template/ \
+    && ln -s /panteras/haproxy_reload.sh  /opt/consul-template/ \
+    && ln -s /panteras/consul-template.sh /opt/consul-template/ \
+    && ln -s /panteras/consul_config.json /etc/consul.d/
 
 # KEEPALIVED config
 #
-ADD keepalived.conf      /opt/consul-template/
-ADD keepalived_reload.sh /opt/consul-template/
+RUN    ln -s /panteras/keepalived.conf.ctmpl /opt/consul-template/ \
+    && ln -s /panteras/keepalived_reload.sh  /opt/consul-template/
 
 # ZOOKEEPER MESOS MARATHON
 #
@@ -130,7 +131,7 @@ RUN apt-get update \
       mesos=${MESOS_APP_VERSION} \
       marathon=${MARATHON_APP_VERSION}
 
-ADD zkStart.sh /opt/zkStart.sh
+RUN ln -s /panteras/zkStart.sh /opt/
 RUN rm /etc/mesos/zk
 
 #RUN echo 'deb http://get.docker.io/ubuntu docker main' > /etc/apt/sources.list.d/docker.list
@@ -146,7 +147,7 @@ RUN apt-get update \
 
 # Adding docker wrapper, so CONTAINER_NAME
 # will be available for every mesos containers
-ADD docker /usr/local/sbin/docker
+RUN ln -s /panteras/docker /usr/local/sbin/
 
 
 # REGISTARTOR
@@ -173,10 +174,10 @@ RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/$
 # Font for logo
 RUN wget https://raw.githubusercontent.com/patorjk/figlet.js/master/fonts/Elite.flf -O /usr/share/figlet/Elite.flf
 
-ADD supervisord.conf   /etc/supervisord.conf
-ADD supervisord.sh     /opt/
-ADD panteras.http      /etc/haproxy/errors/
-ADD version            /opt/
+RUN    ln -s /panteras/supervisord.conf   /etc/                \
+    && ln -s /panteras/supervisord.sh     /opt/                \
+    && ln -s /panteras/panteras.http      /etc/haproxy/errors/ \
+    && ln -s /panteras/version            /opt/
 
 WORKDIR /opt
 ENTRYPOINT [ "/opt/supervisord.sh" ]
