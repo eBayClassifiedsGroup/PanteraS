@@ -38,6 +38,7 @@ panteras:
     HOSTNAME:                   "${PANTERAS_HOSTNAME}"
 
   volumes:
+    - "./infrastructure:/panteras:RO"
     - "/etc/resolv.conf:/etc/resolv.conf.orig"
     - "/var/spool/marathon/artifacts/store:/var/spool/store"
     - "/var/run/docker.sock:/tmp/docker.sock"
