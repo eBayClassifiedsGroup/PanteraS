@@ -106,7 +106,8 @@ RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSU
 # HAPROXY config
 #
 # Add files
-RUN    ln -s /panteras/haproxy.cfg        /etc/haproxy/         \
+RUN rm /etc/haproxy/haproxy.cfg                                 \
+    && ln -s /panteras/haproxy.cfg        /etc/haproxy/         \
     && ln -s /panteras/haproxy.cfg        /opt/consul-template/ \
     && ln -s /panteras/haproxy.conf.ctmpl /opt/consul-template/ \
     && ln -s /panteras/haproxy_reload.sh  /opt/consul-template/ \
