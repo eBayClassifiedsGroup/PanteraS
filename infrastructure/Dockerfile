@@ -105,18 +105,17 @@ RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSU
 # HAPROXY config
 #
 # Add files
-ADD haproxy.cfg        /etc/haproxy/haproxy.cfg
-# same file for an "empty template"
-ADD haproxy.cfg        /opt/consul-template/
-ADD template.conf      /opt/consul-template/
+ADD haproxy.cfg        /etc/haproxy/
+ADD haproxy.cfg        /opt/consul-template/ # same file for an "empty template"
+ADD haproxy.conf.ctmpl /opt/consul-template/
 ADD haproxy_reload.sh  /opt/consul-template/
 ADD consul-template.sh /opt/consul-template/
 ADD consul_config.json /etc/consul.d/
 
 # KEEPALIVED config
 #
-ADD keepalived.conf      /opt/consul-template/
-ADD keepalived_reload.sh /opt/consul-template/
+ADD keepalived.conf.ctmpl /opt/consul-template/
+ADD keepalived_reload.sh  /opt/consul-template/
 
 # ZOOKEEPER MESOS MARATHON
 #
