@@ -102,7 +102,7 @@ CONSUL_PARAMS="agent \
  ${CONSUL_PARAMS}"
 #
 CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
- -template haproxy.conf.ctmpl:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh \
+ -template haproxy.cfg.ctmpl:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh \
  ${KEEPALIVED_CONSUL_TEMPLATE}"
 #
 DNSMASQ_PARAMS="-d \
