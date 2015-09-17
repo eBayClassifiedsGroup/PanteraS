@@ -4,7 +4,8 @@
     acl acl_{{$service.Name}} hdr(host) -i {{$service.Name}}.service.consul
     {{range datacenters}}acl acl_{{$service.Name}} hdr(host) -i {{$service.Name}}.service.{{.}}.consul
     {{end}}{{if ne (env "HAPROXY_ADD_DOMAIN")  ""}}acl acl_{{$service.Name}} hdr(host) -i {{$service.Name}}{{env "HAPROXY_ADD_DOMAIN"}}{{end}}
-    {{range $service.Tags}}{{if . | regexMatch "haproxy_route=(.+)" }}acl acl_{{$service.Name}} path_beg {{. | regexReplaceAll "haproxy_route=" ""}}/{{end}}{{end}}
+    {{range $service.Tags}}{{if . | regexMatch "haproxy_route=(.+)" }}acl acl_{{$service.Name}} path_beg {{. | regexReplaceAll "haproxy_route=" ""}}/
+    {{end}}{{end}}
     use_backend backend_{{$service.Name}} if acl_{{$service.Name}}
 
 {{end}}{{end}}{{end}}
