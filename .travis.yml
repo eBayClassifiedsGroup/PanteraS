@@ -24,17 +24,12 @@ before_install:
   - ./generate_yml.sh
   - cat docker-compose.yml
   - sudo netstat -tulpen
+  - docker --version
   - docker-compose up -d
 
 script:
   - docker ps
   - sleep 10
   - docker exec -ti panteras_panteras_1 supervisorctl status
-  - #docker logs --tail=4000 panteras_panteras_1
-  - #sudo netstat -tulpen
   - cd examples/SimpleWebappPython
-  - #./start_with_marathon.sh deploy0_marathon.json
-  - #sleep 5
-  - #docker ps
-  - #docker exec -ti panteras_panteras_1 supervisorctl status
   - ./test_service.sh
