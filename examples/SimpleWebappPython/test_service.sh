@@ -11,7 +11,7 @@ for i in {1..20}; do
 done
 
 docker exec -ti panteras_panteras_1 supervisorctl status
-curl -s http://paasmaster46-1:8080/v2/leader
-curl -s http://paasmaster46-1:8080/v2/info
-curl -I -s http://paasmaster46-1:5050/master/health
-curl -s http://paasmaster46-1:5050/system/stats.json
+curl -s http://${IP}:8080/v2/leader
+curl -s http://${IP}:8080/v2/info
+curl -I -s http://${IP}:5050/master/health
+curl -s http://${IP}:5050/system/stats.json
