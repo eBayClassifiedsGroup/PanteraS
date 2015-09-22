@@ -8,7 +8,7 @@ notifications:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y curl python-pip ruby-dev
+  - sudo apt-get install -y curl python-pip ruby-dev build-essential
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
   - gem install marathon_deploy
