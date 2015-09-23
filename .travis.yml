@@ -1,7 +1,7 @@
 language: bash
 
-# for secret experimental features ;)
-sudo: 9000
+sudo: required
+services: docker 
 
 notifications:
   slack: ebayclassifiedsgroup:tFHOcsnmbj9SKmfquoJJKjSb
