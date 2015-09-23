@@ -7,8 +7,9 @@ notifications:
   slack: ebayclassifiedsgroup:tFHOcsnmbj9SKmfquoJJKjSb
 
 before_install:
+  - sudo iptables -N DOCKER 
   - sudo apt-get update
-  - sudo apt-get install -y curl python-pip ruby-dev
+  - sudo apt-get install -y curl python-pip ruby-dev build-essential python-dev
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
   - gem install marathon_deploy
@@ -35,4 +36,8 @@ script:
   - cd -
   - cd examples/SmoothWebappPython
   - ./test_service.sh
-  - docker logs panteras_panteras_1
+  - docker exec -ti panteras_panteras_1 supervisorctl status
+  - curl -s http://${IP}:8080/v2/leader
+  - curl -s http://${IP}:8080/v2/info
+  - curl -I -s http://${IP}:5050/master/health
+  - curl -s http://${IP}:5050/system/stats.json
