@@ -140,7 +140,7 @@ Content-Type: text/html
                 });
             });
 
-            document.getElementById('marathon_p').src = window.location.origin + ':8080/img/marathon-favicon.ico';
+            document.getElementById('marathon_p').src = window.location.origin + ':8080/dist/img/marathon-favicon.ico';
             document.getElementById('consul_p').src = window.location.origin + ':8500/ui/static/favicon.png';
 
         </script>
