@@ -9,7 +9,7 @@ notifications:
 before_install:
   - sudo iptables -N DOCKER 
   - sudo apt-get update
-  - sudo apt-get install -y curl python-pip ruby-dev
+  - sudo apt-get install -y curl python-pip ruby-dev build-essential python-dev
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
   - gem install marathon_deploy
