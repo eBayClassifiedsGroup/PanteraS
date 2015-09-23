@@ -12,7 +12,8 @@ before_install:
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
   - gem install marathon_deploy
-  - ./build-docker-images.sh
+#  - ./build-docker-images.sh
+  - docker pull panteras/pass-in-a-box
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
   - export START_DNSMASQ=false
