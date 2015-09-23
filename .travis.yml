@@ -13,7 +13,7 @@ before_install:
   - sudo pip install docker-compose --upgrade
   - gem install marathon_deploy
   - docker pull ubuntu:14.04
-  - docker run -d -c 204 -m 50331648 --net bridge -p 30909:8080/tcp --entrypoint /bin/sh ubuntu:14.04 -c "python3 -m http.server 8080"
+  - docker run -d -c 204 -m 50331648 --net bridge -p 31910:8080/tcp --entrypoint /bin/sh ubuntu:14.04 -c "sleep 100"
   - docker ps
   - ./build-docker-images.sh
 #  - docker pull panteras/paas-in-a-box:latest
