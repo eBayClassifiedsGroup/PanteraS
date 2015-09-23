@@ -12,8 +12,9 @@ before_install:
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
   - gem install marathon_deploy
-#  - ./build-docker-images.sh
-  - docker pull panteras/paas-in-a-box:latest
+  - docker pull ubuntu:14.04
+  - ./build-docker-images.sh
+#  - docker pull panteras/paas-in-a-box:latest
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
   - export START_DNSMASQ=false
@@ -22,6 +23,7 @@ before_install:
   - cat docker-compose.yml
   - sudo netstat -tulpen
   - docker --version
+  - docker images
   - docker-compose up -d
 
 script:
