@@ -32,3 +32,6 @@ script:
   - docker exec -ti panteras_panteras_1 supervisorctl status
   - cd examples/SimpleWebappPython
   - ./test_service.sh
+  - cd -
+  - cd examples/SmoothWebappPython
+  - ./test_service.sh
