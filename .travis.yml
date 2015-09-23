@@ -1,14 +1,10 @@
+language: bash
+
 sudo: required
+services: docker 
 
 notifications:
   slack: ebayclassifiedsgroup:tFHOcsnmbj9SKmfquoJJKjSb
-
-language: ruby
-ruby:
-- 2.2
-
-services:
-  - docker
 
 before_install:
   - sudo apt-get update
@@ -16,6 +12,8 @@ before_install:
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
   - gem install marathon_deploy
+  - docker pull ubuntu:14.04
+  - docker ps
   - ./build-docker-images.sh
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
@@ -25,6 +23,7 @@ before_install:
   - cat docker-compose.yml
   - sudo netstat -tulpen
   - docker --version
+  - docker images
   - docker-compose up -d
 
 script:
@@ -33,3 +32,7 @@ script:
   - docker exec -ti panteras_panteras_1 supervisorctl status
   - cd examples/SimpleWebappPython
   - ./test_service.sh
+  - cd -
+  - cd examples/SmoothWebappPython
+  - ./test_service.sh
+  - docker logs panteras_panteras_1
