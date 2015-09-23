@@ -35,3 +35,4 @@ script:
   - cd -
   - cd examples/SmoothWebappPython
   - ./test_service.sh
+  - docker logs panteras_panteras_1
