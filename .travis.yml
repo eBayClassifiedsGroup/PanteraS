@@ -8,15 +8,13 @@ notifications:
 
 before_install:
   - sudo apt-get update
-  - sudo apt-get install -y curl python-pip ruby-dev build-essential python-dev
+  - sudo apt-get install -y curl python-pip ruby-dev
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
   - gem install marathon_deploy
   - docker pull ubuntu:14.04
-  - docker run -d -c 204 -m 50331648 --net bridge -p 31910:8080/tcp --entrypoint /bin/sh ubuntu:14.04 -c "sleep 100"
   - docker ps
   - ./build-docker-images.sh
-#  - docker pull panteras/paas-in-a-box:latest
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
   - export START_DNSMASQ=false
