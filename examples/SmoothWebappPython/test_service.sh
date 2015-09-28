@@ -1,8 +1,7 @@
-json2yaml deploy0_marathon.json > deploy.yml
-
 ./build-docker-image.sh
-#marathon_deploy -e PRODUCTION -u http://$IP:8080
-./start_with_marathon.sh deploy0_marathon.json
+
+json2yaml deploy0_marathon.json > deploy.yml
+marathon_deploy -e PRODUCTION -u http://$IP:8080
 
 sleep 20
 docker images
