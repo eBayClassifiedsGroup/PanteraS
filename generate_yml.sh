@@ -64,6 +64,9 @@ START_DNSMASQ=${START_DNSMASQ:-"true"}
 [ "${SLAVE}" == "true" ] && [ "${MASTER}" == "false" ] && CONSUL_MODE=${CONSUL_MODE:-' '}
 CONSUL_MODE=${CONSUL_MODE:-'-server'}
 
+[ "${START_MARATHON}"     == "true" ] && MARATHON_PORTS='- "8080:8080"'
+[ "${START_MESOS_MASTER}" == "true" ] && MESOS_PORTS='- "5050:5050"'
+
 HOST_IP=${IP}
 DNS_IP=${DNS_IP}
 CONSUL_IP=${IP}
@@ -135,6 +138,7 @@ MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --ip=0.0.0.0 \
  --docker_stop_timeout=5secs \
  --gc_delay=1days \
+ --docker=/usr/local/sbin/docker \
  ${MESOS_SLAVE_PARAMS}"
 #
 REGISTRATOR_PARAMS="-ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
