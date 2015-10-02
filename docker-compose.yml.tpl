@@ -5,12 +5,28 @@ panteras:
   net:        host
   privileged: true
   restart:    ${PANTERAS_RESTART}
+  ports:
+     - "8500:8500"
+     ${MARATHON_PORTS}
+     ${MESOS_PORTS}
   
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
     HOST_IP:                 "${HOST_IP}"
     FQDN:                    "${FQDN}"
     GOMAXPROCS:              "${GOMAXPROCS}"
+
+    SERVICE_8500_TAGS: haproxy
+    SERVICE_8500_NAME: consul
+    SERVICE_8500_CHECK_SCRIPT: "curl --silent ${HOST_IP}:8500/v1/status/leader"
+
+    SERVICE_8080_TAGS: haproxy
+    SERVICE_8080_NAME: marathon
+    SERVICE_8080_CHECK_SCRIPT: "curl --silent ${HOST_IP}:8080/v2/leader"
+
+    SERVICE_5050_TAGS: haproxy
+    SERVICE_5050_NAME: mesos
+    SERVICE_5050_CHECK_SCRIPT: "curl --silent ${HOST_IP}:5050/master/health"
 
     START_CONSUL:            "${START_CONSUL}"
     START_CONSUL_TEMPLATE:   "${START_CONSUL_TEMPLATE}"
