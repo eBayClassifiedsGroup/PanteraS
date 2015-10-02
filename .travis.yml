@@ -7,7 +7,7 @@ notifications:
   slack: ebayclassifiedsgroup:tFHOcsnmbj9SKmfquoJJKjSb
 
 before_install:
-  - sudo iptables -N DOCKER 
+  - sudo iptables -L DOCKER || sudo iptables -N DOCKER 
   - sudo apt-get update
   - sudo apt-get install -y curl python-pip ruby-dev build-essential python-dev
   - sudo pip install pip --upgrade
