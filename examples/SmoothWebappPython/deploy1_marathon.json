@@ -1,5 +1,6 @@
 {
     "id": "python-smooth-canaries", 
+    "args": [ "cd /opt/web/ && /usr/bin/python3 -m http.server --cgi" ],
     "container": {
         "docker": {
             "image": "simple_webapp_python",
@@ -15,7 +16,7 @@
     "mem": 64.0,
     "instances": 1,
     "env": {
-      "SERVICE_TAGS" : "webapp,weight=1",
+      "SERVICE_TAGS" : "webapp,weight=50",
       "SERVICE_NAME" : "python-smooth",
       "SERVICE_8000_CHECK_SCRIPT" : "curl --silent $HOST_IP:$SERVICE_PORT/index.html"
     },

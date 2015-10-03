@@ -13,9 +13,11 @@ ADD ./index.html /opt/web/
 ADD ./cgi-bin/index /opt/web/cgi-bin/
 RUN chmod a+x /opt/web/cgi-bin/index 
 
-ADD ./start.sh /opt/web/
-RUN chmod a+x /opt/web/start.sh
+RUN cd /usr/local/bin/ && curl -O https://raw.githubusercontent.com/eBayClassifiedsGroup/PanteraS/master/frameworks/start.sh
+RUN chmod +x /usr/local/bin/start.sh
 
 EXPOSE 8000
 
-ENTRYPOINT [ "/bin/bash", "-c", "/opt/web/start.sh" ]
+WORKDIR /
+
+ENTRYPOINT ["/usr/local/bin/start.sh"]
