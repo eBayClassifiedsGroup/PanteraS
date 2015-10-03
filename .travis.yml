@@ -1,6 +1,13 @@
 language: bash
 
 sudo: required
+
+env:
+  global:
+    - DOCKER_VERSION=1.8.2
+    - BRANCH=stable
+    - UML_DOCKERCOMPOSE=1 
+
 services: docker 
 
 notifications:
