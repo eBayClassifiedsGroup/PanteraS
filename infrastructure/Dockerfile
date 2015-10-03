@@ -178,5 +178,8 @@ ADD supervisord.sh     /opt/
 ADD panteras.http      /etc/haproxy/errors/
 ADD version            /opt/
 
+# Temporal Fix for mesos
+RUN ln -s /tmp/docker.sock /var/run/docker.sock
+
 WORKDIR /opt
 ENTRYPOINT [ "/opt/supervisord.sh" ]
