@@ -18,7 +18,7 @@
     "env": {
       "SERVICE_TAGS" : "webapp,weight=50",
       "SERVICE_NAME" : "python-smooth",
-      "SERVICE_8000_CHECK_SCRIPT" : "curl --silent $HOST_IP:$SERVICE_PORT/index.html"
+      "SERVICE_8000_CHECK_HTTP" : "/index.html"
     },
     "healthChecks": [
         {
