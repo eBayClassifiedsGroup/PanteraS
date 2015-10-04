@@ -1,11 +1,11 @@
-#!/bin/bash
-
+# docker-compose.yml generator
+#
 [ -f ./restricted/common ]    && . ./restricted/common
 [ -f ./restricted/host ]      && . ./restricted/host
 [ -f ./restricted/overwrite ] && . ./restricted/overwrite
 
-echo "Keep in mind, to set free these ports on DOCKERHOST"
-echo "53, 80, 81, 2181, 2888, 3888, 5050, 5151, 8080, 8300-8302, 8400, 8500, 8600, 9000, 31000 - 32000"
+echo "Keep in mind, to set free these ports on DOCKER HOST:"
+echo "53, 80, 81, 2181, 2888, 3888, 5050, 5151, 8080, 8300 - 8302, 8400, 8500, 8600, 9000, 31000 - 32000"
 echo "and be sure that your hostname is resolvable, if not, add entry to /etc/resolv.conf"
 
 # detect DOCKERHOST IP if was not provided
@@ -54,7 +54,6 @@ START_MARATHON=${START_MARATHON:-${MASTER}}
 START_ZOOKEEPER=${START_ZOOKEEPER:-${MASTER}}
 #SLAVE
 START_CONSUL_TEMPLATE=${START_CONSUL_TEMPLATE:-${SLAVE}}
-START_HAPROXY=${START_HAPROXY:-${SLAVE}}
 START_MESOS_SLAVE=${START_MESOS_SLAVE:-${SLAVE}}
 START_REGISTRATOR=${START_REGISTRATOR:-${SLAVE}}
 #OPTIONAL
@@ -63,9 +62,6 @@ START_DNSMASQ=${START_DNSMASQ:-"true"}
 # Lets consul behave as a client but on slaves only
 [ "${SLAVE}" == "true" ] && [ "${MASTER}" == "false" ] && CONSUL_MODE=${CONSUL_MODE:-' '}
 CONSUL_MODE=${CONSUL_MODE:-'-server'}
-
-[ "${START_MARATHON}"     == "true" ] && MARATHON_PORTS='- "8080:8080"'
-[ "${START_MESOS_MASTER}" == "true" ] && MESOS_PORTS='- "5050:5050"'
 
 HOST_IP=${IP}
 DNS_IP=${DNS_IP}
@@ -85,10 +81,18 @@ FQDN=${FQDN:-${HOSTNAME}}
 [ "${SLAVE}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
 DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 
-# enable keepalived if the HAProxy gets started and a
+# enable keepalived if the consul_template(with HAproxy) gets started and a
 # virtual IP address is specified
-[ "${START_HAPROXY}" == "true" ] && [ ${KEEPALIVED_VIP} ] && \
+[ "${START_CONSUL_TEMPLATE}" == "true" ] && [ ${KEEPALIVED_VIP} ] && \
     KEEPALIVED_CONSUL_TEMPLATE="-template=./keepalived.conf.ctmpl:/etc/keepalived/keepalived.conf:./keepalived_reload.sh"
+
+# Expose ports depends on which service has been mark to start
+[ "${START_CONSUL_TEMPLATE}" == "true" ] && {
+  [ "${START_CONSUL}"        == "true" ] && PORTS="ports:" && CONSUL_UI_PORTS='- "8500:8500"'
+  [ "${START_MARATHON}"      == "true" ] && PORTS="ports:" && MARATHON_PORTS='- "8080:8080"'
+  [ "${START_MESOS_MASTER}"  == "true" ] && PORTS="ports:" && MESOS_PORTS='- "5050:5050"'
+}
+
 
 # Parameters for every supervisord command
 #
@@ -146,7 +150,6 @@ REGISTRATOR_PARAMS="-ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
 #
 ZOOKEEPER_PARAMS="start-foreground"
 
-
 CONSUL_APP_PARAMS=${CONSUL_APP_PARAMS:-$CONSUL_PARAMS}
 CONSUL_TEMPLATE_APP_PARAMS=${CONSUL_TEMPLATE_APP_PARAMS:-$CONSUL_TEMPLATE_PARAMS}
 DNSMASQ_APP_PARAMS=${DNSMASQ_APP_PARAMS:-$DNSMASQ_PARAMS}
@@ -157,7 +160,6 @@ REGISTRATOR_APP_PARAMS=${REGISTRATOR_APP_PARAMS:-$REGISTRATOR_PARAMS}
 ZOOKEEPER_APP_PARAMS=${ZOOKEEPER_APP_PARAMS:-$ZOOKEEPER_PARAMS}
 
 PANTERAS_HOSTNAME=${PANTERAS_HOSTNAME:-${HOSTNAME}}
-
 PANTERAS_RESTART=${PANTERAS_RESTART:-"no"}
 
 eval "$(cat docker-compose.yml.tpl| sed 's/"/+++/g'|sed  's/^\(.*\)$/echo "\1"/')" |sed 's/+++/"/g'|sed 's;\\";";g' > docker-compose.yml
