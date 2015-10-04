@@ -5,8 +5,8 @@ panteras:
   net:        host
   privileged: true
   restart:    ${PANTERAS_RESTART}
-  ports:
-     - "8500:8500"
+  ${PORTS}
+     ${CONSUL_UI_PORTS} 
      ${MARATHON_PORTS}
      ${MESOS_PORTS}
   
@@ -16,22 +16,21 @@ panteras:
     FQDN:                    "${FQDN}"
     GOMAXPROCS:              "${GOMAXPROCS}"
 
-    SERVICE_8500_TAGS: haproxy
-    SERVICE_8500_NAME: consul
-    SERVICE_8500_CHECK_SCRIPT: "curl --silent ${HOST_IP}:8500/v1/status/leader"
+    SERVICE_8500_NAME: consul-ui
+    SERVICE_8500_TAGS: haproxy,haproxy_route=/ui
+    SERVICE_8500_CHECK_HTTP: /v1/status/leader
 
-    SERVICE_8080_TAGS: haproxy
     SERVICE_8080_NAME: marathon
-    SERVICE_8080_CHECK_SCRIPT: "curl --silent ${HOST_IP}:8080/v2/leader"
+    SERVICE_8080_TAGS: haproxy
+    SERVICE_8080_CHECK_HTTP: /v2/leader
 
-    SERVICE_5050_TAGS: haproxy
     SERVICE_5050_NAME: mesos
-    SERVICE_5050_CHECK_SCRIPT: "curl --silent ${HOST_IP}:5050/master/health"
+    SERVICE_5050_TAGS: haproxy
+    SERVICE_5050_CHECK_HTTP: /master/health
 
     START_CONSUL:            "${START_CONSUL}"
     START_CONSUL_TEMPLATE:   "${START_CONSUL_TEMPLATE}"
     START_DNSMASQ:           "${START_DNSMASQ}"
-    START_HAPROXY:           "${START_HAPROXY}"
     START_MESOS_MASTER:      "${START_MESOS_MASTER}"
     START_MARATHON:          "${START_MARATHON}"
     START_MESOS_SLAVE:       "${START_MESOS_SLAVE}"
