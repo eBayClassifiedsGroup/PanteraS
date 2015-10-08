@@ -17,7 +17,7 @@ panteras:
     GOMAXPROCS:              "${GOMAXPROCS}"
 
     SERVICE_8500_NAME: consul-ui
-    SERVICE_8500_TAGS: haproxy,haproxy_route=/ui
+    SERVICE_8500_TAGS: haproxy
     SERVICE_8500_CHECK_HTTP: /v1/status/leader
 
     SERVICE_8080_NAME: marathon
