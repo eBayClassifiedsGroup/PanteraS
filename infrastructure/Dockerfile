@@ -24,7 +24,6 @@ RUN apt-get update \
       unzip \
       dnsutils \
       vim \
-      golang \
       git \
       lolcat \
       toilet \
@@ -140,12 +139,7 @@ RUN apt-get update \
     || { wget http://apt.dockerproject.org/repo/pool/main/d/docker-engine/docker-engine_${DOCKER_APP_VERSION}_amd64.deb \
     && dpkg -i docker-engine_${DOCKER_APP_VERSION}_amd64.deb; }
 
-# Adding docker wrapper, so CONTAINER_NAME
-# will be available for every mesos containers
-ADD docker /usr/local/sbin/docker
-
-
-# REGISTARTOR
+# REGISTRATOR
 #
 RUN mkdir /opt/registrator
 ENV PATH ${PATH}:/opt/registrator
@@ -173,9 +167,6 @@ ADD supervisord.conf   /etc/supervisord.conf
 ADD supervisord.sh     /opt/
 ADD panteras.http      /etc/haproxy/errors/
 ADD version            /opt/
-
-# Temporal Fix for mesos
-RUN ln -s /tmp/docker.sock /var/run/docker.sock
 
 WORKDIR /opt
 ENTRYPOINT [ "/opt/supervisord.sh" ]

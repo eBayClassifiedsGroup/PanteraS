@@ -142,7 +142,7 @@ MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --ip=0.0.0.0 \
  --docker_stop_timeout=5secs \
  --gc_delay=1days \
- --docker=/usr/local/sbin/docker \
+ --docker_socket=/tmp/docker.sock \
  ${MESOS_SLAVE_PARAMS}"
 #
 REGISTRATOR_PARAMS="-ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
