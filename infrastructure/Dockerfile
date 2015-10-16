@@ -95,12 +95,8 @@ RUN ln -s /usr/sbin/haproxy /usr/sbin/haproxy_a
 RUN ln -s /usr/sbin/haproxy /usr/sbin/haproxy_b
 
 # consul-template
-RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
-    && tar zxf consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
-    && ln -s consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64/consul-template .
-
-#RUN go get -u github.com/hashicorp/consul-template \
-#    && ln -s ${GOPATH}/bin/consul-template .
+RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul_template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip \
+    && unzip consul_template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip
 
 # HAPROXY config
 #
