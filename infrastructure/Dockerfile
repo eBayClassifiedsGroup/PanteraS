@@ -46,7 +46,7 @@ RUN    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >
 
 ENV DOCKER_APP_VERSION            1.8.3-0~trusty
 ENV CONSUL_APP_VERSION            0.5.2
-ENV CONSUL_TEMPLATE_APP_VERSION   0.11.0
+ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
 ENV ENVCONSUL_APP_VERSION         0.5.0
 ENV HAPROXY_APP_VERSION           1.5.4-1ubuntu2.1~ubuntu14.04.1 
 ENV MESOS_APP_VERSION             0.25.0-0.2.70.ubuntu1404
@@ -94,8 +94,11 @@ RUN ln -s /usr/sbin/haproxy /usr/sbin/haproxy_a
 RUN ln -s /usr/sbin/haproxy /usr/sbin/haproxy_b
 
 # consul-template
-RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul_template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip \
-    && unzip consul_template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip
+#RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul_template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip \
+#   && unzip consul_template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip
+RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
+    && tar zxf consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
+    && ln -s consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64/consul-template .
 
 # HAPROXY config
 #
