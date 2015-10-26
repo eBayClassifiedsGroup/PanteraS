@@ -24,7 +24,6 @@ RUN apt-get update \
       unzip \
       dnsutils \
       vim \
-      golang \
       git \
       lolcat \
       toilet \
@@ -45,13 +44,13 @@ RUN    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >
     && update-alternatives --display java \
     && echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 
-ENV DOCKER_APP_VERSION            1.8.2-0~trusty
+ENV DOCKER_APP_VERSION            1.8.3-0~trusty
 ENV CONSUL_APP_VERSION            0.5.2
-ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
+ENV CONSUL_TEMPLATE_APP_VERSION   0.11.0
 ENV ENVCONSUL_APP_VERSION         0.5.0
 ENV HAPROXY_APP_VERSION           1.5.4-1ubuntu2.1~ubuntu14.04.1 
-ENV MESOS_APP_VERSION             0.23.0-1.0.ubuntu1404
-ENV MARATHON_APP_VERSION          0.11.0-1.0.425.ubuntu1404
+ENV MESOS_APP_VERSION             0.25.0-0.2.70.ubuntu1404
+ENV MARATHON_APP_VERSION          0.11.1-1.0.432.ubuntu1404
 ENV REGISTRATOR_APP_VERSION       v6
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
@@ -95,12 +94,8 @@ RUN ln -s /usr/sbin/haproxy /usr/sbin/haproxy_a
 RUN ln -s /usr/sbin/haproxy /usr/sbin/haproxy_b
 
 # consul-template
-RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
-    && tar zxf consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
-    && ln -s consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64/consul-template .
-
-#RUN go get -u github.com/hashicorp/consul-template \
-#    && ln -s ${GOPATH}/bin/consul-template .
+RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul_template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip \
+    && unzip consul_template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip
 
 # HAPROXY config
 #
@@ -144,12 +139,7 @@ RUN apt-get update \
     || { wget http://apt.dockerproject.org/repo/pool/main/d/docker-engine/docker-engine_${DOCKER_APP_VERSION}_amd64.deb \
     && dpkg -i docker-engine_${DOCKER_APP_VERSION}_amd64.deb; }
 
-# Adding docker wrapper, so CONTAINER_NAME
-# will be available for every mesos containers
-ADD docker /usr/local/sbin/docker
-
-
-# REGISTARTOR
+# REGISTRATOR
 #
 RUN mkdir /opt/registrator
 ENV PATH ${PATH}:/opt/registrator
@@ -177,9 +167,6 @@ ADD supervisord.conf   /etc/supervisord.conf
 ADD supervisord.sh     /opt/
 ADD panteras.http      /etc/haproxy/errors/
 ADD version            /opt/
-
-# Temporal Fix for mesos
-RUN ln -s /tmp/docker.sock /var/run/docker.sock
 
 WORKDIR /opt
 ENTRYPOINT [ "/opt/supervisord.sh" ]
