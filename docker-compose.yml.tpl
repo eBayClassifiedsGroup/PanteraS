@@ -51,6 +51,7 @@ panteras:
     KEEPALIVED_VIP:             "${KEEPALIVED_VIP}"
 
     HOSTNAME:                   "${PANTERAS_HOSTNAME}"
+    ${PANTERAS_ENV}
 
   volumes:
     - "/etc/resolv.conf:/etc/resolv.conf.orig"
