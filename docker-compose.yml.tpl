@@ -1,10 +1,8 @@
 panteras:
-  dns:        ${DNS_IP}
   image:      ${PANTERAS_DOCKER_IMAGE}
-  name:       panteras
   net:        host
   privileged: true
-  restart:    ${PANTERAS_RESTART}
+  restart:    "${PANTERAS_RESTART}"
   ${PORTS}
      ${CONSUL_UI_PORTS} 
      ${MARATHON_PORTS}
@@ -51,6 +49,8 @@ panteras:
     KEEPALIVED_VIP:             "${KEEPALIVED_VIP}"
 
     HOSTNAME:                   "${PANTERAS_HOSTNAME}"
+  env_file:
+    ./restricted/env
 
   volumes:
     - "/etc/resolv.conf:/etc/resolv.conf.orig"

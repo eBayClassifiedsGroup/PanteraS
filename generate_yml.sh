@@ -64,7 +64,6 @@ START_DNSMASQ=${START_DNSMASQ:-"true"}
 CONSUL_MODE=${CONSUL_MODE:-'-server'}
 
 HOST_IP=${IP}
-DNS_IP=${DNS_IP}
 CONSUL_IP=${IP}
 CONSUL_DC=${CONSUL_DC:-"UNKNOWN"}
 CONSUL_BOOTSTRAP=${CONSUL_BOOTSTRAP:-'-bootstrap-expect 1'}
@@ -161,5 +160,9 @@ ZOOKEEPER_APP_PARAMS=${ZOOKEEPER_APP_PARAMS:-$ZOOKEEPER_PARAMS}
 
 PANTERAS_HOSTNAME=${PANTERAS_HOSTNAME:-${HOSTNAME}}
 PANTERAS_RESTART=${PANTERAS_RESTART:-"no"}
+
+# Put your ENV varaible in ./restricted/env
+mkdir -p ./restricted
+touch ./restricted/env
 
 eval "$(cat docker-compose.yml.tpl| sed 's/"/+++/g'|sed  's/^\(.*\)$/echo "\1"/')" |sed 's/+++/"/g'|sed 's;\\";";g' > docker-compose.yml
