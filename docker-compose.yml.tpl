@@ -49,6 +49,7 @@ panteras:
     KEEPALIVED_VIP:             "${KEEPALIVED_VIP}"
 
     HOSTNAME:                   "${PANTERAS_HOSTNAME}"
+
   env_file:
     ./restricted/env
 
