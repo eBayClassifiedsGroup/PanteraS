@@ -1,5 +1,4 @@
 openvpn:
-  name: openvpn
   image: ${REGISTRY}panteras/openvpn
   privileged: true
   volumes:
