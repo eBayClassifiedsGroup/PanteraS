@@ -5,10 +5,10 @@
 # PanteraS <br> _entire_ Platform as a Service, in a box
 _"One container to rule them all"_
 
-Now you can create a completely dockerized environment for a platform as a service (PaaS) in no time!
-PanteraS contains all the necessary components for a highly robust, highly available, fault tolerant PaaS.
-The goal is to spawn fully scalable, easy to monitor, debug and orchestrate services in seconds totally independent of
-the underlying infrastructure. Panteras is also fully transferable between development stages. You can run it on your laptop, 
+Now you can create a completely dockerized environment for a platform as a service (PaaS) in no time!  
+PanteraS contains all the necessary components for a highly robust, highly available, fault tolerant PaaS.  
+The goal is to spawn fully scalable, easy to monitor, debug and orchestrate services in seconds. Totally independent of
+the underlying infrastructure. PanteraS is also fully transferable between development stages. You can run it on your laptop, 
 test and production systems without hassle.
 
 _"You shall ~~not~~ PaaS"_
