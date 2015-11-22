@@ -5,13 +5,11 @@
 # PanteraS <br> _entire_ Platform as a Service, in a box
 _"One container to rule them all"_
 
-## Goal
-The goal is to spawn a complete dockerized environment,  
-containing all necessary components for a PaaS,  
-fully transferable between any kind of development stage: laptop / integration / production,  
-highly robust, highly available, fail tolerance,  
-where deployment part is fully independent from a running part.  
-Services supposed to be spawn in a second, fully scalable, easy to monitor, debug and orchestrate.
+Now you can create a completely dockerized environment for a platform as a service (PaaS) in no time!
+PanteraS contains all the necessary components for a highly robust, highly available, fault tolerant PaaS.
+The goal is to spawn fully scalable, easy to monitor, debug and orchestrate services in seconds totally independent of
+the underlying infrastructure. Panteras is also fully transferable between development stages. You can run it on your laptop, 
+test and production systems without hassle.
 
 _"You shall ~~not~~ PaaS"_
 
@@ -26,20 +24,20 @@ _"You shall ~~not~~ PaaS"_
 
 
 ##### Master+Slave mode Container
-This is the default configuration, that starts all components inside container.  
+This is the default configuration. It will start all components inside a container.  
 It is recommended to run 3 or 5 master containers to ensure high availability of the PasteraS cluster.
 
 ![Master Mode](http://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg)
 
 ##### Only Slave mode Container
 Slave mode is enabled by `MASTER=false`  
-In this mode start only slave components, (master part is excluded)  
+In this mode oonly slave components will start (master part is excluded).
 You can run as many slaves as you wish - this is fully scalable.
 
 ![Slave Mode](http://s3.amazonaws.com/easel.ly/all_easels/19186/SlaveMode/image.jpg)
 
 ##### Multiple Datacenter supported by Consul
-To connect multiple datacenter use `consul join -wan <server 1> <server 2>`
+To connect multiple datacenters use `consul join -wan <server 1> <server 2>`
 
 ![Consul multi DC](https://s3.amazonaws.com/easel.ly/all_easels/19186/consul/image.jpg)
 
@@ -96,9 +94,9 @@ masterhost-1# echo 'ZOOKEEPER_ID=1' >> restricted/host
 masterhost-2# echo 'ZOOKEEPER_ID=2' >> restricted/host
 masterhost-3# echo 'ZOOKEEPER_ID=3' >> restricted/host
 ```    
-Optionally, if you have multiple IPs,  
+Optionally, if you have multiple IPs,
 set an IP address of docker host (do not use docker0 interface IP)  
-if you don't set - it will try to guess `dig +short ${HOSTNAME}`
+if you don't set it - it will try to guess `dig +short ${HOSTNAME}`
 ``` 
 masterhost-1# echo 'IP=x.x.x.1' >> restricted/host
 masterhost-2# echo 'IP=x.x.x.2' >> restricted/host
@@ -157,27 +155,26 @@ but you have to have ssh daemon running in some container.
 
 ## Running an example application
 
-there are two examples:  
-`SimpleWebappPython` - basic one - spawn 2x2containers  
-`SmoothWebappPython` - similar to previous, but with smooth scaling down  
+There are two examples available:  
+`SimpleWebappPython` - basic example - spawn 2x2 containers  
+`SmoothWebappPython` - similar to previous one, but with smooth scaling down  
 
-HAproxy gonna ballance services between ports,  
-which has been mapped and assigned by marathon.
+HAproxy will balance the ports which where mapped and assigned by marathon. 
 
-For non human access, like services intercommunication, you can use direct access 
+For non human access like services intercommunication, you can use direct access 
 using DNS consul SRV abilities, to verify answers:
 
 ```
 $ dig python.service.consul +tcp SRV
 ```
 
-or asking consul DNS directly:
+or ask consul DNS directly:
 
 ```
 $ dig @$CONSUL_IP -p8600  python.service.consul +tcp SRV
 ```
 
-remember to disable DNS caching in your future services.
+Remember to disable DNS caching in your future services.
 
 ## Put service into HAproxy HTTP load-balancer
 
