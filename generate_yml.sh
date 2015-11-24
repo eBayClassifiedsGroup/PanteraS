@@ -62,6 +62,7 @@ START_DNSMASQ=${START_DNSMASQ:-"true"}
 # Lets consul behave as a client but on slaves only
 [ "${SLAVE}" == "true" ] && [ "${MASTER}" == "false" ] && CONSUL_MODE=${CONSUL_MODE:-' '}
 CONSUL_MODE=${CONSUL_MODE:-'-server'}
+[ "${CONSUL_DOMAIN}" ] && CONSUL_PARAMS_DOMAIN="-domain ${CONSUL_DOMAIN}"
 
 HOST_IP=${IP}
 CONSUL_IP=${IP}
@@ -105,6 +106,7 @@ CONSUL_PARAMS="agent \
  -dc=${CONSUL_DC} \
  ${CONSUL_MODE} \
  ${CONSUL_HOSTS} \
+ ${CONSUL_PARAMS_DOMAIN} \
  ${CONSUL_PARAMS}"
 #
 CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
