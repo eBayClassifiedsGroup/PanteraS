@@ -28,7 +28,7 @@ backend backend_{{$service.Name}}{{$key_maxconn := printf "/haproxy/%s/maxconn" 
 {{end}}
 {{end}}{{end}}{{end}}
 
-{{range services}}{{range $tag, $services := service .Name | byTag}}{{$service := (index $services 0)}}{{range $service.Tags}}{{if . | regexMatch "haproxy_tcp=([0-9]+)" }}{{$tcp_port := . | regexReplaceAll "haproxy_tcp=" ""}}
+{{range services}}{{range $tag, $services := service .Name | byTag}}{{$service := (index $services 0)}}{{if or (eq $tag "webapp") (eq $tag "haproxy")}}{{range $service.Tags}}{{if . | regexMatch "haproxy_tcp=([0-9]+)" }}{{$tcp_port := . | regexReplaceAll "haproxy_tcp=" ""}}
 # TCP forwarding service: {{$service.Name}}:{{$tcp_port}}
 listen tcp_{{$service.Name}} :{{$tcp_port}}
     mode    tcp
@@ -36,4 +36,4 @@ listen tcp_{{$service.Name}} :{{$tcp_port}}
     balance roundrobin
 {{range $services}}    server  {{.Node}}_{{.Port}} {{.Address}}:{{.Port}} check
 {{end}}{{end}}
-{{end}}{{end}}{{end}}
+{{end}}{{end}}{{end}}{{end}}
