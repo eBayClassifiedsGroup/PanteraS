@@ -29,7 +29,8 @@ RUN apt-get update \
       toilet \
       keepalived \
       iptables \
-      libapparmor1
+      libapparmor1 \
+   && apt-get clean
 
 RUN pip install supervisor-stdout
 RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
@@ -50,7 +51,7 @@ ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
 ENV ENVCONSUL_APP_VERSION         0.5.0
 ENV HAPROXY_APP_VERSION           1.5.4-1ubuntu2.1~ubuntu14.04.1 
 ENV MESOS_APP_VERSION             0.25.0-0.2.70.ubuntu1404
-ENV MARATHON_APP_VERSION          0.11.1-1.0.432.ubuntu1404
+ENV MARATHON_APP_VERSION          0.13.0-1.0.440.ubuntu1404
 ENV REGISTRATOR_APP_VERSION       v6
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
@@ -85,7 +86,8 @@ WORKDIR /opt/consul-template
 RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
     && apt-get update \
     && apt-get install -y \
-    haproxy="${HAPROXY_APP_VERSION}"
+    haproxy="${HAPROXY_APP_VERSION}" \
+    && apt-get clean
 
 RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
     && rm -rf /var/lib/apt/lists/*
@@ -126,7 +128,8 @@ RUN gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv E56151BF && gpg --expor
 RUN apt-get update \
     && apt-get -y install \
       mesos=${MESOS_APP_VERSION} \
-      marathon=${MARATHON_APP_VERSION}
+      marathon=${MARATHON_APP_VERSION} \
+    && apt-get clean
 
 ADD zkStart.sh /opt/zkStart.sh
 RUN rm /etc/mesos/zk
