@@ -62,11 +62,11 @@ START_DNSMASQ=${START_DNSMASQ:-"true"}
 # Lets consul behave as a client but on slaves only
 [ "${SLAVE}" == "true" ] && [ "${MASTER}" == "false" ] && CONSUL_MODE=${CONSUL_MODE:-' '}
 CONSUL_MODE=${CONSUL_MODE:-'-server'}
-[ "${CONSUL_DOMAIN}" ] && CONSUL_PARAMS_DOMAIN="-domain ${CONSUL_DOMAIN}"
 
 HOST_IP=${IP}
 CONSUL_IP=${IP}
 CONSUL_DC=${CONSUL_DC:-"UNKNOWN"}
+CONSUL_DOMAIN=${CONSUL_DOMAIN:-"consul"}
 CONSUL_BOOTSTRAP=${CONSUL_BOOTSTRAP:-'-bootstrap-expect 1'}
 CONSUL_HOSTS=${CONSUL_HOSTS:-${CONSUL_BOOTSTRAP}}
 MESOS_CLUSTER_NAME=${CLUSTER_NAME:-"mesoscluster"}
@@ -104,9 +104,9 @@ CONSUL_PARAMS="agent \
  -advertise=${HOST_IP} \
  -node=${HOSTNAME} \
  -dc=${CONSUL_DC} \
+ -domain ${CONSUL_DOMAIN} \
  ${CONSUL_MODE} \
  ${CONSUL_HOSTS} \
- ${CONSUL_PARAMS_DOMAIN} \
  ${CONSUL_PARAMS}"
 #
 CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
@@ -117,7 +117,7 @@ DNSMASQ_PARAMS="-d \
  -u dnsmasq \
  -r /etc/resolv.conf.orig \
  -7 /etc/dnsmasq.d \
- --server=/consul/${CONSUL_IP}#8600 \
+ --server=/${CONSUL_DOMAIN}/${CONSUL_IP}#8600 \
  --host-record=${HOSTNAME},${CONSUL_IP} \
  ${DNSMASQ_ADDRESS} \
  ${DNSMASQ_PARAMS}"
