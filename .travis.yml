@@ -5,7 +5,7 @@ services: docker
 
 env:
   global:
-    - DOCKER_APP_VERSION=1.9.0-0~trusty
+    - DOCKER_APP_VERSION=1.9.1-0~trusty
 
 notifications:
   slack: ebayclassifiedsgroup:tFHOcsnmbj9SKmfquoJJKjSb
@@ -38,7 +38,11 @@ before_install:
 
 script:
   - docker ps
-  - sleep 10
+  - sleep 20
+  - curl -s http://${IP}:8080/v2/leader
+  - curl -s http://${IP}:8080/v2/info
+  - curl -I -s http://${IP}:5050/master/health
+  - curl -s http://${IP}:5050/system/stats.json
   - docker exec -ti panteras_panteras_1 supervisorctl status
   - cd examples/SimpleWebappPython
   - ./test_service.sh
@@ -46,7 +50,3 @@ script:
   - cd examples/SmoothWebappPython
   - ./test_service.sh
   - docker exec -ti panteras_panteras_1 supervisorctl status
-  - curl -s http://${IP}:8080/v2/leader
-  - curl -s http://${IP}:8080/v2/info
-  - curl -I -s http://${IP}:5050/master/health
-  - curl -s http://${IP}:5050/system/stats.json

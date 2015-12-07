@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/eBayClassifiedsGroup/PanteraS.svg?branch=master)](https://travis-ci.org/eBayClassifiedsGroup/PanteraS)
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/panteras/paas-in-a-box/)
-[![Current Release](http://img.shields.io/badge/release-0.1.8-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/0.1.8)
+[![Current Release](http://img.shields.io/badge/release-0.1.9-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/0.1.9)
 
 # PanteraS <br> _entire_ Platform as a Service, in a box
 _"One container to rule them all"_
@@ -16,7 +16,7 @@ _"You shall ~~not~~ PaaS"_
 ## Architecture
 
 ### Components
-- Mesos + Marathon + ZooKeeper (orchestration components)
+- Mesos + Marathon + ZooKeeper + Chronos (orchestration components)
 - Consul (K/V store, monitoring, service directory and registry)  + Registrator (automating register/ deregister)
 - HAproxy + consul-template (load balancer with dynamic config generation)
 
@@ -53,6 +53,7 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
     Mesos Master| x | x | - |
     Marathon    | x | x | - |
     Zookeeper   | x | x | - |
+    Chronos     | x | x | - |
  Consul-template| x | - | x |
     Haproxy     | x | - | x |
     Mesos Slave | x | - | x |

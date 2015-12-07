@@ -45,7 +45,7 @@ RUN    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >
     && update-alternatives --display java \
     && echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 
-ENV DOCKER_APP_VERSION            1.9.0-0~trusty 
+ENV DOCKER_APP_VERSION            1.9.1-0~trusty
 ENV CONSUL_APP_VERSION            0.5.2
 ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
 ENV ENVCONSUL_APP_VERSION         0.5.0
@@ -53,6 +53,7 @@ ENV HAPROXY_APP_VERSION           1.5.4-1ubuntu2.1~ubuntu14.04.1
 ENV MESOS_APP_VERSION             0.25.0-0.2.70.ubuntu1404
 ENV MARATHON_APP_VERSION          0.13.0-1.0.440.ubuntu1404
 ENV REGISTRATOR_APP_VERSION       v6
+ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -129,6 +130,7 @@ RUN apt-get update \
     && apt-get -y install \
       mesos=${MESOS_APP_VERSION} \
       marathon=${MARATHON_APP_VERSION} \
+      chronos=${CHRONOS_APP_VERSION} \
     && apt-get clean
 
 ADD zkStart.sh /opt/zkStart.sh
