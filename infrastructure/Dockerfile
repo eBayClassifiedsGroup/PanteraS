@@ -45,7 +45,7 @@ RUN    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >
     && update-alternatives --display java \
     && echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 
-ENV DOCKER_APP_VERSION            1.9.0-0~trusty 
+ENV DOCKER_APP_VERSION            1.9.1-0~trusty
 ENV CONSUL_APP_VERSION            0.5.2
 ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
 ENV ENVCONSUL_APP_VERSION         0.5.0
