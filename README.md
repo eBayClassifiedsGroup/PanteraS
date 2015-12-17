@@ -16,7 +16,7 @@ _"You shall ~~not~~ PaaS"_
 ## Architecture
 
 ### Components
-- Mesos + Marathon + ZooKeeper (orchestration components)
+- Mesos + Marathon + ZooKeeper + Chronos (orchestration components)
 - Consul (K/V store, monitoring, service directory and registry)  + Registrator (automating register/ deregister)
 - HAproxy + consul-template (load balancer with dynamic config generation)
 
@@ -53,6 +53,7 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
     Mesos Master| x | x | - |
     Marathon    | x | x | - |
     Zookeeper   | x | x | - |
+    Chronos     | x | x | - |
  Consul-template| x | - | x |
     Haproxy     | x | - | x |
     Mesos Slave | x | - | x |
