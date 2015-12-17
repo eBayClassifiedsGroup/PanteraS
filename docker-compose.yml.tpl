@@ -7,6 +7,7 @@ panteras:
      ${CONSUL_UI_PORTS} 
      ${MARATHON_PORTS}
      ${MESOS_PORTS}
+     ${CHRONOS_PORTS}
   
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
@@ -26,6 +27,10 @@ panteras:
     SERVICE_5050_TAGS: haproxy
     SERVICE_5050_CHECK_HTTP: /master/health
 
+    SERVICE_4400_NAME: chronos
+    SERVICE_4400_TAGS: haproxy
+    SERVICE_4400_CHECK_HTTP: /ping
+
     START_CONSUL:            "${START_CONSUL}"
     START_CONSUL_TEMPLATE:   "${START_CONSUL_TEMPLATE}"
     START_DNSMASQ:           "${START_DNSMASQ}"
@@ -34,6 +39,7 @@ panteras:
     START_MESOS_SLAVE:       "${START_MESOS_SLAVE}"
     START_REGISTRATOR:       "${START_REGISTRATOR}"
     START_ZOOKEEPER:         "${START_ZOOKEEPER}"
+    START_CHRONOS:           "${START_CHRONOS}"
 
     CONSUL_APP_PARAMS:          "${CONSUL_APP_PARAMS}"
     CONSUL_DOMAIN:              "${CONSUL_DOMAIN}"
@@ -48,6 +54,7 @@ panteras:
     ZOOKEEPER_HOSTS:            "${ZOOKEEPER_HOSTS}"
     ZOOKEEPER_ID:               "${ZOOKEEPER_ID}"
     KEEPALIVED_VIP:             "${KEEPALIVED_VIP}"
+    CHRONOS_APP_PARAMS:          "${CHRONOS_APP_PARAMS}"
 
     HOSTNAME:                   "${PANTERAS_HOSTNAME}"
 

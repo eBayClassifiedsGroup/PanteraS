@@ -53,6 +53,7 @@ ENV HAPROXY_APP_VERSION           1.5.4-1ubuntu2.1~ubuntu14.04.1
 ENV MESOS_APP_VERSION             0.25.0-0.2.70.ubuntu1404
 ENV MARATHON_APP_VERSION          0.13.0-1.0.440.ubuntu1404
 ENV REGISTRATOR_APP_VERSION       v6
+ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -129,6 +130,7 @@ RUN apt-get update \
     && apt-get -y install \
       mesos=${MESOS_APP_VERSION} \
       marathon=${MARATHON_APP_VERSION} \
+      chronos=${CHRONOS_APP_VERSION} \
     && apt-get clean
 
 ADD zkStart.sh /opt/zkStart.sh
