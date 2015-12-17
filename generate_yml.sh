@@ -102,7 +102,7 @@ DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 CONSUL_PARAMS="agent \
  -client=0.0.0.0 \
  -data-dir=/opt/consul/ \
- -ui-dir=/opt/consul/dist/ \
+ -ui-dir=/opt/consul/ \
  -advertise=${HOST_IP} \
  -node=${HOSTNAME} \
  -dc=${CONSUL_DC} \
