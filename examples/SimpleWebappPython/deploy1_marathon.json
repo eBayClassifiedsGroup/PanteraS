@@ -15,7 +15,7 @@
    }
  },
  "env": {
-   "SERVICE_TAGS" : "python,webapp,http,weight=1",
+   "SERVICE_TAGS" : "haproxy,http,weight=1",
    "SERVICE_NAME" : "python"
  },
  "healthChecks": [
