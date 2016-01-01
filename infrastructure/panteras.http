@@ -80,6 +80,9 @@ Content-Type: text/html
                 <div id="marathon" class="col-md-6 hidden">
                     <a href="/" title="Deploy & manage containers"><img id="marathon_p" width="32" height="32"/>Marathon</a>
                 </div>
+                <div id="chronos" class="col-md-6 hidden">
+                    <a href="/" title="Schedule Distributed Tasks"><img id="chronos_p" width="32" height="32"/>Chronos</a>
+                </div>
                 <div id="mesos-master" class="col-md-6 hidden">
                     <a href="/" title="Cluster manager"><span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>Mesos</a>
                 </div>
@@ -114,6 +117,10 @@ Content-Type: text/html
                     port: 8080
                 },
                 {
+                    id: 'chronos',
+                    port: 4400
+                },
+                {
                     id: 'consul',
                     port: 8500
                 },
@@ -142,7 +149,8 @@ Content-Type: text/html
 
             document.getElementById('marathon_p').src = window.location.origin + ':8080/ui/img/marathon-favicon.ico';
             document.getElementById('consul_p').src = window.location.origin + ':8500/ui/static/favicon.png';
-
+			document.getElementById('chronos_p').src = window.location.origin + ':4400/favicon.ico';
+			
         </script>
     </body>
 </html>
