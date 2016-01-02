@@ -12,6 +12,7 @@ panteras:
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
     HOST_IP:                 "${HOST_IP}"
+    LISTEN_IP:               "${LISTEN_IP}"
     FQDN:                    "${FQDN}"
     GOMAXPROCS:              "${GOMAXPROCS}"
 
@@ -54,7 +55,7 @@ panteras:
     ZOOKEEPER_HOSTS:            "${ZOOKEEPER_HOSTS}"
     ZOOKEEPER_ID:               "${ZOOKEEPER_ID}"
     KEEPALIVED_VIP:             "${KEEPALIVED_VIP}"
-    CHRONOS_APP_PARAMS:          "${CHRONOS_APP_PARAMS}"
+    CHRONOS_APP_PARAMS:         "${CHRONOS_APP_PARAMS}"
 
     HOSTNAME:                   "${PANTERAS_HOSTNAME}"
 
