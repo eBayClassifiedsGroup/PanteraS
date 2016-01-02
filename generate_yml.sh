@@ -8,34 +8,16 @@ echo "Keep in mind, to set free these ports on DOCKER HOST:"
 echo "53, 80, 81, 2181, 2888, 3888, 4400, 5050, 5151, 8080, 8300 - 8302, 8400, 8500, 8600, 9000, 31000 - 32000"
 echo "and be sure that your hostname is resolvable, if not, add entry to /etc/resolv.conf"
 
-# detect DOCKERHOST IP if was not provided
-
-# boot2docker
-B2D=""
-which boot2docker >/dev/null && {
-  echo "Boot2docker detected, shall we use it (y/n)?"
-  read ANSWER
-  [ "$ANSWER" == "y" ] && {
-    boot2docker init
-    boot2docker start
-    $(boot2docker shellinit)
-    HOSTNAME=boot2docker
-    B2D="boot2docker ssh"
-    FQDN=$HOSTNAME
-    [ -n "${DOCKER_HOST}" ] && IP=${IP:-$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')}
- }
-}
-
 # Try to detect IP
+# docker-machine / boot2docker
+[ -n "${DOCKER_HOST}" ] && IP=${IP:-$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')}
 # outside vagrant
 which vagrant >/dev/null && IP=${IP:-$(vagrant ssh -c ifconfig 2>/dev/null| grep -oh "\w*192.168.10.10\w*")}
 # inside vagrant
 [ "$HOSTNAME" == "standalone" ] && IP=${IP:-192.168.10.10}
 # try to guess
 IP=${IP:-$(dig +short ${HOSTNAME})}
-
 [ -z ${IP} ] && echo "env IP variable missing" && exit 1
-
 
 
 # Defaults for stand alone mode
@@ -65,6 +47,7 @@ START_DNSMASQ=${START_DNSMASQ:-"true"}
 CONSUL_MODE=${CONSUL_MODE:-'-server'}
 
 HOST_IP=${IP}
+LISTEN_IP=${LISTEN_IP:-"0.0.0.0"}
 CONSUL_IP=${IP}
 CONSUL_DC=${CONSUL_DC:-"UNKNOWN"}
 CONSUL_DOMAIN=${CONSUL_DOMAIN:-"consul"}
@@ -100,7 +83,7 @@ DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 #
 # -config-dir=/etc/consul.d/ \
 CONSUL_PARAMS="agent \
- -client=0.0.0.0 \
+ -client=${LISTEN_IP} \
  -data-dir=/opt/consul/ \
  -ui-dir=/opt/consul/ \
  -advertise=${HOST_IP} \
@@ -121,6 +104,8 @@ DNSMASQ_PARAMS="-d \
  -7 /etc/dnsmasq.d \
  --server=/${CONSUL_DOMAIN}/${CONSUL_IP}#8600 \
  --host-record=${HOSTNAME},${CONSUL_IP} \
+ --bind-interfaces \
+ --listen-address=${LISTEN_IP} \
  ${DNSMASQ_ADDRESS} \
  ${DNSMASQ_PARAMS}"
 #
@@ -128,12 +113,14 @@ MARATHON_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --zk zk://${ZOOKEEPER_HOSTS}/marathon \
  --hostname ${HOSTNAME} \
  --no-logger \
+ --http_address ${LISTEN_IP} \
+ --https_address ${LISTEN_IP} \
  ${MARATHON_PARAMS}"
 #
 MESOS_MASTER_PARAMS="--zk=zk://${ZOOKEEPER_HOSTS}/mesos \
  --work_dir=/var/lib/mesos \
  --quorum=${MESOS_MASTER_QUORUM} \
- --ip=0.0.0.0 \
+ --ip=${LISTEN_IP} \
  --hostname=${FQDN} \
  --cluster=${MESOS_CLUSTER_NAME} \
  ${MESOS_MASTER_PARAMS}"
@@ -142,7 +129,7 @@ MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --containerizers=docker,mesos \
  --executor_registration_timeout=5mins \
  --hostname=${FQDN} \
- --ip=0.0.0.0 \
+ --ip=${LISTEN_IP} \
  --docker_stop_timeout=5secs \
  --gc_delay=1days \
  --docker_socket=/tmp/docker.sock \
@@ -155,7 +142,7 @@ ZOOKEEPER_PARAMS="start-foreground"
 #
 CHRONOS_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --zk_hosts ${ZOOKEEPER_HOSTS} \
- --http_address 0.0.0.0 \
+ --http_address ${LISTEN_IP} \
  --http_port 4400 \
  ${CHRONOS_PARAMS}"
 
