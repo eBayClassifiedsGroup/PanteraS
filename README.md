@@ -125,6 +125,7 @@ on the following ports:
 
 - HAproxy: http://hostname:81
 - Consul: http://hostname:8500
+- Chronos: http://hostname:4400
 - Marathon: http://hostname:8080
 - Mesos: http://hostname:5050
 - Supervisord: http://hostname:9000
