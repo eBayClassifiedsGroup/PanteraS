@@ -2,7 +2,7 @@ panteras:
   image:      ${PANTERAS_DOCKER_IMAGE}
   net:        host
   privileged: true
-  restart:    "${PANTERAS_RESTART}"
+  restart:    ${PANTERAS_RESTART}
   ${PORTS}
      ${CONSUL_UI_PORTS} 
      ${MARATHON_PORTS}
