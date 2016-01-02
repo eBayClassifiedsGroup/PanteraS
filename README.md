@@ -61,6 +61,10 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
          dnsmasq| x | x | x |
         
 
+## Requirements:
+- docker >= 1.9.1
+- docker-compose >= 1.5.1
+
 ## Usage:
 Clone it
 ```
@@ -124,6 +128,15 @@ on the following ports:
 - Marathon: http://hostname:8080
 - Mesos: http://hostname:5050
 - Supervisord: http://hostname:9000
+
+## Listening address
+
+All PaaS components listen default on all interfaces (to all addresses: `0.0.0.0`),  
+which might be dangerous if you want to expose the PaaS.  
+Use ENV `LISTEN_IP` if you want to listen on specific IP address.  
+for example:  
+`echo LISTEN_IP=192.168.10.10 >> restricted/host`  
+This might not work for all services like Marathon or Chronos that has some additional random ports.
 
 ## Services Accessibility
 
