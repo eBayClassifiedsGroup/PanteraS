@@ -10,7 +10,8 @@ echo "and be sure that your hostname is resolvable, if not, add entry to /etc/re
 
 # Try to detect IP
 # docker-machine / boot2docker
-[ -n "${DOCKER_HOST}" ] && IP=${IP:-$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')}
+[ ${DOCKER_HOST} ] && IP=${IP:-$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')}
+[ ${DOCKER_MACHINE_NAME} ] && HOSTNAME=${DOCKER_MACHINE_NAME}
 # outside vagrant
 which vagrant >/dev/null && IP=${IP:-$(vagrant ssh -c ifconfig 2>/dev/null| grep -oh "\w*192.168.10.10\w*")}
 # inside vagrant
