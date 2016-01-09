@@ -69,8 +69,10 @@ FQDN=${FQDN:-${HOSTNAME}}
 
 # Disable dnsmasq address re-mapping on non slaves - no HAProxy there
 [ "${SLAVE}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
+# dnsmaq cannot be set to listen on 0.0.0.0 - it causes lot of issues
+# and by default it works on all addresses
 DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
-[ ${LISTEN_IP} != "0.0.0.0" ] && DNSMASQ_BIND_INTERFACES="--bind-interfaces"
+[ ${LISTEN_IP} != "0.0.0.0" ] && DNSMASQ_BIND_INTERFACES="--bind-interfaces --listen-address=${LISTEN_IP}"
 
 # enable keepalived if the consul_template(with HAproxy) gets started and a
 # virtual IP address is specified
@@ -112,7 +114,6 @@ DNSMASQ_PARAMS="-d \
  -7 /etc/dnsmasq.d \
  --server=/${CONSUL_DOMAIN}/${CONSUL_IP}#8600 \
  --host-record=${HOSTNAME},${CONSUL_IP} \
- --listen-address=${LISTEN_IP} \
  ${DNSMASQ_BIND_INTERFACES} \
  ${DNSMASQ_ADDRESS} \
  ${DNSMASQ_PARAMS}"
