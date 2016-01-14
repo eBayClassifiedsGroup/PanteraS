@@ -69,3 +69,4 @@ panteras:
     - "/var/lib/docker:/var/lib/docker"
     - "/sys:/sys"
     - "/tmp/mesos:/tmp/mesos"
+    ${VOLUME_DOCKER}
