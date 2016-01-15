@@ -26,6 +26,8 @@ preconfigure() {
     real_port="${!instance_prefix}${real}"
     stats_port="${!instance_prefix}${stats}"
     iptables -w -t nat -N ${chain}
+    [ ${LISTEN_IP} != "0.0.0.0" ] && \
+    iptables -w -t nat -A ${chain} -p tcp -d ${LISTEN_IP} --dport 80 -j DNAT --to-destination ${LISTEN_IP}:${real_port}
     iptables -w -t nat -A ${chain} -m state --state NEW -p tcp -d ${HOST_IP} --dport 80 -j REDIRECT --to ${real_port}
     iptables -w -t nat -A ${chain} -m state --state NEW -p tcp -d ${HOST_IP} --dport 81 -j REDIRECT --to ${stats_port}
     [ -n "${KEEPALIVED_VIP}" ] && {

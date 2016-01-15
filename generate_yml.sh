@@ -51,6 +51,7 @@ CONSUL_MODE=${CONSUL_MODE:-'-server'}
 #
 HOST_IP=${HOST_IP:-${IP}}
 # Consul advertise IP
+CONSUL_IP=${CONSUL_IP:-${LISTEN_IP}}
 CONSUL_IP=${CONSUL_IP:-${IP}}
 # IP for listening
 LISTEN_IP=${LISTEN_IP:-0.0.0.0}
