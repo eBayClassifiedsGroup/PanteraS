@@ -80,6 +80,7 @@ DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 [ "${START_CONSUL_TEMPLATE}" == "true" ] && [ ${KEEPALIVED_VIP} ] && \
     KEEPALIVED_CONSUL_TEMPLATE="-template=./keepalived.conf.ctmpl:/etc/keepalived/keepalived.conf:./keepalived_reload.sh"
 
+# Default register all services
 REGISTER_CONSUL_UI=${REGISTER_CONSUL_UI:-"true"}
 REGISTER_MARATHON=${REGISTER_MARATHON:-"true"}
 REGISTER_MESOS_MASTER=${REGISTER_MESOS_MASTER:-"true"}
