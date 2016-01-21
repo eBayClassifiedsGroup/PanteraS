@@ -80,12 +80,18 @@ DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 [ "${START_CONSUL_TEMPLATE}" == "true" ] && [ ${KEEPALIVED_VIP} ] && \
     KEEPALIVED_CONSUL_TEMPLATE="-template=./keepalived.conf.ctmpl:/etc/keepalived/keepalived.conf:./keepalived_reload.sh"
 
+# Default register all services
+REGISTER_CONSUL_UI=${REGISTER_CONSUL_UI:-"true"}
+REGISTER_MARATHON=${REGISTER_MARATHON:-"true"}
+REGISTER_MESOS_MASTER=${REGISTER_MESOS_MASTER:-"true"}
+REGISTER_CHRONOS=${REGISTER_CHRONOS:-"true"}
+
 # Expose ports depends on which service has been mark to start
 [ "${START_CONSUL_TEMPLATE}" == "true" ] && {
-  [ "${START_CONSUL}"        == "true" ] && PORTS="ports:" && CONSUL_UI_PORTS='- "8500:8500"'
-  [ "${START_MARATHON}"      == "true" ] && PORTS="ports:" && MARATHON_PORTS='- "8080:8080"'
-  [ "${START_MESOS_MASTER}"  == "true" ] && PORTS="ports:" && MESOS_PORTS='- "5050:5050"'
-  [ "${START_CHRONOS}"       == "true" ] && PORTS="ports:" && CHRONOS_PORTS='- "4400:4400"'
+  [ "${START_CONSUL}"        == "true" ] && [ "${REGISTER_CONSUL_UI}"    == "true" ] && PORTS="ports:" && CONSUL_UI_PORTS='- "8500:8500"'
+  [ "${START_MARATHON}"      == "true" ] && [ "${REGISTER_MARATHON}"     == "true" ] && PORTS="ports:" && MARATHON_PORTS='- "8080:8080"'
+  [ "${START_MESOS_MASTER}"  == "true" ] && [ "${REGISTER_MESOS_MASTER}" == "true" ] && PORTS="ports:" && MESOS_PORTS='- "5050:5050"'
+  [ "${START_CHRONOS}"       == "true" ] && [ "${REGISTER_CHRONOS}"      == "true" ] && PORTS="ports:" && CHRONOS_PORTS='- "4400:4400"'
 }
 
 # Override docker with local binary
