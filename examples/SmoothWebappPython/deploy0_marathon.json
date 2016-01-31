@@ -16,7 +16,7 @@
     "mem": 64.0,
     "instances": 2,
     "env": {
-      "SERVICE_TAGS" : "webapp,weight=100",
+      "SERVICE_TAGS" : "webapp,weight=100,urlprefix-python.service.consul/",
       "SERVICE_NAME" : "python-smooth",
       "SERVICE_8000_CHECK_HTTP" : "/index.html"
     },

@@ -46,13 +46,14 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /e
     && echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 
 ENV DOCKER_APP_VERSION            1.9.1-0~trusty
-ENV CONSUL_APP_VERSION            0.6.0
+ENV CONSUL_APP_VERSION            0.6.3
 ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
 ENV HAPROXY_APP_VERSION           1.5.4-1ubuntu2.1~ubuntu14.04.1 
-ENV MESOS_APP_VERSION             0.25.0-0.2.70.ubuntu1404
-ENV MARATHON_APP_VERSION          0.13.0-1.0.440.ubuntu1404
+ENV MESOS_APP_VERSION             0.26.0-0.2.145.ubuntu1404
+ENV MARATHON_APP_VERSION          0.14.1-1.0.455.ubuntu1404
 ENV REGISTRATOR_APP_VERSION       v6
 ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
+ENV FABIO_APP_VERSION             1.0.8
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -149,21 +150,22 @@ RUN apt-get update \
 RUN mkdir /opt/registrator
 ENV PATH ${PATH}:/opt/registrator
 WORKDIR /opt/registrator
-
-# [DISABLED temporaly]
-#
-# You can setup .golangrc with proxy setup if you wanna build behind proxy
-#RUN [ -f ${HOME}/.golangrc ] && . ${HOME}/.golangrc; \
-#    go get -u -tags ${REGISTRATOR_APP_VERSION} github.com/gliderlabs/registrator \
-#    && cp ${GOPATH}/bin/registrator .
-
 # Binaries are not supported anymore
 #  && wget https://github.com/progrium/registrator/releases/download/v${REGISTRATOR_APP_VERSION}/registrator_${REGISTRATOR_APP_VERSION}_linux_x86_64.tgz \
 #  && tar zxf registrator_${REGISTRATOR_APP_VERSION}_linux_x86_64.tgz
-
 # Providing binaries by us - temporaly
 RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/${REGISTRATOR_APP_VERSION}/registrator.tgz \
     && tar zxf registrator.tgz
+
+# FABIO
+#
+RUN mkdir /opt/fabio
+ENV PATH ${PATH}:/opt/fabio
+WORKDIR /opt/fabio
+ADD fabio.properties /opt/fabio/fabio.properties
+RUN wget https://github.com/eBay/fabio/releases/download/v${FABIO_APP_VERSION}/fabio-${FABIO_APP_VERSION}_linux-amd64 \
+    && chmod a+x fabio-${FABIO_APP_VERSION}_linux-amd64 \
+    && ln -s fabio-${FABIO_APP_VERSION}_linux-amd64 fabio
 
 # Font for logo
 RUN wget https://raw.githubusercontent.com/patorjk/figlet.js/master/fonts/Elite.flf -O /usr/share/figlet/Elite.flf
