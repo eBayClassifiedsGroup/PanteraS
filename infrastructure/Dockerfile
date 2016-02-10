@@ -48,7 +48,7 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /e
 ENV DOCKER_APP_VERSION            1.9.1-0~trusty
 ENV CONSUL_APP_VERSION            0.6.3
 ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
-ENV HAPROXY_APP_VERSION           1.5.4-1ubuntu2.1~ubuntu14.04.1 
+ENV HAPROXY_APP_VERSION           1.5.14-1ubuntu0.15.10.1~ubuntu14.04.1
 ENV MESOS_APP_VERSION             0.26.0-0.2.145.ubuntu1404
 ENV MARATHON_APP_VERSION          0.14.1-1.0.455.ubuntu1404
 ENV REGISTRATOR_APP_VERSION       v6
