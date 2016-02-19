@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/eBayClassifiedsGroup/PanteraS.svg?branch=master)](https://travis-ci.org/eBayClassifiedsGroup/PanteraS)
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/panteras/paas-in-a-box/)
-[![Current Release](http://img.shields.io/badge/release-0.1.8-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/0.1.8)
+[![Current Release](http://img.shields.io/badge/release-0.2.0-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/v0.2.0)
 
 # PanteraS <br> _entire_ Platform as a Service, in a box
 _"One container to rule them all"_
@@ -16,18 +16,18 @@ _"You shall ~~not~~ PaaS"_
 ## Architecture
 
 ### Components
-- Mesos + Marathon + ZooKeeper (orchestration components)
+- Mesos + Marathon + ZooKeeper + Chronos (orchestration components)
 - Consul (K/V store, monitoring, service directory and registry)  + Registrator (automating register/ deregister)
 - HAproxy + consul-template (load balancer with dynamic config generation)
 
-![PanteraS Architecture](http://s3.amazonaws.com/easel.ly/all_easels/19186/panteras/image.jpg)
+![PanteraS Architecture](http://s3.amazonaws.com/easel.ly/all_easels/19186/panteras/image.jpg#)
 
 
 ##### Master+Slave mode Container
 This is the default configuration. It will start all components inside a container.  
 It is recommended to run 3 or 5 master containers to ensure high availability of the PasteraS cluster.
 
-![Master Mode](http://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg)
+![Master Mode](http://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg#)
 
 ##### Only Slave mode Container
 Slave mode is enabled by `MASTER=false`  
@@ -53,12 +53,17 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
     Mesos Master| x | x | - |
     Marathon    | x | x | - |
     Zookeeper   | x | x | - |
+    Chronos     | x | x | - |
  Consul-template| x | - | x |
     Haproxy     | x | - | x |
     Mesos Slave | x | - | x |
      Registrator| x | - | x |
          dnsmasq| x | x | x |
         
+
+## Requirements:
+- docker >= 1.9.1
+- docker-compose >= 1.5.1
 
 ## Usage:
 Clone it
@@ -120,9 +125,19 @@ on the following ports:
 
 - HAproxy: http://hostname:81
 - Consul: http://hostname:8500
+- Chronos: http://hostname:4400
 - Marathon: http://hostname:8080
 - Mesos: http://hostname:5050
 - Supervisord: http://hostname:9000
+
+## Listening address
+
+All PaaS components listen default on all interfaces (to all addresses: `0.0.0.0`),  
+which might be dangerous if you want to expose the PaaS.  
+Use ENV `LISTEN_IP` if you want to listen on specific IP address.  
+for example:  
+`echo LISTEN_IP=192.168.10.10 >> restricted/host`  
+This might not work for all services like Marathon or Chronos that has some additional random ports.
 
 ## Services Accessibility
 

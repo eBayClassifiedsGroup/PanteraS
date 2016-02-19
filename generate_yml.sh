@@ -5,37 +5,20 @@
 [ -f ./restricted/overwrite ] && . ./restricted/overwrite
 
 echo "Keep in mind, to set free these ports on DOCKER HOST:"
-echo "53, 80, 81, 2181, 2888, 3888, 5050, 5151, 8080, 8300 - 8302, 8400, 8500, 8600, 9000, 31000 - 32000"
+echo "53, 80, 81, 2181, 2888, 3888, 4400, 5050, 5151, 8080, 8300 - 8302, 8400, 8500, 8600, 9000, 31000 - 32000"
 echo "and be sure that your hostname is resolvable, if not, add entry to /etc/resolv.conf"
 
-# detect DOCKERHOST IP if was not provided
-
-# boot2docker
-B2D=""
-which boot2docker >/dev/null && {
-  echo "Boot2docker detected, shall we use it (y/n)?"
-  read ANSWER
-  [ "$ANSWER" == "y" ] && {
-    boot2docker init
-    boot2docker start
-    $(boot2docker shellinit)
-    HOSTNAME=boot2docker
-    B2D="boot2docker ssh"
-    FQDN=$HOSTNAME
-    [ -n "${DOCKER_HOST}" ] && IP=${IP:-$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')}
- }
-}
-
 # Try to detect IP
+# docker-machine / boot2docker
+[ ${DOCKER_HOST} ] && IP=${IP:-$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')}
+[ ${DOCKER_MACHINE_NAME} ] && HOSTNAME=${DOCKER_MACHINE_NAME} && FQDN=$HOSTNAME
 # outside vagrant
 which vagrant >/dev/null && IP=${IP:-$(vagrant ssh -c ifconfig 2>/dev/null| grep -oh "\w*192.168.10.10\w*")}
 # inside vagrant
 [ "$HOSTNAME" == "standalone" ] && IP=${IP:-192.168.10.10}
 # try to guess
 IP=${IP:-$(dig +short ${HOSTNAME})}
-
 [ -z ${IP} ] && echo "env IP variable missing" && exit 1
-
 
 
 # Defaults for stand alone mode
@@ -52,8 +35,11 @@ START_CONSUL=${START_CONSUL:-"true"}
 START_MESOS_MASTER=${START_MESOS_MASTER:-${MASTER}}
 START_MARATHON=${START_MARATHON:-${MASTER}}
 START_ZOOKEEPER=${START_ZOOKEEPER:-${MASTER}}
+START_CHRONOS=${START_CHRONOS:-${MASTER}}
 #SLAVE
 START_CONSUL_TEMPLATE=${START_CONSUL_TEMPLATE:-${SLAVE}}
+#FABIO experimental
+START_FABIO=${START_FABIO:-"false"}
 START_MESOS_SLAVE=${START_MESOS_SLAVE:-${SLAVE}}
 START_REGISTRATOR=${START_REGISTRATOR:-${SLAVE}}
 #OPTIONAL
@@ -62,11 +48,18 @@ START_DNSMASQ=${START_DNSMASQ:-"true"}
 # Lets consul behave as a client but on slaves only
 [ "${SLAVE}" == "true" ] && [ "${MASTER}" == "false" ] && CONSUL_MODE=${CONSUL_MODE:-' '}
 CONSUL_MODE=${CONSUL_MODE:-'-server'}
-[ "${CONSUL_DOMAIN}" ] && CONSUL_PARAMS_DOMAIN="-domain ${CONSUL_DOMAIN}"
 
-HOST_IP=${IP}
-CONSUL_IP=${IP}
+# IP that have to be specified (cannot be 0.0.0.0)
+#
+HOST_IP=${HOST_IP:-${IP}}
+# Consul advertise IP
+CONSUL_IP=${CONSUL_IP:-${LISTEN_IP}}
+CONSUL_IP=${CONSUL_IP:-${IP}}
+# IP for listening
+LISTEN_IP=${LISTEN_IP:-0.0.0.0}
+
 CONSUL_DC=${CONSUL_DC:-"UNKNOWN"}
+CONSUL_DOMAIN=${CONSUL_DOMAIN:-"consul"}
 CONSUL_BOOTSTRAP=${CONSUL_BOOTSTRAP:-'-bootstrap-expect 1'}
 CONSUL_HOSTS=${CONSUL_HOSTS:-${CONSUL_BOOTSTRAP}}
 MESOS_CLUSTER_NAME=${CLUSTER_NAME:-"mesoscluster"}
@@ -79,7 +72,10 @@ FQDN=${FQDN:-${HOSTNAME}}
 
 # Disable dnsmasq address re-mapping on non slaves - no HAProxy there
 [ "${SLAVE}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
+# dnsmaq cannot be set to listen on 0.0.0.0 - it causes lot of issues
+# and by default it works on all addresses
 DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
+[ ${LISTEN_IP} != "0.0.0.0" ] && DNSMASQ_BIND_INTERFACES="--bind-interfaces --listen-address=${LISTEN_IP}"
 
 # enable keepalived if the consul_template(with HAproxy) gets started and a
 # virtual IP address is specified
@@ -91,22 +87,26 @@ DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
   [ "${START_CONSUL}"        == "true" ] && PORTS="ports:" && CONSUL_UI_PORTS='- "8500:8500"'
   [ "${START_MARATHON}"      == "true" ] && PORTS="ports:" && MARATHON_PORTS='- "8080:8080"'
   [ "${START_MESOS_MASTER}"  == "true" ] && PORTS="ports:" && MESOS_PORTS='- "5050:5050"'
+  [ "${START_CHRONOS}"       == "true" ] && PORTS="ports:" && CHRONOS_PORTS='- "4400:4400"'
 }
 
+# Override docker with local binary
+[ "${HOST_DOCKER}" == "true" ] && VOLUME_DOCKER=${VOLUME_DOCKER:-'- "/usr/local/bin/docker:/usr/local/bin/docker"'}
 
 # Parameters for every supervisord command
 #
 # -config-dir=/etc/consul.d/ \
 CONSUL_PARAMS="agent \
- -client=0.0.0.0 \
+ -client=${LISTEN_IP} \
+ -advertise=${CONSUL_IP} \
+ -bind=${LISTEN_IP} \
  -data-dir=/opt/consul/ \
- -ui-dir=/opt/consul/dist/ \
- -advertise=${HOST_IP} \
+ -ui-dir=/opt/consul/ \
  -node=${HOSTNAME} \
  -dc=${CONSUL_DC} \
+ -domain ${CONSUL_DOMAIN} \
  ${CONSUL_MODE} \
  ${CONSUL_HOSTS} \
- ${CONSUL_PARAMS_DOMAIN} \
  ${CONSUL_PARAMS}"
 #
 CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
@@ -117,8 +117,9 @@ DNSMASQ_PARAMS="-d \
  -u dnsmasq \
  -r /etc/resolv.conf.orig \
  -7 /etc/dnsmasq.d \
- --server=/consul/${CONSUL_IP}#8600 \
+ --server=/${CONSUL_DOMAIN}/${CONSUL_IP}#8600 \
  --host-record=${HOSTNAME},${CONSUL_IP} \
+ ${DNSMASQ_BIND_INTERFACES} \
  ${DNSMASQ_ADDRESS} \
  ${DNSMASQ_PARAMS}"
 #
@@ -126,12 +127,14 @@ MARATHON_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --zk zk://${ZOOKEEPER_HOSTS}/marathon \
  --hostname ${HOSTNAME} \
  --no-logger \
+ --http_address ${LISTEN_IP} \
+ --https_address ${LISTEN_IP} \
  ${MARATHON_PARAMS}"
 #
 MESOS_MASTER_PARAMS="--zk=zk://${ZOOKEEPER_HOSTS}/mesos \
  --work_dir=/var/lib/mesos \
  --quorum=${MESOS_MASTER_QUORUM} \
- --ip=0.0.0.0 \
+ --ip=${LISTEN_IP} \
  --hostname=${FQDN} \
  --cluster=${MESOS_CLUSTER_NAME} \
  ${MESOS_MASTER_PARAMS}"
@@ -140,7 +143,7 @@ MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --containerizers=docker,mesos \
  --executor_registration_timeout=5mins \
  --hostname=${FQDN} \
- --ip=0.0.0.0 \
+ --ip=${LISTEN_IP} \
  --docker_stop_timeout=5secs \
  --gc_delay=1days \
  --docker_socket=/tmp/docker.sock \
@@ -150,6 +153,14 @@ REGISTRATOR_PARAMS="-ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
  ${REGISTRATOR_PARAMS}"
 #
 ZOOKEEPER_PARAMS="start-foreground"
+#
+CHRONOS_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
+ --zk_hosts ${ZOOKEEPER_HOSTS} \
+ --http_address ${LISTEN_IP} \
+ --http_port 4400 \
+ ${CHRONOS_PARAMS}"
+#
+FABIO_PARAMS="-cfg ./fabio.properties"
 
 CONSUL_APP_PARAMS=${CONSUL_APP_PARAMS:-$CONSUL_PARAMS}
 CONSUL_TEMPLATE_APP_PARAMS=${CONSUL_TEMPLATE_APP_PARAMS:-$CONSUL_TEMPLATE_PARAMS}
@@ -159,6 +170,8 @@ MESOS_MASTER_APP_PARAMS=${MESOS_MASTER_APP_PARAMS:-$MESOS_MASTER_PARAMS}
 MESOS_SLAVE_APP_PARAMS=${MESOS_SLAVE_APP_PARAMS:-$MESOS_SLAVE_PARAMS}
 REGISTRATOR_APP_PARAMS=${REGISTRATOR_APP_PARAMS:-$REGISTRATOR_PARAMS}
 ZOOKEEPER_APP_PARAMS=${ZOOKEEPER_APP_PARAMS:-$ZOOKEEPER_PARAMS}
+CHRONOS_APP_PARAMS=${CHRONOS_APP_PARAMS:-$CHRONOS_PARAMS}
+FABIO_APP_PARAMS=${FABIO_APP_PARAMS:-$FABIO_PARAMS}
 
 PANTERAS_HOSTNAME=${PANTERAS_HOSTNAME:-${HOSTNAME}}
 PANTERAS_RESTART=${PANTERAS_RESTART:-"no"}

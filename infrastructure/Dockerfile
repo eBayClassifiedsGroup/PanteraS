@@ -29,13 +29,14 @@ RUN apt-get update \
       toilet \
       keepalived \
       iptables \
-      libapparmor1
+      libapparmor1 \
+   && apt-get clean
 
 RUN pip install supervisor-stdout
 RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
 
 # install Java 8
-RUN    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /etc/apt/sources.list.d/java-trusty.list \
+RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /etc/apt/sources.list.d/java-trusty.list \
     && gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv EEA14886 && gpg --export --armor EEA14886 | apt-key add - \
     && apt-get update \
     && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
@@ -44,14 +45,15 @@ RUN    echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" >
     && update-alternatives --display java \
     && echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 
-ENV DOCKER_APP_VERSION            1.9.0-0~trusty 
-ENV CONSUL_APP_VERSION            0.5.2
+ENV DOCKER_APP_VERSION            1.9.1-0~trusty
+ENV CONSUL_APP_VERSION            0.6.3
 ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
-ENV ENVCONSUL_APP_VERSION         0.5.0
-ENV HAPROXY_APP_VERSION           1.5.4-1ubuntu2.1~ubuntu14.04.1 
-ENV MESOS_APP_VERSION             0.25.0-0.2.70.ubuntu1404
-ENV MARATHON_APP_VERSION          0.11.1-1.0.432.ubuntu1404
+ENV HAPROXY_APP_VERSION           1.5.14-1ubuntu0.15.10.1~ubuntu14.04.1
+ENV MESOS_APP_VERSION             0.26.0-0.2.145.ubuntu1404
+ENV MARATHON_APP_VERSION          0.15.1-1.0.459.ubuntu1404
 ENV REGISTRATOR_APP_VERSION       v6
+ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
+ENV FABIO_APP_VERSION             1.0.8
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -62,18 +64,16 @@ RUN mkdir /opt/consul && mkdir /etc/consul.d/
 ENV PATH $PATH:/opt/consul
 WORKDIR /opt/consul
 
-RUN wget https://dl.bintray.com/mitchellh/consul/${CONSUL_APP_VERSION}_linux_amd64.zip \
-    && wget https://dl.bintray.com/mitchellh/consul/${CONSUL_APP_VERSION}_web_ui.zip \
-    && wget https://github.com/hashicorp/envconsul/releases/download/v${ENVCONSUL_APP_VERSION}/envconsul_${ENVCONSUL_APP_VERSION}_linux_amd64.tar.gz \
-    && unzip ${CONSUL_APP_VERSION}_linux_amd64.zip \
-    && unzip ${CONSUL_APP_VERSION}_web_ui.zip \
-    && tar zxf envconsul_${ENVCONSUL_APP_VERSION}_linux_amd64.tar.gz \
-    && ln -s envconsul_${ENVCONSUL_APP_VERSION}_linux_amd64/envconsul .
-
+RUN wget https://releases.hashicorp.com/consul/${CONSUL_APP_VERSION}/consul_${CONSUL_APP_VERSION}_linux_amd64.zip \
+    && wget https://releases.hashicorp.com/consul/${CONSUL_APP_VERSION}/consul_${CONSUL_APP_VERSION}_web_ui.zip \
+    && unzip consul_${CONSUL_APP_VERSION}_linux_amd64.zip \
+    && unzip consul_${CONSUL_APP_VERSION}_web_ui.zip \
+    && rm consul_*.zip
 
 # DNSMASQ
 #
-RUN apt-get install -y dnsmasq dnsutils
+RUN apt-get install -y dnsmasq dnsutils \
+    && apt-get clean
 
 
 # HAPROXY
@@ -85,7 +85,8 @@ WORKDIR /opt/consul-template
 RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
     && apt-get update \
     && apt-get install -y \
-    haproxy="${HAPROXY_APP_VERSION}"
+    haproxy="${HAPROXY_APP_VERSION}" \
+    && apt-get clean
 
 RUN sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
     && rm -rf /var/lib/apt/lists/*
@@ -126,7 +127,9 @@ RUN gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv E56151BF && gpg --expor
 RUN apt-get update \
     && apt-get -y install \
       mesos=${MESOS_APP_VERSION} \
-      marathon=${MARATHON_APP_VERSION}
+      marathon=${MARATHON_APP_VERSION} \
+      chronos=${CHRONOS_APP_VERSION} \
+    && apt-get clean
 
 ADD zkStart.sh /opt/zkStart.sh
 RUN rm /etc/mesos/zk
@@ -147,21 +150,22 @@ RUN apt-get update \
 RUN mkdir /opt/registrator
 ENV PATH ${PATH}:/opt/registrator
 WORKDIR /opt/registrator
-
-# [DISABLED temporaly]
-#
-# You can setup .golangrc with proxy setup if you wanna build behind proxy
-#RUN [ -f ${HOME}/.golangrc ] && . ${HOME}/.golangrc; \
-#    go get -u -tags ${REGISTRATOR_APP_VERSION} github.com/gliderlabs/registrator \
-#    && cp ${GOPATH}/bin/registrator .
-
 # Binaries are not supported anymore
 #  && wget https://github.com/progrium/registrator/releases/download/v${REGISTRATOR_APP_VERSION}/registrator_${REGISTRATOR_APP_VERSION}_linux_x86_64.tgz \
 #  && tar zxf registrator_${REGISTRATOR_APP_VERSION}_linux_x86_64.tgz
-
 # Providing binaries by us - temporaly
 RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/${REGISTRATOR_APP_VERSION}/registrator.tgz \
     && tar zxf registrator.tgz
+
+# FABIO
+#
+RUN mkdir /opt/fabio
+ENV PATH ${PATH}:/opt/fabio
+WORKDIR /opt/fabio
+ADD fabio.properties /opt/fabio/fabio.properties
+RUN wget https://github.com/eBay/fabio/releases/download/v${FABIO_APP_VERSION}/fabio-${FABIO_APP_VERSION}_linux-amd64 \
+    && chmod a+x fabio-${FABIO_APP_VERSION}_linux-amd64 \
+    && ln -s fabio-${FABIO_APP_VERSION}_linux-amd64 fabio
 
 # Font for logo
 RUN wget https://raw.githubusercontent.com/patorjk/figlet.js/master/fonts/Elite.flf -O /usr/share/figlet/Elite.flf
