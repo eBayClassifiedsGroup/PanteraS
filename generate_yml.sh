@@ -149,7 +149,7 @@ MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --docker_socket=/tmp/docker.sock \
  ${MESOS_SLAVE_PARAMS}"
 #
-REGISTRATOR_PARAMS="-ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
+REGISTRATOR_PARAMS="-cleanup -ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
  ${REGISTRATOR_PARAMS}"
 #
 ZOOKEEPER_PARAMS="start-foreground"
