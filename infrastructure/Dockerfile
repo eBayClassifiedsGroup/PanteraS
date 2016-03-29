@@ -45,13 +45,13 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /e
     && update-alternatives --display java \
     && echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 
-ENV DOCKER_APP_VERSION            1.10.2-0~trusty
-ENV CONSUL_APP_VERSION            0.6.3
+ENV DOCKER_APP_VERSION            1.10.3-0~trusty
+ENV CONSUL_APP_VERSION            0.6.4
 ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
 ENV HAPROXY_APP_VERSION           1.5.14-1ubuntu0.15.10.1~ubuntu14.04.1
 ENV MESOS_APP_VERSION             0.26.0-0.2.145.ubuntu1404
 ENV MARATHON_APP_VERSION          0.15.3-1.0.463.ubuntu1404
-ENV REGISTRATOR_APP_VERSION       v6
+ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
 ENV FABIO_APP_VERSION             1.1.1
 
