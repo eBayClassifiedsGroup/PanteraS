@@ -32,9 +32,6 @@ RUN apt-get update \
       libapparmor1 \
    && apt-get clean
 
-RUN pip install supervisor-stdout
-RUN pip install https://github.com/Supervisor/supervisor/archive/3.2-branch.zip
-
 # install Java 8
 RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /etc/apt/sources.list.d/java-trusty.list \
     && gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv EEA14886 && gpg --export --armor EEA14886 | apt-key add - \
@@ -45,6 +42,7 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /e
     && update-alternatives --display java \
     && echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 
+ENV SUPERVISORD_APP_VERSION       3.2.3
 ENV DOCKER_APP_VERSION            1.10.3-0~trusty
 ENV CONSUL_APP_VERSION            0.6.4
 ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
@@ -56,6 +54,11 @@ ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
 ENV FABIO_APP_VERSION             1.1.1
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
+
+# SupervisorD
+#
+RUN pip install supervisor-stdout
+RUN pip install https://github.com/Supervisor/supervisor/archive/${SUPERVISORD_APP_VERSION}.zip
 
 
 # CONSUL
