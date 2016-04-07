@@ -11,11 +11,15 @@ Summary:
     Provision $paas on either vagrant vm or a boot2docker vm.
 
 Options
-    -m boot2docker|vagrant|vagrant-provision
+    -m boot2docker|docker-machine|vagrant|vagrant-provision
     -h help
     -b rebuild $paas image
 
 Examples
+
+    Provision $paas for use with docker-machine:
+
+        $0 -m docker-machine
 
     Provision $paas for use with boot2docker:
 
@@ -35,11 +39,11 @@ _END_
 MODE=""
 BUILDIMAGES=false
 
-while getopts ":m:bh" mode ; do 
+while getopts ":m:bh" mode ; do
   case $mode in
   m)
     case $OPTARG in
-    boot2docker|vagrant|vagrant-provision)
+    boot2docker|docker-machine|vagrant|vagrant-provision)
       echo "installing with mode \"$OPTARG\""
       MODE=$OPTARG
       ;;
@@ -77,10 +81,11 @@ isLinux()  { [[ "$OSTYPE" == "linux"* ]] && return 0 || return 1; }
 isUbuntu() { uname -a |grep -i ubuntu &>/dev/null && return 0 || return 1; }
 
 hasVagrant()       { $(hash vagrant 2>/dev/null) && return 0 || return 1; }
-hasVirtualBox()    { $(hash VBoxManage 2>/dev/null) && return 0 || return 1; } 
+hasVirtualBox()    { $(hash VBoxManage 2>/dev/null) && return 0 || return 1; }
 hasDockerCompose() { $(hash docker-compose 2>/dev/null) && return 0 || return 1; }
 hasBoot2docker()   { $(hash boot2docker 2>/dev/null) && return 0 || return 1; }
 hasDocker()        { $(hash docker 2>/dev/null) && return 0 || return 1; }
+hasDockerMachine() { $(hash docker-machine 2>/dev/null) && return 0 || return 1; }
 
 case "$MODE" in
 'vagrant')
@@ -148,27 +153,43 @@ case "$MODE" in
   ;;
 
 
-"boot2docker")
-  ! isMac && echo "boot2docker is only supported on OSX" >&2 && exit 1
-  ! hasBoot2docker && echo "boot2docker not found. Please install the latest boot2docker version on your Mac" >&2 && exit 1
+"boot2docker"|"docker-machine")
+  ! isMac && echo "boot2docker/docker-machine is only supported on OSX" >&2 && exit 1
   ! hasDockerCompose && echo "DockerCompose not found. Please install docker-compose" >&2 && exit 1
 
-  [ "$(boot2docker status 2>/dev/null)" != "running" ] && {
-    echo "boot2docker not running. Attempting to start."        
-    boot2docker up
-  } || {
-    echo "boot2docker is already running. not starting boot2docker."
+  [ "$MODE" = "boot2docker" ] && {
+    ! hasBoot2docker ] && echo "boot2docker not found. Please install the latest boot2docker version on your Mac" >&2 && exit 1
+
+    [ "$(boot2docker status 2>/dev/null)" != "running" ] && {
+      echo "boot2docker not running. Attempting to start."
+      boot2docker up
+    } || {
+      echo "boot2docker is already running. not starting boot2docker."
+    }
+    $(boot2docker shellinit)
+
+    DOCKERHOST_IP=$(boot2docker ip 2>/dev/null)
+    SSH_COMMAND="boot2docker ssh"
+
   }
-  $(boot2docker shellinit)
+
+  [ "$MODE" = "docker-machine" ] && {
+    ! hasDockerMachine ] && echo "docker-machine not found. Please install the latest docker-machine version on your Mac" >&2 && exit 1
+    ! DOCKER_MACHINE_NAME=$(docker-machine active 2>/dev/null) && echo "no active docker-machine, please run eval eval \$(docker-machine env NAME)" >&2 && exit 1
+
+    echo "Using docker-machine \"$DOCKER_MACHINE_NAME\""
+    DOCKERHOST_IP=$(docker-machine ip $DOCKER_MACHINE_NAME 2>/dev/null)
+    SSH_COMMAND="docker-machine ssh $DOCKER_MACHINE_NAME"
+
+  }
 
   [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && ./build-docker-images.sh \
     || docker pull ${IMAGE}
 
-  BOOT2DOCKERIP=$(boot2docker ip 2>/dev/null)
 
   # dns config on boot2docker
-  DNS_CONFIG="EXTRA_ARGS=\\\"\\\${EXTRA_ARGS} --dns $BOOT2DOCKERIP\\\""
-  boot2docker ssh \
+  DNS_CONFIG="EXTRA_ARGS=\\\"\\\${EXTRA_ARGS} --dns $DOCKERHOST_IP\\\""
+  $SSH_COMMAND \
     "sudo touch /var/lib/boot2docker/profile && \
      grep -q -- \"$DNS_CONFIG\" /var/lib/boot2docker/profile || { \
        echo $DNS_CONFIG | \
@@ -179,8 +200,8 @@ case "$MODE" in
 
   echo "(re)generating docker-compose.yml configuration file"
   cd $REPODIR
-  echo "generating docker-compose.yml configuration with boot2docker host ip $BOOT2DOCKERIP"
-  IP=$BOOT2DOCKERIP ./generate_yml.sh
+  echo "generating docker-compose.yml configuration with boot2docker host ip $DOCKERHOST_IP"
+  IP=$DOCKERHOST_IP ./generate_yml.sh
   echo "clean up previous container"
   docker-compose stop 2>/dev/null
   docker-compose kill 2>/dev/null

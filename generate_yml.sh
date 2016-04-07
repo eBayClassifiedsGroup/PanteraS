@@ -38,6 +38,8 @@ START_ZOOKEEPER=${START_ZOOKEEPER:-${MASTER}}
 START_CHRONOS=${START_CHRONOS:-${MASTER}}
 #SLAVE
 START_CONSUL_TEMPLATE=${START_CONSUL_TEMPLATE:-${SLAVE}}
+#FABIO experimental
+START_FABIO=${START_FABIO:-"false"}
 START_MESOS_SLAVE=${START_MESOS_SLAVE:-${SLAVE}}
 START_REGISTRATOR=${START_REGISTRATOR:-${SLAVE}}
 #OPTIONAL
@@ -51,6 +53,7 @@ CONSUL_MODE=${CONSUL_MODE:-'-server'}
 #
 HOST_IP=${HOST_IP:-${IP}}
 # Consul advertise IP
+CONSUL_IP=${CONSUL_IP:-${LISTEN_IP}}
 CONSUL_IP=${CONSUL_IP:-${IP}}
 # IP for listening
 LISTEN_IP=${LISTEN_IP:-0.0.0.0}
@@ -69,8 +72,10 @@ FQDN=${FQDN:-${HOSTNAME}}
 
 # Disable dnsmasq address re-mapping on non slaves - no HAProxy there
 [ "${SLAVE}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
+# dnsmaq cannot be set to listen on 0.0.0.0 - it causes lot of issues
+# and by default it works on all addresses
 DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
-[ ${LISTEN_IP} != "0.0.0.0" ] && DNSMASQ_BIND_INTERFACES="--bind-interfaces"
+[ ${LISTEN_IP} != "0.0.0.0" ] && DNSMASQ_BIND_INTERFACES="--bind-interfaces --listen-address=${LISTEN_IP}"
 
 # enable keepalived if the consul_template(with HAproxy) gets started and a
 # virtual IP address is specified
@@ -85,6 +90,8 @@ DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
   [ "${START_CHRONOS}"       == "true" ] && PORTS="ports:" && CHRONOS_PORTS='- "4400:4400"'
 }
 
+# Override docker with local binary
+[ "${HOST_DOCKER}" == "true" ] && VOLUME_DOCKER=${VOLUME_DOCKER:-'- "/usr/local/bin/docker:/usr/local/bin/docker"'}
 
 # Parameters for every supervisord command
 #
@@ -112,7 +119,6 @@ DNSMASQ_PARAMS="-d \
  -7 /etc/dnsmasq.d \
  --server=/${CONSUL_DOMAIN}/${CONSUL_IP}#8600 \
  --host-record=${HOSTNAME},${CONSUL_IP} \
- --listen-address=${LISTEN_IP} \
  ${DNSMASQ_BIND_INTERFACES} \
  ${DNSMASQ_ADDRESS} \
  ${DNSMASQ_PARAMS}"
@@ -143,7 +149,7 @@ MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --docker_socket=/tmp/docker.sock \
  ${MESOS_SLAVE_PARAMS}"
 #
-REGISTRATOR_PARAMS="-ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
+REGISTRATOR_PARAMS="-cleanup -ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
  ${REGISTRATOR_PARAMS}"
 #
 ZOOKEEPER_PARAMS="start-foreground"
@@ -153,6 +159,8 @@ CHRONOS_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --http_address ${LISTEN_IP} \
  --http_port 4400 \
  ${CHRONOS_PARAMS}"
+#
+FABIO_PARAMS="-cfg ./fabio.properties"
 
 CONSUL_APP_PARAMS=${CONSUL_APP_PARAMS:-$CONSUL_PARAMS}
 CONSUL_TEMPLATE_APP_PARAMS=${CONSUL_TEMPLATE_APP_PARAMS:-$CONSUL_TEMPLATE_PARAMS}
@@ -163,6 +171,7 @@ MESOS_SLAVE_APP_PARAMS=${MESOS_SLAVE_APP_PARAMS:-$MESOS_SLAVE_PARAMS}
 REGISTRATOR_APP_PARAMS=${REGISTRATOR_APP_PARAMS:-$REGISTRATOR_PARAMS}
 ZOOKEEPER_APP_PARAMS=${ZOOKEEPER_APP_PARAMS:-$ZOOKEEPER_PARAMS}
 CHRONOS_APP_PARAMS=${CHRONOS_APP_PARAMS:-$CHRONOS_PARAMS}
+FABIO_APP_PARAMS=${FABIO_APP_PARAMS:-$FABIO_PARAMS}
 
 PANTERAS_HOSTNAME=${PANTERAS_HOSTNAME:-${HOSTNAME}}
 PANTERAS_RESTART=${PANTERAS_RESTART:-"no"}
