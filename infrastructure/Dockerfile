@@ -43,7 +43,7 @@ RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /e
     && echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
 
 ENV SUPERVISORD_APP_VERSION       3.2.3
-ENV DOCKER_APP_VERSION            1.10.3-0~trusty
+ENV DOCKER_APP_VERSION            1.11.0-0~trusty
 ENV CONSUL_APP_VERSION            0.6.4
 ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
 ENV HAPROXY_APP_VERSION           1.5.14-1ubuntu0.15.10.1~ubuntu14.04.1
