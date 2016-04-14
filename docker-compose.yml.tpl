@@ -1,5 +1,5 @@
 panteras:
-  image:      "${PANTERAS_DOCKER_IMAGE}"
+  image:      ${PANTERAS_DOCKER_IMAGE}
   net:        host
   privileged: true
   restart:    "${PANTERAS_RESTART}"
