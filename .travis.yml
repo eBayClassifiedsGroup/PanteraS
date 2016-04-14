@@ -5,7 +5,7 @@ services: docker
 
 env:
   global:
-    - DOCKER_APP_VERSION=1.10.2-0~trusty
+    - DOCKER_APP_VERSION=1.11.0-0~trusty
 
 notifications:
   slack: ebayclassifiedsgroup:tFHOcsnmbj9SKmfquoJJKjSb
