@@ -30,6 +30,13 @@ RUN apt-get update \
       keepalived \
       iptables \
       libapparmor1 \
+      zlib1g-dev \
+      gcc \
+      make \
+      autoconf \
+      autogen \
+      automake \
+      pkg-config \
    && apt-get clean
 
 # install Java 8
@@ -169,6 +176,18 @@ ADD fabio.properties /opt/fabio/fabio.properties
 RUN wget https://github.com/eBay/fabio/releases/download/v${FABIO_APP_VERSION}/fabio-${FABIO_APP_VERSION}-go1.6_linux-amd64 \
     && chmod a+x fabio-${FABIO_APP_VERSION}-go1.6_linux-amd64 \
     && ln -s fabio-${FABIO_APP_VERSION}-go1.6_linux-amd64 fabio
+
+
+# NETDATA
+#
+RUN git clone https://github.com/firehol/netdata.git /tmp/netdata.git --depth=1
+WORKDIR /tmp/netdata.git
+RUN ./netdata-installer.sh --dont-wait --install /opt
+WORKDIR /opt
+RUN rm -rf /tmp/*
+# forward request and error logs to docker log collector
+RUN ln -sf /dev/stdout /opt/netdata/var/log/netdata/access.log \
+  && ln -sf /dev/stderr /opt/netdata/var/log/netdata/error.log
 
 # Font for logo
 RUN wget https://raw.githubusercontent.com/patorjk/figlet.js/master/fonts/Elite.flf -O /usr/share/figlet/Elite.flf
