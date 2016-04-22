@@ -42,7 +42,8 @@ panteras:
     START_ZOOKEEPER:         "${START_ZOOKEEPER}"
     START_CHRONOS:           "${START_CHRONOS}"
     START_FABIO:             "${START_FABIO}"
-
+    HAPROXY_SSL:             "${HAPROXY_SSL}"
+    
     CONSUL_APP_PARAMS:          "${CONSUL_APP_PARAMS}"
     CONSUL_DOMAIN:              "${CONSUL_DOMAIN}"
     CONSUL_TEMPLATE_APP_PARAMS: "${CONSUL_TEMPLATE_APP_PARAMS}"
