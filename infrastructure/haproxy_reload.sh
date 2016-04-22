@@ -6,7 +6,7 @@ http=0
 stats=1
 
 DPORT=80
-[ ${HAPROXY_SSL} == "true" ] && DPORT=443 && export CERT_OPTS="${HAPROXY_CERT_OPTS}"
+[ ${HAPROXY_SSL} == "true" ] && DPORT=443
 
 haproxy_a_prefix=855
 haproxy_b_prefix=866
