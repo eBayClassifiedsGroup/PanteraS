@@ -6,7 +6,7 @@ http=0
 stats=1
 
 DPORT=80
-[ ${HAPROXY_SSL} == "true" ] && DPORT=443
+[ ${HAPROXY_SSL} == "true" ] && DPORT=443 && export CERT_OPTS="${HAPROXY_CERT_OPTS}"
 
 haproxy_a_prefix=855
 haproxy_b_prefix=866
@@ -57,7 +57,6 @@ configure() {
   stats_port="${!instance_prefix}${stats}"
   export PORT_STATS=${stats_port}
   export PORT_HTTP=${http_port}
-  [[ ${HAPROXY_SSL} == "true" ]] && export CERT_OPTS="ssl crt /etc/haproxy/haproxy.pem"
   eval "$(cat /etc/haproxy/haproxy.cfg| sed 's/^\(.*\)/echo "\1"/')" >| /etc/haproxy/$1.cfg
 }
 
