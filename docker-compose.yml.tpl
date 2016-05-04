@@ -42,6 +42,8 @@ panteras:
     START_ZOOKEEPER:         "${START_ZOOKEEPER}"
     START_CHRONOS:           "${START_CHRONOS}"
     START_FABIO:             "${START_FABIO}"
+    START_NETDATA:           "${START_NETDATA}"
+
     HAPROXY_SSL:             "${HAPROXY_SSL}"
     
     CONSUL_APP_PARAMS:          "${CONSUL_APP_PARAMS}"
@@ -60,6 +62,7 @@ panteras:
     KEEPALIVED_VIP:             "${KEEPALIVED_VIP}"
     CHRONOS_APP_PARAMS:         "${CHRONOS_APP_PARAMS}"
     FABIO_APP_PARAMS:           "${FABIO_APP_PARAMS}"
+    NETDATA_APP_PARAMS:         "${NETDATA_APP_PARAMS}"
 
     HOSTNAME:                   "${PANTERAS_HOSTNAME}"
 
@@ -73,4 +76,6 @@ panteras:
     - "/var/lib/docker:/var/lib/docker"
     - "/sys:/sys"
     - "/tmp/mesos:/tmp/mesos"
+    - "/proc:/host/proc:ro" 
+    - "/sys:/host/sys:ro"
     ${VOLUME_DOCKER}

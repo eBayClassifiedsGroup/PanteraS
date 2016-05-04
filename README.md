@@ -129,6 +129,7 @@ on the following ports:
 - Marathon: http://hostname:8080
 - Mesos: http://hostname:5050
 - Supervisord: http://hostname:9000
+- Netdata:  http://hostname:19999 (must run `START_NETDATA=true`)
 
 ## Listening address
 
