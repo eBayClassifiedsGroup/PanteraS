@@ -115,6 +115,7 @@ RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSU
 #
 # Add files
 ADD haproxy.cfg        /etc/haproxy/
+ADD haproxy.pem       /etc/haproxy/
 # same file for an "empty template"
 ADD haproxy.cfg        /opt/consul-template/
 ADD haproxy.cfg.ctmpl  /opt/consul-template/

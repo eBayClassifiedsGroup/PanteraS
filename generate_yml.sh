@@ -46,6 +46,9 @@ START_REGISTRATOR=${START_REGISTRATOR:-${SLAVE}}
 START_NETDATA=${START_NETDATA:-"false"}
 #OPTIONAL
 START_DNSMASQ=${START_DNSMASQ:-"true"}
+#HAPROXY SSL
+HAPROXY_SSL=${HAPROXY_SSL:-"false"}
+[ "$HAPROXY_SSL" == "true" ] && HAPROXY_CERT_OPTS=${HAPROXY_CERT_OPTS:-"ssl crt /etc/haproxy/haproxy.pem"}
 
 # Lets consul behave as a client but on slaves only
 [ "${SLAVE}" == "true" ] && [ "${MASTER}" == "false" ] && CONSUL_MODE=${CONSUL_MODE:-' '}
