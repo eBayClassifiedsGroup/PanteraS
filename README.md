@@ -129,6 +129,7 @@ on the following ports:
 - Marathon: http://hostname:8080
 - Mesos: http://hostname:5050
 - Supervisord: http://hostname:9000
+- Netdata:  http://hostname:19999 (must run `START_NETDATA=true`)
 
 ## Listening address
 
@@ -233,6 +234,37 @@ set with `ENV` variables, specified with `%%MACROS%%` in deployment plan.
 
 more info: https://github.com/eBayClassifiedsGroup/marathon_deploy
 
+## Enabling SSL on HAProxy
+
+By default, HAProxy will proxy all of your HTTP services via port `80`.  If you would like to enable ssl on HAProxy and proxy all of your HTTP services on port `443`, set the following `ENV` variable before running `generate_yml.sh`:
+
+`HAPROXY_SSL=true`
+
+By default, HA proxy will use a default certificate called `haproxy.pem` in the [infrastructure](/infrastructure) folder.  You can extract the cert public from that `pem` file to import into your other reverse proxies.  
+
+If you would like to use your own cert, create a new `pem` by running:
+
+```
+openssl genrsa -out haproxy.key 2048
+openssl req -new -key haproxy.key 2048 -out haproxy.csr
+```
+...complete the CSR details and then get it signed by a trusted CA, or sign it yourself:
+
+```
+openssl x509 -req -days 9999 -in haproxy.csr -signkey haproxy.key -out haproxy.crt
+```
+
+Create the pem:
+
+```cat haproxy.crt haproxy.key | tee haproxy.pem```
+
+Replace the `haproxy.pem` in the infrastructure folder before you build the PanteraS image.
+
+Alternatively, you could map your new `pem` to the container by adding this to `docker-compose.yml`
+
+```- "/path/to/your/haproxy.pem:/etc/haproxy/haproxy.pem" ```
+
+**Note**: Currently HAProxy supports `http` or `https`, but not both.  
 
 ## References
 
