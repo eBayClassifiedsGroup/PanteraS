@@ -2,7 +2,7 @@
 
 paas="PanteraS"
 REPODIR=`dirname $0`
-IMAGE="panteras/paas-in-a-box:latest"
+IMAGE="${REGISTRY}panteras/paas-in-a-box:latest"
 
 usage(){
 cat <<_END_
