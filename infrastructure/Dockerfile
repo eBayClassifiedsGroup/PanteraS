@@ -181,7 +181,8 @@ RUN apt-get update \
        autogen \
        automake \
        pkg-config \
-       uuid \
+       uuid-dev \
+       libmnl-dev \
     && git clone https://github.com/firehol/netdata.git /tmp/netdata.git --depth=1 \
     && cd /tmp/netdata.git \
     && ./netdata-installer.sh --dont-wait --install /opt \
@@ -197,7 +198,8 @@ RUN apt-get update \
        autogen \
        automake \
        pkg-config \
-       uuid \
+       uuid-dev \
+       libmnl-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
