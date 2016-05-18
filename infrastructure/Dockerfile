@@ -102,7 +102,7 @@ RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
 
 # consul-template
 RUN wget https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip \
-    && unzip consul_template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip
+    && unzip consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip
 
 # HAPROXY config
 #
