@@ -181,6 +181,7 @@ RUN apt-get update \
        autogen \
        automake \
        pkg-config \
+       uuid \
     && git clone https://github.com/firehol/netdata.git /tmp/netdata.git --depth=1 \
     && cd /tmp/netdata.git \
     && ./netdata-installer.sh --dont-wait --install /opt \
@@ -196,6 +197,7 @@ RUN apt-get update \
        autogen \
        automake \
        pkg-config \
+       uuid \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
