@@ -88,11 +88,12 @@ DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
     KEEPALIVED_CONSUL_TEMPLATE="-template=./keepalived.conf.ctmpl:/etc/keepalived/keepalived.conf:./keepalived_reload.sh"
 
 # Expose ports depends on which service has been mark to start
-[ "${START_CONSUL_TEMPLATE}" == "true" ] && {
+[ "${START_CONSUL_TEMPLATE}" == "true" ] || [ "${START_FABIO}" == "true" ] && {
   [ "${START_CONSUL}"        == "true" ] && PORTS="ports:" && CONSUL_UI_PORTS='- "8500:8500"'
   [ "${START_MARATHON}"      == "true" ] && PORTS="ports:" && MARATHON_PORTS='- "8080:8080"'
   [ "${START_MESOS_MASTER}"  == "true" ] && PORTS="ports:" && MESOS_PORTS='- "5050:5050"'
   [ "${START_CHRONOS}"       == "true" ] && PORTS="ports:" && CHRONOS_PORTS='- "4400:4400"'
+  [ "${START_NETDATA}"       == "true" ] && PORTS="ports:" && NETDATA_PORTS='- "19999:19999"'
 }
 
 # Override docker with local binary
