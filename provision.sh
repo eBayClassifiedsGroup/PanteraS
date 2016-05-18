@@ -2,7 +2,8 @@
 
 paas="PanteraS"
 REPODIR=`dirname $0`
-IMAGE="${REGISTRY}panteras/paas-in-a-box:latest"
+export PANTERAS_IMAGE_TAG=$(awk '/version/{print $2}' ${REPODIR}/infrastructure/version)
+IMAGE="${REGISTRY}panteras/paas-in-a-box:$PANTERAS_IMAGE_TAG"
 
 usage(){
 cat <<_END_
