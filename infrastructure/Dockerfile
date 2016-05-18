@@ -50,11 +50,11 @@ ENV DOCKER_APP_VERSION            1.11.0-0~trusty
 ENV CONSUL_APP_VERSION            0.6.4
 ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
 ENV HAPROXY_APP_VERSION           1.5.14-1ubuntu0.15.10.1~ubuntu14.04.1
-ENV MESOS_APP_VERSION             0.28.0-2.0.16.ubuntu1404
-ENV MARATHON_APP_VERSION          1.1.0-1.0.471.ubuntu1404
+ENV MESOS_APP_VERSION             0.28.1-2.0.20.ubuntu1404
+ENV MARATHON_APP_VERSION          1.1.1-1.0.472.ubuntu1404
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
-ENV FABIO_APP_VERSION             1.1.2
+ENV FABIO_APP_VERSION             1.1.3rc2
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -101,11 +101,8 @@ RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
     && ln -s /usr/sbin/haproxy /usr/sbin/haproxy_b
 
 # consul-template
-#RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul_template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip \
-#   && unzip consul_template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip
-RUN wget https://github.com/hashicorp/consul-template/releases/download/v${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
-    && tar zxf consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.tar.gz \
-    && ln -s consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64/consul-template .
+RUN wget https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_APP_VERSION}/consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip \
+    && unzip consul-template_${CONSUL_TEMPLATE_APP_VERSION}_linux_amd64.zip
 
 # HAPROXY config
 #
@@ -184,6 +181,8 @@ RUN apt-get update \
        autogen \
        automake \
        pkg-config \
+       uuid-dev \
+       libmnl-dev \
     && git clone https://github.com/firehol/netdata.git /tmp/netdata.git --depth=1 \
     && cd /tmp/netdata.git \
     && ./netdata-installer.sh --dont-wait --install /opt \
@@ -199,6 +198,8 @@ RUN apt-get update \
        autogen \
        automake \
        pkg-config \
+       uuid-dev \
+       libmnl-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/eBayClassifiedsGroup/PanteraS.svg?branch=master)](https://travis-ci.org/eBayClassifiedsGroup/PanteraS)
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/panteras/paas-in-a-box/)
-[![Current Release](http://img.shields.io/badge/release-0.2.2-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/v0.2.2)
+[![Current Release](http://img.shields.io/badge/release-0.2.3-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/v0.2.3)
 
 # PanteraS <br> _entire_ Platform as a Service, in a box
 _"One container to rule them all"_
@@ -59,6 +59,10 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
     Mesos Slave | x | - | x |
      Registrator| x | - | x |
          dnsmasq| x | x | x |
+    Fabio       | - | - | - |
+    Netdata     | - | - | - |
+
+(Last two require manual override `START_FABIO=true` )
         
 
 ## Requirements:
@@ -123,7 +127,7 @@ slavehost-n# docker-compose up -d
 You can reach the PaaS components
 on the following ports:
 
-- HAproxy: http://hostname:81
+- HAproxy / Fabio: http://hostname:81
 - Consul: http://hostname:8500
 - Chronos: http://hostname:4400
 - Marathon: http://hostname:8080

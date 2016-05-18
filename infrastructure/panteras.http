@@ -67,6 +67,9 @@ Content-Type: text/html
                 <div id="consul" class="col-md-6 hidden">
                     <a href="/" title="Service discovery"><img id="consul_p" width="32" height="32"/>Consul</a>
                 </div>
+                <div id="netdata" class="col-md-6 hidden">
+                    <a href="/" title="Netdata monitoring"><img id="netdata_p" width="32" height="32"/>Netdata</a>
+                </div>
                 <div id="supervisord" class="col-md-6 hidden">
                     <a href="/" title="Processes status"><span class="glyphicon glyphicon-play" aria-hidden="true"></span>Supervisor</a>
                 </div>
@@ -136,6 +139,10 @@ Content-Type: text/html
                     id: 'mesos-master',
                     port: 5050
                 },
+                {
+                    id: 'netdata',
+                    port: 19999
+                },
             ];
 
             links.forEach(function (link) {
@@ -148,8 +155,9 @@ Content-Type: text/html
             });
 
             document.getElementById('marathon_p').src = window.location.origin + ':8080/ui/img/marathon-favicon.ico';
-            document.getElementById('consul_p').src = window.location.origin + ':8500/ui/static/favicon.png';
-			document.getElementById('chronos_p').src = window.location.origin + ':4400/favicon.ico';
+            document.getElementById('consul_p').src   = window.location.origin + ':8500/ui/static/favicon.png';
+            document.getElementById('chronos_p').src  = window.location.origin + ':4400/favicon.ico';
+            document.getElementById('netdata_p').src  = window.location.origin + ':19999/favicon.ico';
 			
         </script>
     </body>
