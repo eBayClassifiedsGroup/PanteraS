@@ -27,6 +27,11 @@ trap 'kill -TERM $ZK_PID' TERM INT
     || echo "clientPortAddress=${LISTEN_IP}" >> ${ZK_CFG}
 }
 
+REAL_JAVA_PATH=$(readlink -f $(which java))
+JAVA_DIR=${REAL_JAVA_PATH%/bin/java}
+mkdir -p ${JAVA_DIR}/conf/management/
+touch ${JAVA_DIR}/conf/management/management.properties
+
 /usr/share/zookeeper/bin/zkServer.sh "$@" &
 ZK_PID=$!
 wait $ZK_PID

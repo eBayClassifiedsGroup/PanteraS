@@ -1,7 +1,7 @@
 # PanteraS
 # Platform as a Service based on Paas in a box project
 #
-FROM ubuntu:14.04.4
+FROM ubuntu:16.04
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
@@ -33,25 +33,13 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-
-# install Java 8
-RUN echo "deb http://ppa.launchpad.net/webupd8team/java/ubuntu trusty main" > /etc/apt/sources.list.d/java-trusty.list \
-    && gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv EEA14886 && gpg --export --armor EEA14886 | apt-key add - \
-    && apt-get update \
-    && echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections \
-    && apt-get -y install oracle-java8-installer \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --display java \
-    && echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment
-
 ENV SUPERVISORD_APP_VERSION       3.2.3
-ENV DOCKER_APP_VERSION            1.11.0-0~trusty
-ENV CONSUL_APP_VERSION            0.6.4
-ENV CONSUL_TEMPLATE_APP_VERSION   0.10.0
-ENV HAPROXY_APP_VERSION           1.5.14-1ubuntu0.15.10.1~ubuntu14.04.1
-ENV MESOS_APP_VERSION             0.28.1-2.0.20.ubuntu1404
-ENV MARATHON_APP_VERSION          1.1.1-1.0.472.ubuntu1404
+ENV DOCKER_APP_VERSION            1.12.1-0~xenial
+ENV CONSUL_APP_VERSION            0.7.0
+ENV CONSUL_TEMPLATE_APP_VERSION   0.15.0
+ENV HAPROXY_APP_VERSION           1.6.3-1ubuntu0.1
+ENV MESOS_APP_VERSION             1.0.1-2.0.94.ubuntu1604
+ENV MARATHON_APP_VERSION          1.3.0-1.0.506.ubuntu1604
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
 ENV FABIO_APP_VERSION             1.1.3rc2
@@ -93,7 +81,7 @@ WORKDIR /opt/consul-template
 RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
     && apt-get update \
     && apt-get install -y \
-    haproxy="${HAPROXY_APP_VERSION}" \
+       haproxy=${HAPROXY_APP_VERSION} \
     && apt-get clean \
     && sed -i 's/^ENABLED=.*/ENABLED=1/' /etc/default/haproxy \
     && rm -rf /var/lib/apt/lists/* \
@@ -123,26 +111,28 @@ ADD keepalived_reload.sh  /opt/consul-template/
 
 # ZOOKEEPER MESOS MARATHON
 #
-RUN echo "deb http://repos.mesosphere.io/ubuntu/ trusty main" > /etc/apt/sources.list.d/mesosphere.list \
+RUN echo "deb http://repos.mesosphere.io/ubuntu/ xenial main" > /etc/apt/sources.list.d/mesosphere.list \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv E56151BF \
     && apt-get update \
     && apt-get -y install \
        mesos=${MESOS_APP_VERSION} \
        marathon=${MARATHON_APP_VERSION} \
-       chronos=${CHRONOS_APP_VERSION} \
+    && wget http://repos.mesosphere.io/ubuntu/pool/main/c/chronos/chronos_${CHRONOS_APP_VERSION}_amd64.deb \
+    && dpkg -i chronos_${CHRONOS_APP_VERSION}_amd64.deb \
+    && rm chronos_${CHRONOS_APP_VERSION}_amd64.deb \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && rm /etc/mesos/zk
 ADD zkStart.sh /opt/zkStart.sh
+    # Chronos no longer in mesosphere ?
+    #chronos=${CHRONOS_APP_VERSION}\
 
 # DOCKER
 #
-RUN echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /etc/apt/sources.list.d/docker.list \
+RUN echo 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' > /etc/apt/sources.list.d/docker.list \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv F76221572C52609D \
     && apt-get update \
     && apt-get install -y docker-engine=${DOCKER_APP_VERSION} \
-    || { wget http://apt.dockerproject.org/repo/pool/main/d/docker-engine/docker-engine_${DOCKER_APP_VERSION}_amd64.deb \
-    && dpkg -i docker-engine_${DOCKER_APP_VERSION}_amd64.deb; } \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -151,10 +141,7 @@ RUN echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /etc/apt/
 RUN mkdir /opt/registrator
 ENV PATH ${PATH}:/opt/registrator
 WORKDIR /opt/registrator
-# Binaries are not supported anymore
-#  && wget https://github.com/progrium/registrator/releases/download/v${REGISTRATOR_APP_VERSION}/registrator_${REGISTRATOR_APP_VERSION}_linux_x86_64.tgz \
-#  && tar zxf registrator_${REGISTRATOR_APP_VERSION}_linux_x86_64.tgz
-# Providing binaries by us - temporaly
+# Providing binaries by us
 RUN wget https://github.com/eBayClassifiedsGroup/registrator/releases/download/${REGISTRATOR_APP_VERSION}/registrator.tgz \
     && tar zxf registrator.tgz \
     && rm registrator.tgz
@@ -200,6 +187,7 @@ RUN apt-get update \
        pkg-config \
        uuid-dev \
        libmnl-dev \
+    && apt-get autoremove -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

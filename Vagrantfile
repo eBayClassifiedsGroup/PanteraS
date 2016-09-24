@@ -13,7 +13,8 @@ end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu/trusty64"
+  config.vm.box = "ubuntu/xenial64"
+
 
   config.vm.define "standalone" do |node|
     node.vm.hostname = "standalone"
@@ -32,5 +33,5 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "2048"]
   end
 
-  config.vm.provision "shell", inline: "export DOCKER_VERSION=$(awk '/ENV DOCKER_APP_VERSION/{print $3}' /vagrant/infrastructure/Dockerfile); LOCALIP=192.168.10.10 /vagrant/provision.sh -m vagrant-provision" + build
+  config.vm.provision "shell", inline: "ln -sf /run/resolvconf/resolv.conf /etc/resolv.conf; export DOCKER_VERSION=$(awk '/ENV DOCKER_APP_VERSION/{print $3}' /vagrant/infrastructure/Dockerfile); LOCALIP=192.168.10.10 /vagrant/provision.sh -m vagrant-provision" + build
 end

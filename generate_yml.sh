@@ -153,6 +153,8 @@ MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --docker_stop_timeout=5secs \
  --gc_delay=1days \
  --docker_socket=/tmp/docker.sock \
+ --no-systemd_enable_support \
+ --work_dir=/tmp \
  ${MESOS_SLAVE_PARAMS}"
 #
 REGISTRATOR_PARAMS="-cleanup -ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
