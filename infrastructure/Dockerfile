@@ -42,7 +42,8 @@ ENV MESOS_APP_VERSION             1.0.1-2.0.94.ubuntu1604
 ENV MARATHON_APP_VERSION          1.3.0-1.0.506.ubuntu1604
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
-ENV FABIO_APP_VERSION             1.1.3rc2
+ENV FABIO_APP_VERSION             1.3.2
+ENV FABIO_GO_APP_VERSION          go1.7.1
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -152,9 +153,9 @@ RUN mkdir /opt/fabio
 ENV PATH ${PATH}:/opt/fabio
 WORKDIR /opt/fabio
 ADD fabio.properties /opt/fabio/fabio.properties
-RUN wget https://github.com/eBay/fabio/releases/download/v${FABIO_APP_VERSION}/fabio-${FABIO_APP_VERSION}-go1.6.2_linux-amd64 \
-    && chmod a+x fabio-${FABIO_APP_VERSION}-go1.6.2_linux-amd64 \
-    && ln -s fabio-${FABIO_APP_VERSION}-go1.6.2_linux-amd64 fabio
+RUN wget https://github.com/eBay/fabio/releases/download/v${FABIO_APP_VERSION}/fabio-${FABIO_APP_VERSION}-${FABIO_GO_APP_VERSION}_linux-amd64 \
+    && chmod a+x fabio-${FABIO_APP_VERSION}-${FABIO_GO_APP_VERSION}_linux-amd64 \
+    && ln -s fabio-${FABIO_APP_VERSION}-${FABIO_GO_APP_VERSION}_linux-amd64 fabio
 
 
 # NETDATA
