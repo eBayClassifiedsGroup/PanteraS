@@ -39,6 +39,7 @@ _END_
 
 MODE=""
 BUILDIMAGES=false
+DOCKER_VERSION=${DOCKER_VERSION:-'*'}
 
 while getopts ":m:bh" mode ; do
   case $mode in
@@ -127,16 +128,16 @@ case "$MODE" in
   ! hasDockerCompose && echo "error: docker-compose not detected" >&2 && exit 1
   echo BUILDIMAGES
   echo $BUILDIMAGES
-  [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && sudo ./build-docker-images.sh \
+  [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && . ./build-docker-images.sh \
     || docker pull ${IMAGE}
 
   LOCALIP=${LOCALIP:-$(hostname --ip-address| awk '{ print $2}')}
   DNS_CONFIG="DOCKER_OPTS=\"\${DOCKER_OPTS} --dns $LOCALIP\""
   DNS_CONFIG_JSON="{\"dns\": [\"$LOCALIP\"]}"
   TRIGGER_RESTART=0
-  [ ! -f /etc/docker/daemon.json ] && echo $DNS_CONFIG_JSON >> /etc/docker/daemon.json && $TRIGGER_RESTART=1
-  grep -q -- "$DNS_CONFIG" /etc/default/docker || echo $DNS_CONFIG >>/etc/default/docker && $TRIGGER_RESTART=1
-  [ $TRIGGER_RESTART ] && sudo service docker restart
+  [ ! -f /etc/docker/daemon.json ] && { echo $DNS_CONFIG_JSON >> /etc/docker/daemon.json && TRIGGER_RESTART=1; }
+  grep -q -- "$DNS_CONFIG" /etc/default/docker || { echo $DNS_CONFIG >>/etc/default/docker && TRIGGER_RESTART=1; }
+  [ "$TRIGGER_RESTART" -eq 1 ] && sudo service docker restart
 
   # evil hack to set a proper /etc/hosts entry (non localhost) for our hostname.
   #   This is needed for marathon (and posible consul) checks to work properly. Since these
@@ -188,7 +189,7 @@ case "$MODE" in
 
   }
 
-  [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && ./build-docker-images.sh \
+  [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && . ./build-docker-images.sh \
     || docker pull ${IMAGE}
 
 

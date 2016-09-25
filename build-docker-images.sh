@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 [ -f ./restricted/common ] && . ./restricted/common
 [ -f ./restricted/common ] && . ./restricted/host
@@ -8,8 +8,16 @@ error_exit() {
     exit 1
 }
 
-TAG=${TAG:-"latest"}
+TAG=${PANTERAS_IMAGE_TAG:-"latest"}
 IMAGE=${IMAGE:-"panteras/paas-in-a-box:${TAG}"}
+docker version >/dev/null 2>&1 || { 
+  sudo docker version >/dev/null 2>&1 && SUDO_NEEDED=1 || {
+    echo "Can't run docker"
+    exit 1
+  }
+}
 
-docker build --rm=true --tag=${REGISTRY}${IMAGE} infrastructure || error_exit
-docker tag                   ${REGISTRY}${IMAGE} ${IMAGE}       || error_exit
+[ $SUDO_NEEDED ] && SUDO='sudo'
+
+$SUDO docker build --rm=true --tag=${REGISTRY}${IMAGE} infrastructure || error_exit
+$SUDO docker tag                   ${REGISTRY}${IMAGE} ${IMAGE}       || error_exit

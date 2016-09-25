@@ -30,6 +30,7 @@ RUN apt-get update \
        keepalived \
        iptables \
        libapparmor1 \
+       jshon \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -193,6 +194,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 
+# PanteraS:
+RUN gem install panteras_api marathon_deploy
 # Font for logo
 RUN wget https://raw.githubusercontent.com/patorjk/figlet.js/master/fonts/Elite.flf -O /usr/share/figlet/Elite.flf
 
@@ -200,6 +203,8 @@ ADD supervisord.conf   /etc/supervisord.conf
 ADD supervisord.sh     /opt/
 ADD panteras.http      /etc/haproxy/errors/
 ADD version            /opt/
+ADD bashrc             /tmp
+RUN cat /tmp/bashrc >> /root/.bashrc
 
 WORKDIR /opt
 ENTRYPOINT [ "/opt/supervisord.sh" ]
