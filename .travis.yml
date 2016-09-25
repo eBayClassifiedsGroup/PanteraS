@@ -22,7 +22,7 @@ before_install:
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
   - gem install marathon_deploy
-  - docker pull ubuntu:14.04
+  - docker pull ubuntu:16.04
   - docker ps
   - ./build-docker-images.sh
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
@@ -38,7 +38,7 @@ before_install:
 
 script:
   - docker ps
-  - sleep 20
+  - sleep 30
   - curl -s http://${IP}:8080/v2/leader
   - curl -s http://${IP}:8080/v2/info
   - curl -I -s http://${IP}:5050/master/health
