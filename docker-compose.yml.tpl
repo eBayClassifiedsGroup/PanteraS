@@ -81,6 +81,7 @@ panteras:
     - "/var/lib/docker:/var/lib/docker"
     - "/sys:/sys"
     - "/tmp/mesos:/tmp/mesos"
+    - "/tmp/consul/data:/opt/consul/data"
     - "/proc:/host/proc:ro" 
     - "/sys:/host/sys:ro"
     ${VOLUME_DOCKER}
