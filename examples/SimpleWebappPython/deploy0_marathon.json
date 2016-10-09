@@ -15,7 +15,7 @@
    }
  },
  "env": {
-   "SERVICE_TAGS" : "haproxy,http,weight=100,haproxy_route=/media,haproxy_route=/chat,haproxy_tcp=5556",
+   "SERVICE_TAGS" : "haproxy,http,weight=100,haproxy_tcp=5556,haproxy_httpchk=GET /",
    "SERVICE_NAME" : "python"
  },
  "healthChecks": [
