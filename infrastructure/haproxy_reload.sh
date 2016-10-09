@@ -11,11 +11,15 @@ DPORT=80
 haproxy_a_prefix=855
 haproxy_b_prefix=866
 
-iptables_status() {
-   state=$(iptables -w -t nat -L HAPROXY 2>/dev/null| awk '/haproxy/{print $1}')
-   if   [[ ${state} == "" ]]; then echo "none"
-   elif [[ ${state} == "haproxy_a" ]]; then echo ${state}
-   elif [[ ${state} == "haproxy_b" ]]; then echo ${state}
+current_state() {
+   iptables -w -t nat -L HAPROXY 2>/dev/null| awk '/haproxy/{print $1}'
+}
+
+new_state() {
+   old_state=$1
+   if   [[ ${old_state} == "" ]]; then echo "none"
+   elif [[ ${old_state} == "haproxy_a" ]]; then echo "haproxy_b"
+   elif [[ ${old_state} == "haproxy_b" ]]; then echo "haproxy_a"
    else echo "unknown"
    fi
 }
@@ -58,6 +62,7 @@ configure() {
   export PORT_STATS=${stats_port}
   export PORT_HTTP=${http_port}
   eval "$(cat /etc/haproxy/haproxy.cfg| sed 's/^\(.*\)/echo "\1"/')" >| /etc/haproxy/$1.cfg
+  /usr/sbin/$1 -c -f /etc/haproxy/$1.cfg
 }
 
 # Race condition can happen also here
@@ -66,7 +71,8 @@ configure() {
 # since we retry evey fail start
 #
 service_restart() {
-  configure $1 && /usr/sbin/$1 -p /tmp/$1.pid -f /etc/haproxy/$1.cfg -sf $(pidof $1) 2>/dev/null
+  configure $1 || { echo "[ERROR] - configruation file is broken - leaving state as it is"; exit; }
+  /usr/sbin/$1 -p /tmp/$1.pid -f /etc/haproxy/$1.cfg -sf $(pidof $1)
 }
 
 remove() {
@@ -88,22 +94,24 @@ init() {
   add haproxy_a
 }
 
-[[ $1 == "cleanup" ]] && ( remove; true ) && exit
+main() {
+  [[ $1 == "cleanup" ]] && { remove; exit; }
 
-status=$(iptables_status)
-echo "Currently: ${status}"
+  current_state=$(current_state)
+  echo "Current state: ${current_state}"
+  state=$(new_state $current_state)
 
-if [[ ${status} == "none" ]]; then
-  init
-elif [[ ${status} == "haproxy_b" ]]; then
-  echo "Switching routing to haproxy_a"
-  while !(service_restart haproxy_a); do echo "trying again"; done
-  replace haproxy_a || init
-elif [[ ${status} == "haproxy_a" ]]; then
-  echo "Switching routing to haproxy_b"
-  while !(service_restart haproxy_b); do echo "trying again"; done
-  replace haproxy_b || init
-else
-  echo "[ERROR] unknown ipfilters state! doing cleanup and init"
-  init
-fi
+  if [[ ${state} == "none" ]]; then
+    init
+  elif [[ ${state} =~ "haproxy_" ]]; then
+    echo "Switching routing to ${state}"
+    while ! service_restart ${state}; do
+      echo "trying again"
+    done && \
+    { replace ${state} || init ; }
+  else
+    echo "[ERROR] unknown ipfilters state! doing cleanup and init"
+    init
+  fi
+}
+main
