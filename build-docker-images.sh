@@ -1,14 +1,14 @@
 #!/bin/bash
 
 [ -f ./restricted/common ] && . ./restricted/common
-[ -f ./restricted/common ] && . ./restricted/host
+[ -f ./restricted/host ] && . ./restricted/host
 
 error_exit() {
     echo "ERROR DURING BUILDING IMAGE"
     exit 1
 }
 
-TAG=${PANTERAS_IMAGE_TAG:-"latest"}
+TAG=${PANTERAS_IMAGE_TAG:-$(awk '{print $2}' infrastructure/version)}
 IMAGE=${IMAGE:-"panteras/paas-in-a-box:${TAG}"}
 docker version >/dev/null 2>&1 || { 
   sudo docker version >/dev/null 2>&1 && SUDO_NEEDED=1 || {
