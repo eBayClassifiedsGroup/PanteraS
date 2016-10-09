@@ -37,10 +37,10 @@ RUN apt-get update \
 ENV SUPERVISORD_APP_VERSION       3.2.3
 ENV DOCKER_APP_VERSION            1.12.1-0~xenial
 ENV CONSUL_APP_VERSION            0.7.0
-ENV CONSUL_TEMPLATE_APP_VERSION   0.15.0
+ENV CONSUL_TEMPLATE_APP_VERSION   0.16.0
 ENV HAPROXY_APP_VERSION           1.6.3-1ubuntu0.1
 ENV MESOS_APP_VERSION             1.0.1-2.0.94.ubuntu1604
-ENV MARATHON_APP_VERSION          1.3.0-1.0.506.ubuntu1604
+ENV MARATHON_APP_VERSION          1.3.2-1.0.525.ubuntu1604
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
 ENV FABIO_APP_VERSION             1.3.2
@@ -56,14 +56,12 @@ RUN pip install https://github.com/Supervisor/supervisor/archive/${SUPERVISORD_A
 
 # CONSUL
 #
-RUN mkdir /opt/consul && mkdir /etc/consul.d/
+RUN mkdir -p /opt/consul/data && mkdir /etc/consul.d/
 ENV PATH $PATH:/opt/consul
 WORKDIR /opt/consul
 
 RUN wget https://releases.hashicorp.com/consul/${CONSUL_APP_VERSION}/consul_${CONSUL_APP_VERSION}_linux_amd64.zip \
-    && wget https://releases.hashicorp.com/consul/${CONSUL_APP_VERSION}/consul_${CONSUL_APP_VERSION}_web_ui.zip \
     && unzip consul_${CONSUL_APP_VERSION}_linux_amd64.zip \
-    && unzip consul_${CONSUL_APP_VERSION}_web_ui.zip \
     && rm consul_*.zip
 
 # DNSMASQ
