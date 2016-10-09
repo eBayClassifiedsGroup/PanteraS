@@ -26,7 +26,7 @@
 backend backend_{{$service.Name}}{{$key_maxconn := printf "/haproxy/%s/maxconn" $service.Name}}
     balance roundrobin{{range $tag, $services := service $service.Name | byTag}}{{if $tag | regexMatch "^haproxy_httpchk=(.+)" }}
     option  {{$tag | regexReplaceAll "haproxy_httpchk=(.+)" "httpchk $1"}} {{end}}{{end}}
-{{range $services}}    server  {{.Node}}_{{.Port}} {{.Address}}:{{.Port}} maxconn {{ key_or_default $key_maxconn "128" }} {{range .Tags}}{{if . | regexMatch "^haproxy_weight=([0-9]+)" }} {{. | regexReplaceAll "=" " "}} {{end}}{{end}} check
+{{range $services}}    server  {{.Node}}_{{.Port}} {{.Address}}:{{.Port}} maxconn {{ key_or_default $key_maxconn "128" }} {{range .Tags}}{{if . | regexMatch "^haproxy_weight=([0-9]+)" }} {{. | regexReplaceAll "haproxy_weight=" "weight "}} {{end}}{{end}} check
 {{end}}{{end}}{{end}}{{end}}
 
 {{range services}}{{range $tag, $services := service .Name | byTag}}{{$service := (index $services 0)}}{{if eq $tag "haproxy"}}{{range $service.Tags}}{{if . | regexMatch "^haproxy_tcp=([0-9]+)" }}{{$tcp_port := . | regexReplaceAll "haproxy_tcp=" ""}}
