@@ -1,10 +1,10 @@
 # Simplest web app ever
 
-FROM ubuntu:16.04
+FROM python:alpine
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update; apt-get install -y python3 curl
+RUN apk update && apk add bash
 RUN mkdir -p /opt/web/cgi-bin
 WORKDIR /opt/web
 ENV HOME  /opt/web

@@ -1,6 +1,6 @@
 {
     "id": "python-smooth-canaries", 
-    "args": [ "cd /opt/web/ && /usr/bin/python3 -m http.server --cgi" ],
+    "args": [ "cd /opt/web/ && python3 -m http.server --cgi" ],
     "container": {
         "docker": {
             "image": "simple_webapp_python",

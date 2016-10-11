@@ -7,7 +7,7 @@
  "container": {
    "type": "DOCKER",
    "docker": {
-     "image": "ubuntu:16.04",
+     "image": "python:alpine",
      "network": "BRIDGE",
      "portMappings": [
         { "containerPort": 8080, "hostPort": 0, "protocol": "tcp" }
