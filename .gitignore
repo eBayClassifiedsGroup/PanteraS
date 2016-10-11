@@ -5,3 +5,4 @@ docker-compose.yml
 *.swp
 .DS_Store
 .vagrant/
+ubuntu-*.log

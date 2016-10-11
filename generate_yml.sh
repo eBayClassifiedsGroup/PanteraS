@@ -26,7 +26,8 @@ MASTER=${MASTER:-"true"}
 SLAVE=${SLAVE:-"true"}
 
 # allow to specify a specific docker image or a specific tag of the pass-in-a-box image
-PANTERAS_IMAGE_TAG=${PANTERAS_IMAGE_TAG:-"latest"}
+PANTERAS_IMAGE_TAG=${PANTERAS_IMAGE_TAG:-$(awk '{print $2}' infrastructure/version)} #'
+echo $PANTERAS_IMAGE_TAG
 PANTERAS_DOCKER_IMAGE=${PANTERAS_DOCKER_IMAGE:-${REGISTRY}panteras/paas-in-a-box:${PANTERAS_IMAGE_TAG}}
 
 #COMMON
@@ -106,8 +107,8 @@ CONSUL_PARAMS="agent \
  -client=${LISTEN_IP} \
  -advertise=${CONSUL_IP} \
  -bind=${LISTEN_IP} \
- -data-dir=/opt/consul/ \
- -ui-dir=/opt/consul/ \
+ -data-dir=/opt/consul/data \
+ -ui \
  -node=${HOSTNAME} \
  -dc=${CONSUL_DC} \
  -domain ${CONSUL_DOMAIN} \
@@ -117,6 +118,7 @@ CONSUL_PARAMS="agent \
 #
 CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
  -template haproxy.cfg.ctmpl:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh \
+ -max-stale=0 \
  ${KEEPALIVED_CONSUL_TEMPLATE}"
 #
 DNSMASQ_PARAMS="-d \
@@ -153,6 +155,8 @@ MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --docker_stop_timeout=5secs \
  --gc_delay=1days \
  --docker_socket=/tmp/docker.sock \
+ --no-systemd_enable_support \
+ --work_dir=/tmp/mesos \
  ${MESOS_SLAVE_PARAMS}"
 #
 REGISTRATOR_PARAMS="-cleanup -ip=${HOST_IP} consul://${CONSUL_IP}:8500 \

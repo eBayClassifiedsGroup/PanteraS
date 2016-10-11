@@ -2,12 +2,13 @@
 [ -z ${HOST_IP} ] || exec supervisord -c /etc/supervisord.conf
 export LC_ALL=en_US.utf8
 toilet -f Elite PanteraS | /usr/games/lolcat -f 2>/dev/null
-cat version
+version=$(cat version)
+echo $version
 cat << EOF
 PanteraS - Platform as a Service
 Usage:
 
-$ git clone https://github.com/eBayClassifiedsGroup/PanteraS
+$ git clone -b $version https://github.com/eBayClassifiedsGroup/PanteraS
 $ cd PanteraS
 
 # ------------------------------------------

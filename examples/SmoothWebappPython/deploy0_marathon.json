@@ -1,6 +1,6 @@
 {
     "id": "python-smooth-stable",
-    "args": [ "cd /opt/web/ && /usr/bin/python3 -m http.server --cgi" ],
+    "args": [ "cd /opt/web/ && python3 -m http.server --cgi" ],
     "container": {
         "docker": {
             "image": "simple_webapp_python",
@@ -16,7 +16,7 @@
     "mem": 64.0,
     "instances": 2,
     "env": {
-      "SERVICE_TAGS" : "webapp,weight=100,urlprefix-python.service.consul/",
+      "SERVICE_TAGS" : "haproxy,haproxy_weight=100,urlprefix-python-smooth.service.consul/",
       "SERVICE_NAME" : "python-smooth",
       "SERVICE_8000_CHECK_HTTP" : "/index.html"
     },
