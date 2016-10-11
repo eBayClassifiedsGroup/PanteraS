@@ -1,5 +1,5 @@
 {
- "id": "python-example-stable",
+ "id": "python-example-tcp",
  "cmd": "echo python stable `hostname` > index.html; python3 -m http.server 8080",
  "mem": 16,
  "cpus": 0.1,
@@ -15,8 +15,8 @@
    }
  },
  "env": {
-   "SERVICE_TAGS" : "haproxy,haproxy_weight=100,haproxy_httpchk=GET /",
-   "SERVICE_NAME" : "python"
+   "SERVICE_TAGS" : "haproxy,haproxy_tcp=5556",
+   "SERVICE_NAME" : "python-tcp"
  },
  "healthChecks": [
    {

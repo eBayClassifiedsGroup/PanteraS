@@ -7,7 +7,7 @@
  "container": {
    "type": "DOCKER",
    "docker": {
-     "image": "ubuntu:14.04",
+     "image": "ubuntu:16.04",
      "network": "BRIDGE",
      "portMappings": [
         { "containerPort": 8080, "hostPort": 0, "protocol": "tcp" }
@@ -15,8 +15,8 @@
    }
  },
  "env": {
-   "SERVICE_TAGS" : "haproxy,http,weight=1,haproxy_route=/media,haproxy_route=/chat",
-   "SERVICE_NAME" : "pythonii"
+   "SERVICE_TAGS" : "haproxy,haproxy_weight=1,haproxy_route=/media,haproxy_route=/chat",
+   "SERVICE_NAME" : "python"
  },
  "healthChecks": [
    {
