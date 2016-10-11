@@ -4,7 +4,7 @@ FROM python:alpine
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
-RUN apk update && apk add bash
+RUN apk update && apk add bash curl
 RUN mkdir -p /opt/web/cgi-bin
 WORKDIR /opt/web
 ENV HOME  /opt/web
