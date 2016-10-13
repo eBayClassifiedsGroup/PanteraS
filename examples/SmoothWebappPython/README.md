@@ -24,5 +24,5 @@ $ while true; do curl -H 'Host: python-smooth.service.consul' http://<IP>; done
 ```
 
 scale up and down in marathon GUI http://<IP>:8080  
-and check that there is no connection timeout or connectin error,  
+and check that there is no connection timeout or connection error,  
 so removed containers goes into mainanece mode before being killed.
