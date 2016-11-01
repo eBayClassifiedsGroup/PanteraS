@@ -71,7 +71,7 @@ configure() {
 # since we retry evey fail start
 #
 service_restart() {
-  configure $1 || { echo "[ERROR] - configruation file is broken - leaving state as it is"; exit; }
+  configure $1 || { echo "[ERROR] - configruation file is broken - leaving state as it is"; exit 0; }
   /usr/sbin/$1 -p /tmp/$1.pid -f /etc/haproxy/$1.cfg -sf $(pidof $1)
 }
 
@@ -95,7 +95,7 @@ init() {
 }
 
 main() {
-  [[ $1 == "cleanup" ]] && { remove; exit; }
+  [[ $1 == "cleanup" ]] && { remove; exit 0; }
 
   current_state=$(current_state)
   echo "Current state: ${current_state}"
