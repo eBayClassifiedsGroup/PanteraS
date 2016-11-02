@@ -20,5 +20,6 @@ then
   curl -X DELETE -H "Content-Type: application/json" http://${IP}:8080/v2/apps/python-example-tcp?force=true >/dev/null 2>&1
 else
   echo "Start a new one"
-  curl -X POST -H "Content-Type: application/json" http://${IP}:8080/v2/apps/ -d@$1
+  #curl -X POST -H "Content-Type: application/json" http://${IP}:8080/v2/apps -d@$1
+  curl -X PUT -H "Content-Type: application/json" http://${IP}:8080/v2/apps/python-example-stable?force=true -d@$1
 fi
