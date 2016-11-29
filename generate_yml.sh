@@ -1,12 +1,23 @@
+#!/bin/bash
 # docker-compose.yml generator
 #
+
+[ -f docker-compose.yml.tpl ] || {
+  echo "Error: docker-compose.yml.tpl need to be in CWD"
+  exit 1
+}
+
+mkdir -p ./restricted
+touch ./restricted/env
+
+[ -f /etc/default/panteras ]  && . /etc/default/panteras
 [ -f ./restricted/common ]    && . ./restricted/common
 [ -f ./restricted/host ]      && . ./restricted/host
 [ -f ./restricted/overwrite ] && . ./restricted/overwrite
 
 echo "Keep in mind, to set free these ports on DOCKER HOST:"
 echo "53, 80, 81, 2181, 2888, 3888, 4400, 5050, 5151, 8080, 8300 - 8302, 8400, 8500, 8600, 9000, 31000 - 32000"
-echo "and be sure that your hostname is resolvable, if not, add entry to /etc/resolv.conf"
+echo "and be sure that your hostname is resolvable, if not, configure dns in /etc/resolv.conf or add entry in /etc/hosts"
 
 # Try to detect IP
 # docker-machine / boot2docker
@@ -26,7 +37,7 @@ MASTER=${MASTER:-"true"}
 SLAVE=${SLAVE:-"true"}
 
 # allow to specify a specific docker image or a specific tag of the pass-in-a-box image
-PANTERAS_IMAGE_TAG=${PANTERAS_IMAGE_TAG:-$(awk '{print $2}' infrastructure/version)} #'
+PANTERAS_IMAGE_TAG=${PANTERAS_IMAGE_TAG:-$(cat infrastructure/version)} #'
 echo $PANTERAS_IMAGE_TAG
 PANTERAS_DOCKER_IMAGE=${PANTERAS_DOCKER_IMAGE:-${REGISTRY}panteras/paas-in-a-box:${PANTERAS_IMAGE_TAG}}
 
@@ -189,8 +200,5 @@ NETDATA_APP_PARAMS=${NETDATA_APP_PARAMS:-$NETDATA_PARAMS}
 PANTERAS_HOSTNAME=${PANTERAS_HOSTNAME:-${HOSTNAME}}
 PANTERAS_RESTART=${PANTERAS_RESTART:-"no"}
 
-# Put your ENV varaible in ./restricted/env
-mkdir -p ./restricted
-touch ./restricted/env
 
 eval "$(cat docker-compose.yml.tpl| sed 's/"/+++/g'|sed  's/^\(.*\)$/echo "\1"/')" |sed 's/+++/"/g'|sed 's;\\";";g' > docker-compose.yml
