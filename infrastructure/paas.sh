@@ -2,14 +2,19 @@ paas-connect ()
 {
     if [ -z "$1" ]; then
         echo "For connecting to service provide service_name/regex/substring as first parameter.";
+        paas_image=$(sudo docker ps | awk '/panteras/{print $NF}')
+        [ $paas_image ] && {
+            echo "Connecting to PaaS image instead..."
+            sudo docker exec -ti $paas_image bash
+        }
     else
-        for i in $(paas-list | tail -n+2 | awk '{print $1":"$2}');
+        for i in $(paas-list | awk 'NR>1 {print $1":"$2}');
         do
-            name=$(echo $i | cut -d: -f2);
-            id=$(echo $i | cut -d: -f1);
+            name=${i##*:}
+            id=${i%%:*}
             if [[ $name =~ $1 ]]; then
                 echo "Connecting to ${id}...";
-                docker exec -ti $id bash;
+                sudo docker exec -ti $id bash;
             fi;
         done;
     fi
