@@ -20,7 +20,7 @@ $ IP=<IP> ./start_with_marathon.sh deploy1_marathon.json
 
 Test:
 ```
-$ while true; do curl -H 'Host: python-smooth.service.consul' http://<IP>; done
+$ while true; do curl -H 'Host: python-smooth.service.consul' http://<IP>/cgi-bin/index; done
 ```
 
 scale up and down in marathon GUI http://<IP>:8080  
