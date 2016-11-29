@@ -36,11 +36,11 @@ RUN apt-get update \
 
 ENV SUPERVISORD_APP_VERSION       3.2.3
 ENV DOCKER_APP_VERSION            1.12.3-0~xenial
-ENV CONSUL_APP_VERSION            0.7.0
+ENV CONSUL_APP_VERSION            0.7.1
 ENV CONSUL_TEMPLATE_APP_VERSION   0.16.0
 ENV HAPROXY_APP_VERSION           1.6.3-1ubuntu0.1
 ENV MESOS_APP_VERSION             1.0.1-2.0.94.ubuntu1604
-ENV MARATHON_APP_VERSION          1.3.5-1.0.537.ubuntu1604
+ENV MARATHON_APP_VERSION          1.3.6-1.0.540.ubuntu1604
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
 ENV FABIO_APP_VERSION             1.3.4
@@ -201,7 +201,11 @@ ADD supervisord.conf   /etc/supervisord.conf
 ADD supervisord.sh     /opt/
 ADD panteras.http      /etc/haproxy/errors/
 ADD version            /opt/
+
+ADD logo.sh            /etc/profile.d
+ADD paas.sh            /etc/profile.d
 ADD bashrc             /tmp
+
 RUN cat /tmp/bashrc >> /root/.bashrc
 
 WORKDIR /opt

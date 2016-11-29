@@ -24,7 +24,7 @@ before_install:
   - gem install marathon_deploy
   - docker pull ubuntu:16.04
   - docker ps
-  - ./build-docker-images.sh
+  - ./build-docker-image.sh
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
   - export START_DNSMASQ=false

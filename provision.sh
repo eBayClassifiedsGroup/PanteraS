@@ -2,7 +2,7 @@
 
 paas="PanteraS"
 REPODIR=`dirname $0`
-export PANTERAS_IMAGE_TAG=$(awk '/version/{print $2}' ${REPODIR}/infrastructure/version)
+export PANTERAS_IMAGE_TAG=$(cat ${REPODIR}/infrastructure/version)
 IMAGE="${REGISTRY}panteras/paas-in-a-box:$PANTERAS_IMAGE_TAG"
 
 usage(){
@@ -128,7 +128,7 @@ case "$MODE" in
   ! hasDockerCompose && echo "error: docker-compose not detected" >&2 && exit 1
   echo BUILDIMAGES
   echo $BUILDIMAGES
-  [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && . ./build-docker-images.sh \
+  [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && . ./build-docker-image.sh \
     || docker pull ${IMAGE}
 
   LOCALIP=${LOCALIP:-$(hostname --ip-address| awk '{ print $2}')}
@@ -189,7 +189,7 @@ case "$MODE" in
 
   }
 
-  [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && . ./build-docker-images.sh \
+  [ "$BUILDIMAGES" == "true" ] && cd $REPODIR && . ./build-docker-image.sh \
     || docker pull ${IMAGE}
 
 
