@@ -81,7 +81,7 @@ panteras:
     - "/var/run/docker.sock:/tmp/docker.sock"
     - "/var/lib/docker:/var/lib/docker"
     - "/sys:/sys"
-    - "/tmp/mesos:/tmp/mesos:${SHARED}"
+    - "/tmp/mesos:/tmp/mesos${SHARED}"
     - "/tmp/supervisord:/tmp/supervisord"
     - "/tmp/consul/data:/opt/consul/data"
     - "/proc:/host/proc:ro" 
