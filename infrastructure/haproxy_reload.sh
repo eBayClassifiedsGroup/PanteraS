@@ -72,7 +72,7 @@ configure() {
 #
 service_restart() {
   configure $1 || { echo "[ERROR] - configruation file is broken - leaving state as it is"; exit 0; }
-  /usr/sbin/$1 -p /tmp/$1.pid -f /etc/haproxy/$1.cfg -sf $(pidof $1)
+  /usr/sbin/$1 -p /tmp/$1.pid -f /etc/haproxy/$1.cfg -sf $(pidof $2)
 }
 
 remove() {
@@ -105,7 +105,7 @@ main() {
     init
   elif [[ ${state} =~ "haproxy_" ]]; then
     echo "Switching routing to ${state}"
-    while ! service_restart ${state}; do
+    while ! service_restart ${state} ${current_state}; do
       echo "trying again"
     done && \
     { replace ${state} || init ; }
@@ -114,4 +114,4 @@ main() {
     init
   fi
 }
-main
+main "$@"
