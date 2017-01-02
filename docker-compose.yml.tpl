@@ -2,12 +2,14 @@ panteras:
   image:      ${PANTERAS_DOCKER_IMAGE}
   net:        host
   privileged: true
+  pid:        host
   restart:    "${PANTERAS_RESTART}"
   ${PORTS}
      ${CONSUL_UI_PORTS} 
      ${MARATHON_PORTS}
      ${MESOS_PORTS}
      ${CHRONOS_PORTS}
+     ${NETDATA_PORTS}
   
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
@@ -17,20 +19,24 @@ panteras:
     GOMAXPROCS:              "${GOMAXPROCS}"
 
     SERVICE_8500_NAME: consul-ui
-    SERVICE_8500_TAGS: haproxy
+    SERVICE_8500_TAGS: haproxy,urlprefix-consul-ui.service.consul/
     SERVICE_8500_CHECK_HTTP: /v1/status/leader
 
     SERVICE_8080_NAME: marathon
-    SERVICE_8080_TAGS: haproxy
+    SERVICE_8080_TAGS: haproxy,urlprefix-marathon.service.consul/
     SERVICE_8080_CHECK_HTTP: /v2/leader
 
     SERVICE_5050_NAME: mesos
-    SERVICE_5050_TAGS: haproxy
+    SERVICE_5050_TAGS: haproxy,urlprefix-mesos.service.consul/
     SERVICE_5050_CHECK_HTTP: /master/health
 
     SERVICE_4400_NAME: chronos
-    SERVICE_4400_TAGS: haproxy
+    SERVICE_4400_TAGS: haproxy,urlprefix-chronos.service.consul/
     SERVICE_4400_CHECK_HTTP: /ping
+
+    SERVICE_19999_NAME: netdata
+    SERVICE_19999_TAGS: haproxy,urlprefix-netdata.service.consul/
+    SERVICE_19999_CHECK_HTTP: /version.txt
 
     START_CONSUL:            "${START_CONSUL}"
     START_CONSUL_TEMPLATE:   "${START_CONSUL_TEMPLATE}"
@@ -75,7 +81,9 @@ panteras:
     - "/var/run/docker.sock:/tmp/docker.sock"
     - "/var/lib/docker:/var/lib/docker"
     - "/sys:/sys"
-    - "/tmp/mesos:/tmp/mesos"
+    - "/tmp/mesos:/tmp/mesos${SHARED}"
+    - "/tmp/supervisord:/tmp/supervisord"
+    - "/tmp/consul/data:/opt/consul/data"
     - "/proc:/host/proc:ro" 
     - "/sys:/host/sys:ro"
     ${VOLUME_DOCKER}

@@ -5,7 +5,7 @@ services: docker
 
 env:
   global:
-    - DOCKER_APP_VERSION=1.11.0-0~trusty
+    - DOCKER_APP_VERSION=1.12.1-0~trusty
 
 notifications:
   slack: ebayclassifiedsgroup:tFHOcsnmbj9SKmfquoJJKjSb
@@ -14,17 +14,17 @@ before_install:
   - echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /tmp/docker.list
   - sudo cp /tmp/docker.list /etc/apt/sources.list.d/docker.list
   - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv F76221572C52609D
-  - sudo apt-get update && sudo apt-get install -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" docker-engine=${DOCKER_APP_VERSION}
-  - sudo apt-cache policy docker-engine || true
-  - sudo iptables -L DOCKER || sudo iptables -N DOCKER 
   - sudo apt-get update
+  - apt-cache policy docker-engine || true
+  - sudo apt-get install -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" docker-engine=${DOCKER_APP_VERSION}
+  - sudo iptables -L DOCKER || sudo iptables -N DOCKER 
   - sudo apt-get install -y curl python-pip ruby-dev build-essential python-dev
   - sudo pip install pip --upgrade
   - sudo pip install docker-compose --upgrade
   - gem install marathon_deploy
-  - docker pull ubuntu:14.04
+  - docker pull ubuntu:16.04
   - docker ps
-  - ./build-docker-images.sh
+  - ./build-docker-image.sh
   - export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
   - echo $IP
   - export START_DNSMASQ=false
@@ -38,7 +38,7 @@ before_install:
 
 script:
   - docker ps
-  - sleep 20
+  - sleep 30
   - curl -s http://${IP}:8080/v2/leader
   - curl -s http://${IP}:8080/v2/info
   - curl -I -s http://${IP}:5050/master/health

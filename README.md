@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/eBayClassifiedsGroup/PanteraS.svg?branch=master)](https://travis-ci.org/eBayClassifiedsGroup/PanteraS)
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/panteras/paas-in-a-box/)
-[![Current Release](http://img.shields.io/badge/release-0.2.2-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/v0.2.2)
+[![Current Release](http://img.shields.io/badge/release-0.3.2-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/v0.3.2)
 
 # PanteraS <br> _entire_ Platform as a Service, in a box
 _"One container to rule them all"_
@@ -18,14 +18,15 @@ _"You shall ~~not~~ PaaS"_
 ### Components
 - Mesos + Marathon + ZooKeeper + Chronos (orchestration components)
 - Consul (K/V store, monitoring, service directory and registry)  + Registrator (automating register/ deregister)
-- HAproxy + consul-template (load balancer with dynamic config generation)
+- Fabio or  
+  HAproxy + consul-template (load balancer with dynamic config generation)
 
 ![PanteraS Architecture](http://s3.amazonaws.com/easel.ly/all_easels/19186/panteras/image.jpg#)
 
 
 ##### Master+Slave mode Container
 This is the default configuration. It will start all components inside a container.  
-It is recommended to run 3 or 5 master containers to ensure high availability of the PasteraS cluster.
+It is recommended to run 3 master containers to ensure high availability of the PasteraS cluster.
 
 ![Master Mode](http://s3.amazonaws.com/easel.ly/all_easels/19186/MasterMode/image.jpg#)
 
@@ -59,16 +60,20 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
     Mesos Slave | x | - | x |
      Registrator| x | - | x |
          dnsmasq| x | x | x |
+    Fabio       | - | - | - |
+    Netdata     | - | - | - |
+
+(Last two require manual override `START_FABIO=true` )
         
 
 ## Requirements:
-- docker >= 1.10
-- docker-compose >= 1.5.1
+- docker >= 1.12
+- docker-compose >= 1.8.0
 
 ## Usage:
 Clone it
 ```
-git clone https://github.com/eBayClassifiedsGroup/PanteraS.git
+git clone -b 0.3.2 https://github.com/eBayClassifiedsGroup/PanteraS.git
 cd PanteraS
 ```
 #### Default: Stand alone mode
@@ -123,7 +128,7 @@ slavehost-n# docker-compose up -d
 You can reach the PaaS components
 on the following ports:
 
-- HAproxy: http://hostname:81
+- HAproxy / Fabio: http://hostname:81
 - Consul: http://hostname:8500
 - Chronos: http://hostname:4400
 - Marathon: http://hostname:8080
@@ -220,8 +225,14 @@ the specific `<port>` on all cluster nodes, e.g., `my_service.service.consul:<po
 
 1. You need to create services with the same consul name (ENV `SERVICE_NAME="consul_service"`), but different marathon `id` in every JSON deployment plan (see examples)
 2. You need to set different [weights](http://cbonte.github.io/haproxy-dconv/configuration-1.5.html#weight) for those services. You can propagate weight value using consul tag  
-(ENV `SERVICE_TAGS="haproxy,weight=1"`)
+(ENV `SERVICE_TAGS="haproxy,haproxy_weight=1"`)
 3. We set the default weight value for `100` (max is `256`).
+
+## Add http health checks to HAproxy
+
+Use tag haproxy_httpchk (`SERVICE_TAGS="haproxy,haproxy_httpchk=GET /"`). You can also specify more complex tag like
+`SERVICE_TAGS="haproxy,haproxy_httpchk=GET /check HTTP/1.0\\r\\nHost:\\ www.domain.com"`
+but keep in mind to espace special characters
 
 ## Deploy using marathon_deploy
 

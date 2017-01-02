@@ -1,6 +1,6 @@
 {
- "id": "python-example-canaries",
- "cmd": "echo python canaries `hostname` > index.html; python3 -m http.server 8080",
+ "id": "python-example-tcp",
+ "cmd": "echo python stable `hostname` > index.html; python3 -m http.server 8080",
  "mem": 16,
  "cpus": 0.1,
  "instances": 2,
@@ -15,18 +15,10 @@
    }
  },
  "env": {
-   "SERVICE_TAGS" : "haproxy,haproxy_weight=1,haproxy_route=/media,haproxy_route=/chat",
-   "SERVICE_NAME" : "python"
+   "SERVICE_TAGS" : "haproxy,haproxy_tcp=5556",
+   "SERVICE_NAME" : "python-tcp"
  },
  "healthChecks": [
-   {
-     "portIndex": 0,
-     "protocol": "TCP",
-     "gracePeriodSeconds": 30,
-     "intervalSeconds": 10,
-     "timeoutSeconds": 30,
-     "maxConsecutiveFailures": 3
-   },
    {
          "path": "/",
          "portIndex": 0,

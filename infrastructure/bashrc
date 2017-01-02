@@ -1,0 +1,1 @@
+[ $version ] || { . /etc/profile.d/logo.sh && . /etc/profile.d/paas.sh; }
