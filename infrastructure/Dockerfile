@@ -38,7 +38,7 @@ ENV SUPERVISORD_APP_VERSION       3.2.3
 ENV DOCKER_APP_VERSION            1.12.3-0~xenial
 ENV CONSUL_APP_VERSION            0.7.1
 ENV CONSUL_TEMPLATE_APP_VERSION   0.16.0
-ENV HAPROXY_APP_VERSION           1.6.3-1ubuntu0.1
+ENV HAPROXY_APP_VERSION           1.6.11-1ppa1~xenial
 ENV MESOS_APP_VERSION             1.0.1-2.0.94.ubuntu1604
 ENV MARATHON_APP_VERSION          1.3.6-1.0.540.ubuntu1604
 ENV REGISTRATOR_APP_VERSION       v7
@@ -78,6 +78,8 @@ RUN mkdir /opt/consul-template
 ENV PATH $PATH:/opt/consul-template
 WORKDIR /opt/consul-template
 
+RUN apt-get update && apt-get install -y software-properties-common python-software-properties
+RUN add-apt-repository ppa:vbernat/haproxy-1.6
 RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
     && apt-get update \
     && apt-get install -y \
