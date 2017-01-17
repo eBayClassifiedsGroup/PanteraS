@@ -35,7 +35,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 ENV SUPERVISORD_APP_VERSION       3.2.3
-ENV DOCKER_APP_VERSION            1.12.3-0~xenial
+ENV DOCKER_APP_VERSION            1.12.6-0~ubuntu-xenial
 ENV CONSUL_APP_VERSION            0.7.2
 ENV CONSUL_TEMPLATE_APP_VERSION   0.16.0
 ENV HAPROXY_APP_VERSION           1.6.11-1ppa1~xenial
