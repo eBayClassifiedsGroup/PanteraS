@@ -78,9 +78,8 @@ RUN mkdir /opt/consul-template
 ENV PATH $PATH:/opt/consul-template
 WORKDIR /opt/consul-template
 
-RUN apt-get update && apt-get install -y software-properties-common python-software-properties
-RUN add-apt-repository ppa:vbernat/haproxy-1.6
-RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
+RUN echo 'deb http://ppa.launchpad.net/vbernat/haproxy-1.6/ubuntu xenial main' > /etc/apt/sources.list.d/haproxy.list \
+    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 1C61B9CD \
     && apt-get update \
     && apt-get install -y \
        haproxy=${HAPROXY_APP_VERSION} \
@@ -98,7 +97,7 @@ RUN wget https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_APP_VE
 #
 # Add files
 ADD haproxy.cfg        /etc/haproxy/
-ADD haproxy.pem       /etc/haproxy/
+ADD haproxy.pem        /etc/haproxy/
 # same file for an "empty template"
 ADD haproxy.cfg        /opt/consul-template/
 ADD haproxy.cfg.ctmpl  /opt/consul-template/
