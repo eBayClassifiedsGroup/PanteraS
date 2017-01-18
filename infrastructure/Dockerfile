@@ -35,16 +35,16 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 ENV SUPERVISORD_APP_VERSION       3.2.3
-ENV DOCKER_APP_VERSION            1.12.3-0~xenial
-ENV CONSUL_APP_VERSION            0.7.1
+ENV DOCKER_APP_VERSION            1.12.6-0~ubuntu-xenial
+ENV CONSUL_APP_VERSION            0.7.2
 ENV CONSUL_TEMPLATE_APP_VERSION   0.16.0
 ENV HAPROXY_APP_VERSION           1.6.11-1ppa1~xenial
 ENV MESOS_APP_VERSION             1.0.1-2.0.94.ubuntu1604
 ENV MARATHON_APP_VERSION          1.3.6-1.0.540.ubuntu1604
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
-ENV FABIO_APP_VERSION             1.3.4
-ENV FABIO_GO_APP_VERSION          go1.7.3
+ENV FABIO_APP_VERSION             1.3.6
+ENV FABIO_GO_APP_VERSION          go1.7.4
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -78,9 +78,8 @@ RUN mkdir /opt/consul-template
 ENV PATH $PATH:/opt/consul-template
 WORKDIR /opt/consul-template
 
-RUN apt-get update && apt-get install -y software-properties-common python-software-properties
-RUN add-apt-repository ppa:vbernat/haproxy-1.6
-RUN sed -i 's/^# \(.*-backports\s\)/\1/g' /etc/apt/sources.list \
+RUN echo 'deb http://ppa.launchpad.net/vbernat/haproxy-1.6/ubuntu xenial main' > /etc/apt/sources.list.d/haproxy.list \
+    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 1C61B9CD \
     && apt-get update \
     && apt-get install -y \
        haproxy=${HAPROXY_APP_VERSION} \
@@ -98,7 +97,7 @@ RUN wget https://releases.hashicorp.com/consul-template/${CONSUL_TEMPLATE_APP_VE
 #
 # Add files
 ADD haproxy.cfg        /etc/haproxy/
-ADD haproxy.pem       /etc/haproxy/
+ADD haproxy.pem        /etc/haproxy/
 # same file for an "empty template"
 ADD haproxy.cfg        /opt/consul-template/
 ADD haproxy.cfg.ctmpl  /opt/consul-template/
