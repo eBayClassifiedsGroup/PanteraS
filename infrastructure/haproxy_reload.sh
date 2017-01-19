@@ -114,4 +114,4 @@ main() {
     init
   fi
 }
-main
+main $1
