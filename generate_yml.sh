@@ -129,6 +129,7 @@ CONSUL_PARAMS="agent \
 #
 CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
  -template haproxy.cfg.ctmpl:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh \
+ -consul-retry \
  -max-stale=0 \
  ${KEEPALIVED_CONSUL_TEMPLATE}"
 #
