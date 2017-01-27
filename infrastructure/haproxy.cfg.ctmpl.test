@@ -1,0 +1,41 @@
+{{file "haproxy.cfg"}}
+
+{{range services}}{{if .Tags | contains "haproxy"}}{{$name := .Name}}    # HTTP service: {{.Name}}
+    {{if eq (env "CONSUL_DOMAIN") ""}}acl acl_{{$name}} hdr(host) -i {{$name}}.service.consul{{else}}acl acl_{{$name}} hdr(host) -i {{$name}}.service.{{env "CONSUL_DOMAIN"}}{{end}}
+    {{range datacenters}}{{if eq (env "CONSUL_DOMAIN") ""}}acl acl_{{$name}} hdr(host) -i {{$name}}.service.{{.}}.consul{{else}}acl acl_{{$name}} hdr(host) -i {{$name}}.service.{{.}}.{{env "CONSUL_DOMAIN"}}{{end}}
+    {{end}}{{if ne (env "HAPROXY_ADD_DOMAIN")  ""}}acl acl_{{$name}} hdr(host) -i {{$name}}{{env "HAPROXY_ADD_DOMAIN"}}{{end}}
+    {{range .Tags}}{{if . | regexMatch "^haproxy_route=(.+)" }}acl acl_{{$name}} path_beg {{. | regexReplaceAll "haproxy_route=" ""}}/
+    {{end}}{{end}}
+    use_backend backend_{{$name}} if acl_{{$name}}
+
+{{end}}{{end}}
+
+    acl acl_panteras hdr(host) -i localhost
+    acl acl_panteras hdr(host)    127.0.0.1
+    {{if ne (env "HOSTNAME") ""}}acl acl_panteras hdr(host) -i {{env "HOSTNAME"}}{{end}}
+    {{if ne (env "FQDN")     ""}}acl acl_panteras hdr(host) -i {{env "FQDN"    }}{{end}}
+    {{if ne (env "HOST_IP")  ""}}acl acl_panteras hdr(host)    {{env "HOST_IP" }}{{end}}
+    use_backend backend_panteras if acl_panteras
+
+# BACKENDS
+backend backend_panteras
+    errorfile 503 /etc/haproxy/errors/panteras.http
+
+{{range services}}{{if .Tags | contains "haproxy" }}
+# HTTP service: {{.Name}}
+backend backend_{{.Name}}{{$key_maxconn := printf "/haproxy/%s/maxconn" .Name}}
+    balance roundrobin{{range $tag, $services := service .Name | byTag}}{{if $tag | regexMatch "^haproxy_httpchk=(.+)" }}
+    option  {{$tag | regexReplaceAll "haproxy_httpchk=(.+)" "httpchk $1"}} {{end}}{{end}}
+{{range service .Name}}{{if .Tags | contains "haproxy"}}    server  {{.Node}}_{{.Port}} {{.Address}}:{{.Port}} maxconn {{ key_or_default $key_maxconn "128" }} {{range .Tags}}{{if . | regexMatch "^haproxy_weight=([0-9]+)" }} {{. | regexReplaceAll "haproxy_weight=" "weight "}} {{end}}{{end}} check
+{{end}}{{end}}{{end}}{{end}}
+
+{{range services}}{{if .Tags | contains "haproxy"}}{{range .Tags}}{{if . | regexMatch "^haproxy_tcp=([0-9]+)" }}{{$tcp_port := . | regexReplaceAll "haproxy_tcp=" ""}}
+# TCP forwarding service: {{.Name}}:{{$tcp_port}}
+listen tcp_{{.Name}}
+    bind    :{{$tcp_port}}
+    mode    tcp
+    option  tcplog
+    balance roundrobin
+{{range service .Name}}    server  {{.Node}}_{{.Port}} {{.Address}}:{{.Port}} check
+{{end}}{{end}}
+{{end}}{{end}}{{end}}
