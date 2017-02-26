@@ -35,16 +35,17 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 ENV SUPERVISORD_APP_VERSION       3.2.3
-ENV DOCKER_APP_VERSION            1.12.6-0~ubuntu-xenial
-ENV CONSUL_APP_VERSION            0.7.3
-ENV CONSUL_TEMPLATE_APP_VERSION   0.18.0
+ENV DOCKER_APP_VERSION            1.13.1-0~ubuntu-xenial
+ENV CONSUL_APP_VERSION            0.7.5
+ENV CONSUL_TEMPLATE_APP_VERSION   0.18.1
 ENV HAPROXY_APP_VERSION           1.6.11-1ppa1~xenial
 ENV MESOS_APP_VERSION             1.0.1-2.0.94.ubuntu1604
-ENV MARATHON_APP_VERSION          1.3.8-1.0.566.ubuntu1604
+ENV MARATHON_APP_VERSION          1.3.10-1.0.627.ubuntu1604
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
-ENV FABIO_APP_VERSION             1.3.7
-ENV FABIO_GO_APP_VERSION          go1.7.4
+ENV FABIO_APP_VERSION             1.3.8
+ENV FABIO_GO_APP_VERSION          go1.7.5
+ENV NETDATA_APP_VERSION           1.5.0
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -171,7 +172,7 @@ RUN apt-get update \
        pkg-config \
        uuid-dev \
        libmnl-dev \
-    && git clone https://github.com/firehol/netdata.git /tmp/netdata.git --depth=1 \
+    && git clone -b v${NETDATA_APP_VERSION} --single-branch https://github.com/firehol/netdata.git /tmp/netdata.git --depth=1 \
     && cd /tmp/netdata.git \
     && ./netdata-installer.sh --dont-wait --install /opt \
     && cd /opt \
