@@ -1,6 +1,7 @@
 {{file "haproxy.cfg"}}
 
 {{range services}}{{range $tag, $services := service .Name | byTag}}{{$service := (index $services 0)}}{{if eq $tag "haproxy"}}    # HTTP service: {{$service.Name}}
+    acl acl_{{$service.Name}} hdr(host) -i {{$service.Name}}.service
     {{if eq (env "CONSUL_DOMAIN") ""}}acl acl_{{$service.Name}} hdr(host) -i {{$service.Name}}.service.consul{{else}}acl acl_{{$service.Name}} hdr(host) -i {{$service.Name}}.service.{{env "CONSUL_DOMAIN"}}{{end}}
     {{range datacenters}}{{if eq (env "CONSUL_DOMAIN") ""}}acl acl_{{$service.Name}} hdr(host) -i {{$service.Name}}.service.{{.}}.consul{{else}}acl acl_{{$service.Name}} hdr(host) -i {{$service.Name}}.service.{{.}}.{{env "CONSUL_DOMAIN"}}{{end}}
     {{end}}{{if ne (env "HAPROXY_ADD_DOMAIN")  ""}}acl acl_{{$service.Name}} hdr(host) -i {{$service.Name}}{{env "HAPROXY_ADD_DOMAIN"}}{{end}}
