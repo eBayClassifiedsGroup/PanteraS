@@ -87,6 +87,11 @@ GOMAXPROCS=${GOMAXPROCS:-"4"}
 FQDN=${FQDN:-"`hostname -f`"}
 FQDN=${FQDN:-${HOSTNAME}}
 
+# Memory settings
+MARATHON_JAVA_OPTS=${MARATHON_JAVA_OPTS:-"-Xmx512m"}
+ZOOKEEPER_JAVA_OPTS=${ZOOKEEPER_JAVA_OPTS:-"-Xmx512m"}
+CHRONOS_JAVA_OPTS=${CHRONOS_JAVA_OPTS:-"-Xmx512m"}
+
 # Disable dnsmasq address re-mapping on non slaves - no HAProxy there
 [ "${SLAVE}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
 # dnsmaq cannot be set to listen on 0.0.0.0 - it causes lot of issues
@@ -166,10 +171,11 @@ MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --ip=${LISTEN_IP} \
  --docker_stop_timeout=5secs \
  --gc_delay=1days \
- --docker_socket=/tmp/docker.sock \
+ --docker_socket=/var/run/docker.sock \
  --no-systemd_enable_support \
  --work_dir=/tmp/mesos \
  ${MESOS_SLAVE_PARAMS}"
+# --docker_mesos_image=${PANTERAS_DOCKER_IMAGE} \
 #
 REGISTRATOR_PARAMS="-cleanup -ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
  ${REGISTRATOR_PARAMS}"

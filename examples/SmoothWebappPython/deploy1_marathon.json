@@ -1,42 +1,42 @@
 {
-    "id": "python-smooth-canaries", 
-    "args": [ "cd /opt/web/ && python3 -m http.server --cgi" ],
-    "container": {
-        "docker": {
-            "image": "simple_webapp_python",
-            "network": "BRIDGE",
-            "portMappings": [
-              { "containerPort": 8000, "hostPort": 0, "protocol": "tcp" }
-            ]
-        },
-        "type": "DOCKER",
-        "volumes": []
+  "id": "python-smooth-canaries",
+  "args": [ "cd /opt/web/ && python3 -m http.server --cgi" ],
+  "container": {
+    "docker": {
+      "image": "simple_webapp_python",
+      "network": "BRIDGE",
+      "portMappings": [
+        { "containerPort": 8000, "hostPort": 0, "protocol": "tcp" }
+      ]
     },
-    "cpus": 0.1,
-    "mem": 64.0,
-    "instances": 1,
-    "env": {
-      "SERVICE_TAGS" : "haproxy,haproxy_weight=50,urlprefix-python-smooth.service.consul/",
-      "SERVICE_NAME" : "python-smooth",
-      "SERVICE_8000_CHECK_HTTP" : "/index.html"
+    "type": "DOCKER",
+    "volumes": []
+  },
+  "cpus": 0.1,
+  "mem": 64.0,
+  "instances": 1,
+  "env": {
+    "SERVICE_TAGS" : "haproxy,haproxy_weight=50,urlprefix-python-smooth.service.consul/",
+    "SERVICE_NAME" : "python-smooth",
+    "SERVICE_8000_CHECK_HTTP" : "/index.html"
+  },
+  "healthChecks": [
+    {
+      "gracePeriodSeconds": 30,
+      "intervalSeconds": 10,
+      "maxConsecutiveFailures": 3,
+      "portIndex": 0,
+      "protocol": "MESOS_TCP",
+      "timeoutSeconds": 30
     },
-    "healthChecks": [
-        {
-            "gracePeriodSeconds": 30,
-            "intervalSeconds": 10,
-            "maxConsecutiveFailures": 3,
-            "portIndex": 0,
-            "protocol": "TCP",
-            "timeoutSeconds": 30
-        },
-        {
-            "gracePeriodSeconds": 30,
-            "intervalSeconds": 10,
-            "maxConsecutiveFailures": 3,
-            "path": "/index.html",
-            "portIndex": 0,
-            "protocol": "HTTP",
-            "timeoutSeconds": 30
-        }
-    ]
+    {
+      "gracePeriodSeconds": 30,
+      "intervalSeconds": 10,
+      "maxConsecutiveFailures": 3,
+      "path": "/index.html",
+      "portIndex": 0,
+      "protocol": "MESOS_HTTP",
+      "timeoutSeconds": 30
+    }
+  ]
 }
