@@ -5,8 +5,6 @@ FROM ubuntu:16.04
 
 MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
-RUN locale-gen en_US.UTF-8
-
 ENV DEBIAN_FRONTEND noninteractive
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
@@ -17,6 +15,7 @@ ENV GOPATH ${HOME}/go
 
 RUN apt-get update \
     && apt-get install -y \
+       locales \
        apt-transport-https \
        python-pip \
        wget \
@@ -48,6 +47,8 @@ ENV FABIO_GO_APP_VERSION          go1.7.5
 ENV NETDATA_APP_VERSION           1.5.0
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
+
+RUN locale-gen en_US.UTF-8
 
 # SupervisorD
 #
