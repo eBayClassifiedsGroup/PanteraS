@@ -15,7 +15,7 @@ ENV GOPATH ${HOME}/go
 
 RUN apt-get update \
     && apt-get install -y \
-       locale \
+       locales \
        apt-transport-https \
        python-pip \
        wget \
