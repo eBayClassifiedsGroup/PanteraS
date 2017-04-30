@@ -137,6 +137,12 @@ ADD zkStart.sh /opt/zkStart.sh
     #chronos=${CHRONOS_APP_VERSION}\
 ADD marathon.default /etc/default/marathon
 
+# MARATHON PLUGINS
+#
+RUN mkdir -p /opt/marathon/plugins/
+WORKDIR /opt/marathon/plugins/
+RUN wget https://github.com/ContainX/marathon-ldap/releases/download/1.3/marathon-ldap.jar
+
 # DOCKER
 #
 RUN echo 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' > /etc/apt/sources.list.d/docker.list \
