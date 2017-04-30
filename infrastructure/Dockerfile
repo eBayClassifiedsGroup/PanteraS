@@ -7,7 +7,9 @@ MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
 
 RUN apt-get update \
     && apt-get install -y \
-      locales
+      locales \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN locale-gen en_US.UTF-8
 
@@ -40,15 +42,15 @@ RUN apt-get update \
 
 ENV SUPERVISORD_APP_VERSION       3.2.3
 ENV DOCKER_APP_VERSION            1.13.1-0~ubuntu-xenial
-ENV CONSUL_APP_VERSION            0.7.5
-ENV CONSUL_TEMPLATE_APP_VERSION   0.18.1
+ENV CONSUL_APP_VERSION            0.8.1
+ENV CONSUL_TEMPLATE_APP_VERSION   0.18.2
 ENV HAPROXY_APP_VERSION           1.6.12-1ppa1~xenial
 ENV MESOS_APP_VERSION             1.2.0-2.0.6
 ENV MARATHON_APP_VERSION          1.4.3-1.0.649.ubuntu1604
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
-ENV FABIO_APP_VERSION             1.3.8
-ENV FABIO_GO_APP_VERSION          go1.7.5
+ENV FABIO_APP_VERSION             1.4.3
+ENV FABIO_GO_APP_VERSION          go1.8.1
 ENV NETDATA_APP_VERSION           1.6.0
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
@@ -133,6 +135,13 @@ RUN echo "deb http://repos.mesosphere.io/ubuntu/ xenial main" > /etc/apt/sources
 ADD zkStart.sh /opt/zkStart.sh
     # Chronos no longer in mesosphere ?
     #chronos=${CHRONOS_APP_VERSION}\
+ADD marathon.default /etc/default/marathon
+
+# MARATHON PLUGINS
+#
+RUN mkdir -p /opt/marathon/plugins/
+WORKDIR /opt/marathon/plugins/
+RUN wget https://github.com/ContainX/marathon-ldap/releases/download/1.3/marathon-ldap.jar
 
 # DOCKER
 #
@@ -216,4 +225,4 @@ ADD bashrc             /tmp
 RUN cat /tmp/bashrc >> /root/.bashrc
 
 WORKDIR /opt
-ENTRYPOINT [ "/opt/supervisord.sh" ]
+CMD [ "/opt/supervisord.sh" ]
