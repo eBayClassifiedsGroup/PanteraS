@@ -46,25 +46,26 @@ To connect multiple datacenters use `consul join -wan <server 1> <server 2>`
 
 Depending on `MASTER` and `SLAVE` you can define role of the container
 
-    daemon\role    |  default    | Only Master | Only Slave    |
-    --------------:|:-----------:|:-----------:|:-------------:|
-                   |`MASTER=true`|`MASTER=true`| `MASTER=false`|
-                   |`SLAVE=true `|`SLAVE=false`| `SLAVE=true`  |
-    Consul         | x | x | x |
-    Mesos Master   | x | x | - |
-    Marathon       | x | x | - |
-    Zookeeper      | x | x | - |
-    Chronos        | x | x | - |
-    Consul-template| x | - | x |
-    Haproxy        | x | - | x |
-    Mesos Slave    | x | - | x |
-    Registrator    | x | - | x |
-    dnsmasq        | x | x | x |
-    Fabio          | - | - | - |
-    Netdata        | - | - | - |
+   daemon\role    |  default    | Only Master | Only Slave
+   --------------:|:-----------:|:-----------:|:-------------:
+   .               |`MASTER=true`|`MASTER=true`| `MASTER=false`
+   .               |`SLAVE=true `|`SLAVE=false`| `SLAVE=true`
+   Consul         | x | x | x
+   Mesos Master   | x | x | -
+   Marathon       | x | x | -
+   Zookeeper      | x | x | -
+   Chronos        | x | x | -
+   Consul-template| x | - | x
+   Haproxy        | x | - | x
+   Mesos Slave    | x | - | x
+   Registrator    | x | - | x
+   dnsmasq        | x | x | x
+   Fabio          | - | - | -
+   Netdata        | - | - | -
 
-(Last two require manual override `START_FABIO=true` )
-        
+Last two require manual override like `START_FABIO=true`
+Enabling `Fabio` require stop the other concurent service `START_CONSUL_TEMPLATE=false`
+
 
 ## Requirements:
 - docker >= 1.12
