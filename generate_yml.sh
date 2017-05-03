@@ -126,7 +126,7 @@ CONSUL_PARAMS="agent \
  -data-dir=/opt/consul/data \
  -ui \
  -node=${HOSTNAME} \
- -dc=${CONSUL_DC} \
+ -datacenter=${CONSUL_DC} \
  -domain ${CONSUL_DOMAIN} \
  ${CONSUL_MODE} \
  ${CONSUL_HOSTS} \
