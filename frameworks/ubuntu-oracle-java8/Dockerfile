@@ -21,10 +21,7 @@ RUN apt-get update \
 
 RUN cd /usr/local/bin/ \
     && curl -O https://raw.githubusercontent.com/eBayClassifiedsGroup/PanteraS/master/frameworks/start.sh \
-    && chmod +x /usr/local/bin/start.sh \
-    && curl -L -O https://github.com/hashicorp/envconsul/releases/download/v0.6.0/envconsul_0.6.0_linux_amd64.zip \
-    && unzip envconsul_0.6.0_linux_amd64.zip \
-    && rm envconsul_0.6.0_linux_amd64.zip
+    && chmod +x /usr/local/bin/start.sh
 
 ENV IMAGE panteras/ubuntu-oracle-java8
 ENV HOME  /
