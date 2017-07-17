@@ -43,7 +43,7 @@ RUN apt-get update \
 ENV SUPERVISORD_APP_VERSION       3.2.3
 ENV DOCKER_APP_VERSION            17.05.0~ce-0~ubuntu-xenial
 ENV CONSUL_APP_VERSION            0.8.5
-ENV CONSUL_TEMPLATE_APP_VERSION   0.19.0
+ENV CONSUL_TEMPLATE_APP_VERSION   0.18.5
 ENV HAPROXY_APP_VERSION           1.6.13-1ppa1~xenial
 ENV MESOS_APP_VERSION             1.3.0-2.0.3
 ENV MARATHON_APP_VERSION          1.4.5-1.0.654.ubuntu1604
@@ -126,15 +126,11 @@ RUN echo "deb http://repos.mesosphere.io/ubuntu/ xenial main" > /etc/apt/sources
     && apt-get -y install \
        mesos=${MESOS_APP_VERSION} \
        marathon=${MARATHON_APP_VERSION} \
-    && wget http://repos.mesosphere.io/ubuntu/pool/main/c/chronos/chronos_${CHRONOS_APP_VERSION}_amd64.deb \
-    && dpkg -i chronos_${CHRONOS_APP_VERSION}_amd64.deb \
-    && rm chronos_${CHRONOS_APP_VERSION}_amd64.deb \
+       chronos=${CHRONOS_APP_VERSION} \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && rm /etc/mesos/zk
 ADD zkStart.sh /opt/zkStart.sh
-    # Chronos no longer in mesosphere ?
-    #chronos=${CHRONOS_APP_VERSION}\
 ADD marathon.default /etc/default/marathon
 
 # MARATHON PLUGINS
