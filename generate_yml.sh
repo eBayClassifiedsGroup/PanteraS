@@ -170,7 +170,6 @@ MESOS_SLAVE_PARAMS="--master=zk://${ZOOKEEPER_HOSTS}/mesos \
  --hostname=${FQDN} \
  --ip=${LISTEN_IP} \
  --docker_stop_timeout=5secs \
- --gc_delay=1days \
  --docker_socket=/var/run/docker.sock \
  --no-systemd_enable_support \
  --work_dir=/tmp/mesos \
