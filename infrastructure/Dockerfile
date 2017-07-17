@@ -42,16 +42,16 @@ RUN apt-get update \
 
 ENV SUPERVISORD_APP_VERSION       3.2.3
 ENV DOCKER_APP_VERSION            17.05.0~ce-0~ubuntu-xenial
-ENV CONSUL_APP_VERSION            0.8.1
+ENV CONSUL_APP_VERSION            0.8.5
 ENV CONSUL_TEMPLATE_APP_VERSION   0.18.2
 ENV HAPROXY_APP_VERSION           1.6.13-1ppa1~xenial
-ENV MESOS_APP_VERSION             1.2.0-2.0.6
-ENV MARATHON_APP_VERSION          1.4.3-1.0.649.ubuntu1604
+ENV MESOS_APP_VERSION             1.3.0-2.0.3
+ENV MARATHON_APP_VERSION          1.4.5-1.0.654.ubuntu1604
 ENV REGISTRATOR_APP_VERSION       v7
-ENV CHRONOS_APP_VERSION           2.4.0-0.1.20151007110204.ubuntu1404
-ENV FABIO_APP_VERSION             1.4.3
-ENV FABIO_GO_APP_VERSION          go1.8.1
-ENV NETDATA_APP_VERSION           1.6.0
+ENV CHRONOS_APP_VERSION           2.5.0-0.1.20170628182950.ubuntu1604
+ENV FABIO_APP_VERSION             1.5.1
+ENV FABIO_GO_APP_VERSION          go1.8.3
+ENV NETDATA_APP_VERSION           1.7.0
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -126,15 +126,11 @@ RUN echo "deb http://repos.mesosphere.io/ubuntu/ xenial main" > /etc/apt/sources
     && apt-get -y install \
        mesos=${MESOS_APP_VERSION} \
        marathon=${MARATHON_APP_VERSION} \
-    && wget http://repos.mesosphere.io/ubuntu/pool/main/c/chronos/chronos_${CHRONOS_APP_VERSION}_amd64.deb \
-    && dpkg -i chronos_${CHRONOS_APP_VERSION}_amd64.deb \
-    && rm chronos_${CHRONOS_APP_VERSION}_amd64.deb \
+       chronos=${CHRONOS_APP_VERSION} \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     && rm /etc/mesos/zk
 ADD zkStart.sh /opt/zkStart.sh
-    # Chronos no longer in mesosphere ?
-    #chronos=${CHRONOS_APP_VERSION}\
 ADD marathon.default /etc/default/marathon
 
 # MARATHON PLUGINS
