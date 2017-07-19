@@ -1,4 +1,4 @@
-FROM node:8.1.3-slim
+FROM node:8.1.4-slim
 
 MAINTAINER Wojciech Sielski <wsielski@team.mobile.de>
 
