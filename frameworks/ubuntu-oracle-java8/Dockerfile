@@ -1,11 +1,13 @@
-FROM ubuntu:14.04
+FROM ubuntu:xenial-20170802
 
 MAINTAINER Wojciech Sielski <wsielski@team.mobile.de>
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive apt-get -y upgrade \
+    && apt-get -y upgrade \
     && apt-get clean
-RUN dpkg-divert --local --rename --add /sbin/initctl
+
 RUN apt-get update \
     && apt-get -y install software-properties-common wget curl \
     && add-apt-repository ppa:webupd8team/java
@@ -24,7 +26,9 @@ RUN cd /usr/local/bin/ \
     && chmod +x /usr/local/bin/start.sh
 
 ENV IMAGE panteras/ubuntu-oracle-java8
-ENV HOME  /
-WORKDIR /
+
+ENV HOME /mnt/mesos/sandbox
+WORKDIR /mnt/mesos/sandbox
 
 ENTRYPOINT ["/usr/local/bin/start.sh"]
+
