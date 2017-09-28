@@ -40,24 +40,26 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-ENV SUPERVISORD_APP_VERSION       3.2.3
+ENV SUPERVISORD_APP_VERSION       3.3.3
 ENV DOCKER_APP_VERSION            17.05.0~ce-0~ubuntu-xenial
-ENV CONSUL_APP_VERSION            0.8.5
-ENV CONSUL_TEMPLATE_APP_VERSION   0.18.2
+ENV CONSUL_APP_VERSION            0.9.3
+ENV CONSUL_TEMPLATE_APP_VERSION   0.19.3
 ENV HAPROXY_APP_VERSION           1.6.13-1ppa1~xenial
-ENV MESOS_APP_VERSION             1.3.0-2.0.3
-ENV MARATHON_APP_VERSION          1.4.5-1.0.654.ubuntu1604
+ENV MESOS_APP_VERSION             1.4.0-2.0.1
+ENV MARATHON_APP_VERSION          1.4.8-1.0.660.ubuntu1604
 ENV REGISTRATOR_APP_VERSION       v7
-ENV CHRONOS_APP_VERSION           2.5.0-0.1.20170628182950.ubuntu1604
-ENV FABIO_APP_VERSION             1.5.1
+ENV CHRONOS_APP_VERSION           2.5.0-0.1.20170816233446.ubuntu1604
+ENV FABIO_APP_VERSION             1.5.2
 ENV FABIO_GO_APP_VERSION          go1.8.3
-ENV NETDATA_APP_VERSION           1.7.0
+ENV NETDATA_APP_VERSION           1.8.0
+ENV MARATHON_LDAP_VERSION         v1.3.1
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
 
 # SupervisorD
 #
+RUN pip install --upgrade pip
 RUN pip install supervisor-stdout
 RUN pip install https://github.com/Supervisor/supervisor/archive/${SUPERVISORD_APP_VERSION}.zip
 
@@ -137,7 +139,7 @@ ADD marathon.default /etc/default/marathon
 #
 RUN mkdir -p /opt/marathon/plugins/
 WORKDIR /opt/marathon/plugins/
-RUN wget https://github.com/ContainX/marathon-ldap/releases/download/1.3/marathon-ldap.jar
+RUN wget https://github.com/ContainX/marathon-ldap/releases/download/${MARATHON_LDAP_VERSION}/marathon-ldap.jar
 
 # DOCKER
 #
