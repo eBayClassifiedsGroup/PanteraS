@@ -205,6 +205,8 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+RUN echo 1 >/sys/kernel/mm/ksm/run \
+    && echo 1000 >/sys/kernel/mm/ksm/sleep_millisecs
 
 # PanteraS:
 RUN gem install panteras_api marathon_deploy
