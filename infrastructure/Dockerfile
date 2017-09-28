@@ -205,10 +205,6 @@ RUN apt-get update \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN [[ -e "/sys/kernel/mm/ksm/run" ]] \
-    && echo 1 >/sys/kernel/mm/ksm/run \
-    && echo 1000 >/sys/kernel/mm/ksm/sleep_millisecs
-
 # PanteraS:
 RUN gem install panteras_api marathon_deploy
 # Font for logo
@@ -221,6 +217,7 @@ ADD version            /opt/
 
 ADD logo.sh            /etc/profile.d
 ADD paas.sh            /etc/profile.d
+ADD netdata.sh         /etc/profile.d
 ADD bashrc             /tmp
 
 RUN cat /tmp/bashrc >> /root/.bashrc
