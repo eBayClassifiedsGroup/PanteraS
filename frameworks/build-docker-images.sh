@@ -11,5 +11,5 @@ REGISTRY=${REGISTRY:-"panteras/"}
 IMAGES=$(ls -l | awk '/^d/{print $NF}')
 for image in $IMAGES; do
   docker build --rm=true --tag=${REGISTRY}${image} ${image}|| error_exit
-  docker tag -f ${REGISTRY}${image}:latest ${image}:latest || error_exit
+  docker tag ${REGISTRY}${image}:latest ${image}:latest || error_exit
 done
