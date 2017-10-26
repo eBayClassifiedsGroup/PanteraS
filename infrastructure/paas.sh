@@ -22,7 +22,7 @@ paas-connect ()
 
 paas-list ()
 {
-    all_containers="$(docker inspect $(docker ps -q))";
+    all_containers="$(sudo docker inspect $(sudo docker ps -q))";
     count=$(echo "$all_containers"|jshon -l);
     count=$(($count-1));
     max_len_app_id=$(echo "$all_containers"|jshon -a -e Config -e Env -a -u | awk -F\= '/MARATHON_APP_ID/{print $2}'| wc -L)
