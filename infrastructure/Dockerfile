@@ -217,7 +217,6 @@ ADD version            /opt/
 
 ADD logo.sh            /etc/profile.d
 ADD paas.sh            /etc/profile.d
-ADD netdata.sh         /etc/profile.d
 ADD bashrc             /tmp
 
 RUN cat /tmp/bashrc >> /root/.bashrc
