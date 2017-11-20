@@ -1,4 +1,4 @@
-FROM ubuntu:xenial-20170802
+FROM ubuntu:xenial-20171114
 
 MAINTAINER Wojciech Sielski <wsielski@team.mobile.de>
 
