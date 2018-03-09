@@ -15,8 +15,9 @@
    }
  },
  "env": {
-   "SERVICE_TAGS" : "haproxy,haproxy_weight=100,haproxy_httpchk=GET /",
-   "SERVICE_NAME" : "python"
+   "SERVICE_TAGS" : "paas-python.service.consul/",
+   "SERVICE_NAME" : "python",
+   "SERVICE_8080_CHECK_HTTP" : "/index.html"
  },
  "healthChecks": [
    {

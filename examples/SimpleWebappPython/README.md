@@ -16,13 +16,20 @@ Test:
 $ curl -H 'Host: python.service.consul' http://<IP>
 ```
 
+Test canary:
 
-Deploy  "tcp" example:
+http://<IP>:81/manual
+```
+route weight python.service.consul weight 0.01 tags "canary"
+```
+
+
+Deploy  "tcp" example (require fabio start with extra port):
 ```
 $ IP=<IP> ./start_with_marathon.sh deploy2_marathon.json
 ```
 
 Test:
 ```
-$ curl http://<IP>:5556
+$ curl http://<IP>:8181
 ```

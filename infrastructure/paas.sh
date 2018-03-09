@@ -1,11 +1,15 @@
+su_docker() {
+  which sudo >/dev/null && sudo docker "$@" || docker "$@"
+}
+
 paas-connect ()
 {
     if [ -z "$1" ]; then
         echo "For connecting to service provide service_name/regex/substring as first parameter.";
-        paas_image=$(sudo docker ps | awk '/panteras/{print $NF}')
+        paas_image=$(su_docker ps | awk '/panteras/{print $NF}')
         [ $paas_image ] && {
             echo "Connecting to PaaS image instead..."
-            sudo docker exec -ti $paas_image bash
+            su_docker exec -ti $paas_image bash
         }
     else
         for i in $(paas-list | awk 'NR>1 {print $1":"$2}');
@@ -14,7 +18,7 @@ paas-connect ()
             id=${i%%:*}
             if [[ $name =~ $1 ]]; then
                 echo "Connecting to ${id}...";
-                sudo docker exec -ti $id bash;
+                su_docker exec -ti $id bash;
             fi;
         done;
     fi
@@ -22,7 +26,7 @@ paas-connect ()
 
 paas-list ()
 {
-    all_containers="$(sudo docker inspect $(sudo docker ps -q))";
+    all_containers="$(su_docker inspect $(su_docker ps -q))";
     count=$(echo "$all_containers"|jshon -l);
     count=$(($count-1));
     max_len_app_id=$(echo "$all_containers"|jshon -a -e Config -e Env -a -u | awk -F\= '/MARATHON_APP_ID/{print $2}'| wc -L)

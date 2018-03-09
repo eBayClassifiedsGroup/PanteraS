@@ -43,24 +43,22 @@ PANTERAS_DOCKER_IMAGE=${PANTERAS_DOCKER_IMAGE:-${REGISTRY}panteras/paas-in-a-box
 
 #COMMON
 START_CONSUL=${START_CONSUL:-"true"}
+START_FABIO=${START_FABIO:-"true"}
+
 #MASTER
 START_MESOS_MASTER=${START_MESOS_MASTER:-${MASTER}}
 START_MARATHON=${START_MARATHON:-${MASTER}}
 START_ZOOKEEPER=${START_ZOOKEEPER:-${MASTER}}
 START_CHRONOS=${START_CHRONOS:-${MASTER}}
+
 #SLAVE
 START_CONSUL_TEMPLATE=${START_CONSUL_TEMPLATE:-${SLAVE}}
-#FABIO experimental
-START_FABIO=${START_FABIO:-"false"}
 START_MESOS_SLAVE=${START_MESOS_SLAVE:-${SLAVE}}
 START_REGISTRATOR=${START_REGISTRATOR:-${SLAVE}}
-#NETDATA experimental
-START_NETDATA=${START_NETDATA:-"false"}
+
 #OPTIONAL
-START_DNSMASQ=${START_DNSMASQ:-"true"}
-#HAPROXY SSL
-HAPROXY_SSL=${HAPROXY_SSL:-"false"}
-[ "$HAPROXY_SSL" == "true" ] && HAPROXY_CERT_OPTS=${HAPROXY_CERT_OPTS:-"ssl crt /etc/haproxy/haproxy.pem"}
+START_NETDATA=${START_NETDATA:-"false"}
+START_DNSMASQ=${START_DNSMASQ:-"false"}
 
 # Lets consul behave as a client but on slaves only
 [ "${SLAVE}" == "true" ] && [ "${MASTER}" == "false" ] && CONSUL_MODE=${CONSUL_MODE:-' '}
@@ -88,7 +86,6 @@ FQDN=${FQDN:-"`hostname -f`"}
 FQDN=${FQDN:-${HOSTNAME}}
 
 # Memory settings
-MARATHON_JAVA_OPTS=${MARATHON_JAVA_OPTS:-"-Xmx512m"}
 ZOOKEEPER_JAVA_OPTS=${ZOOKEEPER_JAVA_OPTS:-"-Xmx512m"}
 CHRONOS_JAVA_OPTS=${CHRONOS_JAVA_OPTS:-"-Xmx512m"}
 
@@ -99,19 +96,13 @@ CHRONOS_JAVA_OPTS=${CHRONOS_JAVA_OPTS:-"-Xmx512m"}
 DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 [ ${LISTEN_IP} != "0.0.0.0" ] && DNSMASQ_BIND_INTERFACES="--bind-interfaces --listen-address=${LISTEN_IP}"
 
-# enable keepalived if the consul_template(with HAproxy) gets started and a
-# virtual IP address is specified
-[ "${START_CONSUL_TEMPLATE}" == "true" ] && [ ${KEEPALIVED_VIP} ] && \
-    KEEPALIVED_CONSUL_TEMPLATE="-template=./keepalived.conf.ctmpl:/etc/keepalived/keepalived.conf:./keepalived_reload.sh"
-
 # Expose ports depends on which service has been mark to start
-[ "${START_CONSUL_TEMPLATE}" == "true" ] || [ "${START_FABIO}" == "true" ] && {
-  [ "${START_CONSUL}"        == "true" ] && PORTS="ports:" && CONSUL_UI_PORTS='- "8500:8500"'
-  [ "${START_MARATHON}"      == "true" ] && PORTS="ports:" && MARATHON_PORTS='- "8080:8080"'
-  [ "${START_MESOS_MASTER}"  == "true" ] && PORTS="ports:" && MESOS_PORTS='- "5050:5050"'
-  [ "${START_CHRONOS}"       == "true" ] && PORTS="ports:" && CHRONOS_PORTS='- "4400:4400"'
-  [ "${START_NETDATA}"       == "true" ] && PORTS="ports:" && NETDATA_PORTS='- "19999:19999"'
-}
+[ "${START_FABIO}"         == "true" ] && PORTS="ports:" && FABIO_UI_PORTS='- "81:81"'
+[ "${START_CONSUL}"        == "true" ] && PORTS="ports:" && CONSUL_UI_PORTS='- "8500:8500"'
+[ "${START_MARATHON}"      == "true" ] && PORTS="ports:" && MARATHON_PORTS='- "8080:8080"'
+[ "${START_MESOS_MASTER}"  == "true" ] && PORTS="ports:" && MESOS_PORTS='- "5050:5050"'
+[ "${START_CHRONOS}"       == "true" ] && PORTS="ports:" && CHRONOS_PORTS='- "4400:4400"'
+[ "${START_NETDATA}"       == "true" ] && PORTS="ports:" && NETDATA_PORTS='- "19999:19999"'
 
 # Override docker with local binary
 [ "${HOST_DOCKER}" == "true" ] && VOLUME_DOCKER=${VOLUME_DOCKER:-'- "/usr/local/bin/docker:/usr/local/bin/docker"'}
@@ -132,12 +123,6 @@ CONSUL_PARAMS="agent \
  ${CONSUL_HOSTS} \
  ${CONSUL_PARAMS}"
 #
-CONSUL_TEMPLATE_PARAMS="-consul=${CONSUL_IP}:8500 \
- -template haproxy.cfg.ctmpl:/etc/haproxy/haproxy.cfg:/opt/consul-template/haproxy_reload.sh \
- -consul-retry \
- -max-stale=0 \
- ${KEEPALIVED_CONSUL_TEMPLATE}"
-#
 DNSMASQ_PARAMS="-d \
  -u dnsmasq \
  -r /etc/resolv.conf.orig \
@@ -151,7 +136,6 @@ DNSMASQ_PARAMS="-d \
 MARATHON_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --zk zk://${ZOOKEEPER_HOSTS}/marathon \
  --hostname ${HOSTNAME} \
- --no-logger \
  --http_address ${LISTEN_IP} \
  --https_address ${LISTEN_IP} \
  ${MARATHON_PARAMS}"
@@ -192,7 +176,6 @@ FABIO_PARAMS="-cfg ./fabio.properties"
 NETDATA_PARAMS="-nd -ch /host"
 
 CONSUL_APP_PARAMS=${CONSUL_APP_PARAMS:-$CONSUL_PARAMS}
-CONSUL_TEMPLATE_APP_PARAMS=${CONSUL_TEMPLATE_APP_PARAMS:-$CONSUL_TEMPLATE_PARAMS}
 DNSMASQ_APP_PARAMS=${DNSMASQ_APP_PARAMS:-$DNSMASQ_PARAMS}
 MARATHON_APP_PARAMS=${MARATHON_APP_PARAMS:-$MARATHON_PARAMS}
 MESOS_MASTER_APP_PARAMS=${MESOS_MASTER_APP_PARAMS:-$MESOS_MASTER_PARAMS}

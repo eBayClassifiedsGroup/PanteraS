@@ -15,8 +15,9 @@
    }
  },
  "env": {
-   "SERVICE_TAGS" : "haproxy,haproxy_tcp=5556",
-   "SERVICE_NAME" : "python-tcp"
+   "SERVICE_TAGS" : "paas-:8181 proto=tcp",
+   "SERVICE_NAME" : "python-tcp",
+   "SERVICE_8080_CHECK_HTTP" : "/index.html"
  },
  "healthChecks": [
    {

@@ -15,18 +15,11 @@
    }
  },
  "env": {
-   "SERVICE_TAGS" : "haproxy,haproxy_weight=1,haproxy_route=/media,haproxy_route=/chat",
-   "SERVICE_NAME" : "python"
+   "SERVICE_TAGS" : "paas-python.service.consul/,canary",
+   "SERVICE_NAME" : "python",
+   "SERVICE_8080_CHECK_HTTP" : "/index.html"
  },
  "healthChecks": [
-   {
-     "portIndex": 0,
-     "protocol": "MESOS_TCP",
-     "gracePeriodSeconds": 30,
-     "intervalSeconds": 10,
-     "timeoutSeconds": 30,
-     "maxConsecutiveFailures": 3
-   },
    {
      "path": "/",
      "portIndex": 0,
