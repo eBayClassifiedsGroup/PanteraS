@@ -1,4 +1,4 @@
-FROM node:4.8.4-slim
+FROM node:4.9.1-slim
 
 MAINTAINER Robert Schumann <roschumann@team.mobile.de>
 
