@@ -120,8 +120,8 @@ case "$MODE" in
   ! hasDockerCompose && {
     sudo apt-get install -y python-pip
     # Fix for pip - Ubuntu provide incompatible version
-    sudo pip install pip --upgrade
-    sudo pip install docker-compose #--upgrade
+    sudo pip install -I pip==9.0.1
+    sudo pip install docker-compose --upgrade
   }
   # verify:
   ! hasDocker && echo "error: docker not detected." >&2 && exit 1
