@@ -163,6 +163,10 @@ ADD paas.sh            /etc/profile.d
 ADD bashrc             /tmp
 ADD version            /opt/
 
+# example user
+RUN groupadd -g 31337 ecgapp && \
+    useradd  -g 31337 -u 31337 -d /app -s /bin/false ecgapp
+
 RUN cat /tmp/bashrc >> /root/.bashrc
 
 WORKDIR /opt
