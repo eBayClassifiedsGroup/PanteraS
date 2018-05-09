@@ -33,7 +33,7 @@ ENV HOME /root
 ENV GOPATH ${HOME}/go
 
 ENV SUPERVISORD_APP_VERSION       3.3.3
-ENV DOCKER_APP_VERSION            17.05.0~ce-0~ubuntu-xenial
+ENV DOCKER_APP_VERSION            18.03.0~ce-0~ubuntu
 ENV CONSUL_APP_VERSION            1.0.7
 ENV MESOS_APP_VERSION             1.5.0-2.0.1
 ENV MARATHON_APP_VERSION          1.5.8
@@ -86,10 +86,10 @@ ADD zkStart.sh /opt/zkStart.sh
 
 # DOCKER
 #
-RUN echo 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' > /etc/apt/sources.list.d/docker.list \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv F76221572C52609D \
+RUN echo 'deb https://download.docker.com/linux/ubuntu xenial stable' > /etc/apt/sources.list.d/docker.list \
+    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0EBFCD88 \
     && apt-get update \
-    && apt-get install -y docker-engine=${DOCKER_APP_VERSION} \
+    && apt-get install -y docker-ce=${DOCKER_APP_VERSION} \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
