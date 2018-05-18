@@ -1,6 +1,7 @@
 {
  "id": "python-example-tcp",
  "cmd": "echo python stable `hostname` > index.html; python3 -m http.server 8080",
+ "user": "ecgapp",
  "mem": 16,
  "cpus": 0.1,
  "instances": 2,
