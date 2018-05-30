@@ -14,10 +14,14 @@ ADD ./cgi-bin/index /opt/web/cgi-bin/
 RUN chmod a+x /opt/web/cgi-bin/index 
 
 ADD https://raw.githubusercontent.com/eBayClassifiedsGroup/PanteraS/master/frameworks/start.sh /usr/local/bin/start.sh
-RUN chmod +x /usr/local/bin/start.sh
+RUN chmod +rx /usr/local/bin/start.sh
 
-EXPOSE 8000
+RUN addgroup -g 31337 ecgapp && \
+    adduser  -G ecgapp -u 31337 -h /app -s /bin/false -D ecgapp && \
+    chown ecgapp:ecgapp /opt/web/
 
-WORKDIR /
+USER ecgapp
+
+WORKDIR /app
 
 ENTRYPOINT ["/usr/local/bin/start.sh"]

@@ -33,15 +33,15 @@ ENV HOME /root
 ENV GOPATH ${HOME}/go
 
 ENV SUPERVISORD_APP_VERSION       3.3.3
-ENV DOCKER_APP_VERSION            17.05.0~ce-0~ubuntu-xenial
-ENV CONSUL_APP_VERSION            1.0.6
-ENV MESOS_APP_VERSION             1.5.0-2.0.1
-ENV MARATHON_APP_VERSION          1.5.6
+ENV DOCKER_APP_VERSION            18.03.1~ce-0~ubuntu
+ENV CONSUL_APP_VERSION            1.1.0
+ENV MESOS_APP_VERSION             1.6.0-2.0.4
+ENV MARATHON_APP_VERSION          1.6.352
 ENV REGISTRATOR_APP_VERSION       v7
 ENV CHRONOS_APP_VERSION           2.5.1-0.1.20171211074431.ubuntu1604
-ENV FABIO_APP_VERSION             1.5.8
-ENV FABIO_GO_APP_VERSION          go1.10
-ENV NETDATA_APP_VERSION           1.9.0
+ENV FABIO_APP_VERSION             1.5.9
+ENV FABIO_GO_APP_VERSION          go1.10.2
+ENV NETDATA_APP_VERSION           1.10.0
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -86,10 +86,10 @@ ADD zkStart.sh /opt/zkStart.sh
 
 # DOCKER
 #
-RUN echo 'deb https://apt.dockerproject.org/repo ubuntu-xenial main' > /etc/apt/sources.list.d/docker.list \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv F76221572C52609D \
+RUN echo 'deb https://download.docker.com/linux/ubuntu xenial stable' > /etc/apt/sources.list.d/docker.list \
+    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0EBFCD88 \
     && apt-get update \
-    && apt-get install -y docker-engine=${DOCKER_APP_VERSION} \
+    && apt-get install -y docker-ce=${DOCKER_APP_VERSION} \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -162,6 +162,10 @@ ADD logo.sh            /etc/profile.d
 ADD paas.sh            /etc/profile.d
 ADD bashrc             /tmp
 ADD version            /opt/
+
+# example user
+RUN groupadd -g 31337 ecgapp && \
+    useradd  -g 31337 -u 31337 -d /app -s /bin/false ecgapp
 
 RUN cat /tmp/bashrc >> /root/.bashrc
 
