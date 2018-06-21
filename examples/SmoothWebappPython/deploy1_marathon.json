@@ -1,5 +1,6 @@
 {
   "id": "python-smooth-canaries",
+  "user": "ecgapp",  
   "args": [ "cd /opt/web/ && python3 -m http.server --cgi" ],
   "container": {
     "docker": {
@@ -16,7 +17,7 @@
   "mem": 64.0,
   "instances": 1,
   "env": {
-    "SERVICE_TAGS" : "haproxy,haproxy_weight=50,urlprefix-python-smooth.service.consul/",
+    "SERVICE_TAGS" : "paas-python-smooth.service.consul/",
     "SERVICE_NAME" : "python-smooth",
     "SERVICE_8000_CHECK_HTTP" : "/index.html"
   },

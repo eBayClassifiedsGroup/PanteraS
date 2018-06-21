@@ -1,6 +1,7 @@
 {
  "id": "python-example-tcp",
  "cmd": "echo python stable `hostname` > index.html; python3 -m http.server 8080",
+ "user": "ecgapp",
  "mem": 16,
  "cpus": 0.1,
  "instances": 2,
@@ -15,8 +16,9 @@
    }
  },
  "env": {
-   "SERVICE_TAGS" : "haproxy,haproxy_tcp=5556",
-   "SERVICE_NAME" : "python-tcp"
+   "SERVICE_TAGS" : "paas-:8181 proto=tcp",
+   "SERVICE_NAME" : "python-tcp",
+   "SERVICE_8080_CHECK_HTTP" : "/index.html"
  },
  "healthChecks": [
    {

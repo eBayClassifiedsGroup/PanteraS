@@ -1,11 +1,9 @@
-HTTP/1.0 200 OK
-Cache-Control: no-cache
-Connection: close
-Content-Type: text/html
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta http-equiv="Expires" content="0" />
         <meta charset="utf-8">
         <title>PaaS</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
@@ -67,6 +65,9 @@ Content-Type: text/html
                 <div id="consul" class="col-md-6 hidden">
                     <a href="/" title="Service discovery"><img id="consul_p" width="32" height="32"/>Consul</a>
                 </div>
+                <div id="fabio" class="col-md-6 hidden">
+                    <a href="/" title="Load Balancer and proxy"><span class="glyphicon glyphicon-random" aria-hidden="true"></span>Fabio</a>
+                </div>
                 <div id="netdata" class="col-md-6 hidden">
                     <a href="/" title="Netdata monitoring"><img id="netdata_p" width="32" height="32"/>Netdata</a>
                 </div>
@@ -86,80 +87,91 @@ Content-Type: text/html
                 <div id="chronos" class="col-md-6 hidden">
                     <a href="/" title="Schedule Distributed Tasks"><img id="chronos_p" width="32" height="32"/>Chronos</a>
                 </div>
-                <div id="mesos-master" class="col-md-6 hidden">
+                <div id="mesos" class="col-md-6 hidden">
                     <a href="/" title="Cluster manager"><span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>Mesos</a>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    <h3>Slave Services</h3>
-                </div>
-            </div>
-            <div class="row">
-                <div id="HAproxy" class="col-md-6 hidden">
-                    <a href="/" title="Load Balancer and proxy"><span class="glyphicon glyphicon-random" aria-hidden="true"></span>HAproxy</a>
-                </div>
             </div>
         </div>
 
         <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script>
 
-            function ifUrlIsAvailable(url, callback) {
+            function ifUrlIsAvailable(name, url, endpoint, callback) {
                 var $iframe = $('<iframe src="' + url + '" style="display:none"></iframe>');
-                $iframe.load(callback);
-                $("body").append($iframe);
+                var img = new Image();
+                img.onload = function(){
+                 if (img.width>0) {
+                  try{
+                    $("body").append($iframe);
+                    $iframe.load(callback);
+                    document.getElementById(name+'_p').src = url + endpoint;
+                  }
+                  catch(err) {
+                    console.log(err.message);
+                  }
+                 };
+                };
+                try{
+                  img.src = url + endpoint;
+                }
+                catch(err) {
+                  console.log(err.message);
+                }
                 window.setTimeout(function () {
                     $iframe.remove();
                 }, 5000);
             }
 
+            var rand = new Date(+(new Date()) - Math.floor(Math.random()*10000000000))
             var links = [
                 {
                     id: 'marathon',
-                    port: 8080
+                    port: 8080,
+                    endpoint: '/ui/img/marathon-favicon.ico'
                 },
                 {
                     id: 'chronos',
-                    port: 4400
+                    port: 4400,
+                    endpoint: '/favicon.ico?foo=' + rand
                 },
                 {
                     id: 'consul',
-                    port: 8500
+                    port: 8500,
+                    endpoint: '/ui/static/favicon.png'
                 },
                 {
                     id: 'supervisord',
-                    port: 9000
+                    port: 9000,
+                    endpoint: '/images/supervisor.gif'
                 },
                 {
-                    id: 'HAproxy',
-                    port: 81
+                    id: 'fabio',
+                    port: 81,
+                    endpoint: '/logo.svg'
                 },
                 {
-                    id: 'mesos-master',
-                    port: 5050
+                    id: 'mesos',
+                    port: 5050,
+                    endpoint: '/static/img/mesos_logo.png'
                 },
                 {
                     id: 'netdata',
-                    port: 19999
+                    port: 19999,
+                    endpoint: '/images/animated.gif?foo=' + rand
                 },
             ];
 
             links.forEach(function (link) {
                 var url = window.location.origin + ':' + link.port;
-                ifUrlIsAvailable(url, function () {
+                ifUrlIsAvailable(link.id, url, link.endpoint, function () {
                     var $col = $("#" + link.id);
                     $col.removeClass("hidden");
                     $col.find("a").attr("href", url);
                 });
             });
 
-            document.getElementById('marathon_p').src = window.location.origin + ':8080/ui/img/marathon-favicon.ico';
-            document.getElementById('consul_p').src   = window.location.origin + ':8500/ui/static/favicon.png';
-            document.getElementById('chronos_p').src  = window.location.origin + ':4400/favicon.ico';
-            document.getElementById('netdata_p').src  = window.location.origin + ':19999/favicon.ico';
-			
         </script>
     </body>
 </html>
-

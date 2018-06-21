@@ -1,6 +1,14 @@
 #!/bin/bash
 
-[ -z ${HOST_IP} ] || exec supervisord -c /etc/supervisord.conf
+feed(){
+  sleep 20
+  consul kv put panteras/http @/etc/fabio/errors/panteras.http
+}
+
+[ -z ${HOST_IP} ] || {
+  feed &
+  exec supervisord -c /etc/supervisord.conf
+}
 . /etc/profile.d/logo.sh
 
 cat << EOF
