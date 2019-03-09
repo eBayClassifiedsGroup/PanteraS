@@ -22,5 +22,5 @@ docker version >/dev/null 2>&1 || {
 
 [ $SUDO_NEEDED ] && SUDO='sudo'
 
-$SUDO docker build --rm=true ${PROXY} --tag=${REGISTRY}${IMAGE} infrastructure || error_exit
+$SUDO docker build  --rm=true ${PROXY} --tag=${REGISTRY}${IMAGE} infrastructure || error_exit
 $SUDO docker tag ${REGISTRY}${IMAGE} ${IMAGE} || error_exit

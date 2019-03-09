@@ -9,7 +9,6 @@ panteras:
      ${CONSUL_UI_PORTS} 
      ${MARATHON_PORTS}
      ${MESOS_PORTS}
-     ${CHRONOS_PORTS}
      ${NETDATA_PORTS}
   
   environment:
@@ -21,7 +20,7 @@ panteras:
 
     SERVICE_81_NAME: fabio-ui
     SERVICE_81_TAGS: paas-fabio.ui.service.consul/
-    SERVICE_81_CHECK_HTTP: /v1/status/leader
+    SERVICE_81_CHECK_HTTP: /routes
 
     SERVICE_8500_NAME: consul-ui
     SERVICE_8500_TAGS: paas-consul.ui.service.consul/
@@ -35,10 +34,6 @@ panteras:
     SERVICE_5050_TAGS: paas-mesos.service.consul/
     SERVICE_5050_CHECK_HTTP: /master/health
 
-    SERVICE_4400_NAME: chronos
-    SERVICE_4400_TAGS: paas-chronos.service.consul/
-    SERVICE_4400_CHECK_HTTP: /ping
-
     SERVICE_19999_NAME: netdata
     SERVICE_19999_TAGS: paas-netdata.service.consul/
     SERVICE_19999_CHECK_HTTP: /version.txt
@@ -50,7 +45,6 @@ panteras:
     START_MESOS_SLAVE:       "${START_MESOS_SLAVE}"
     START_REGISTRATOR:       "${START_REGISTRATOR}"
     START_ZOOKEEPER:         "${START_ZOOKEEPER}"
-    START_CHRONOS:           "${START_CHRONOS}"
     START_FABIO:             "${START_FABIO}"
     START_NETDATA:           "${START_NETDATA}"
 
@@ -65,8 +59,6 @@ panteras:
     ZOOKEEPER_APP_PARAMS:       "${ZOOKEEPER_APP_PARAMS}"
     ZOOKEEPER_HOSTS:            "${ZOOKEEPER_HOSTS}"
     ZOOKEEPER_ID:               "${ZOOKEEPER_ID}"
-    CHRONOS_APP_PARAMS:         "${CHRONOS_APP_PARAMS}"
-    JAVA_OPTS:                  "${CHRONOS_JAVA_OPTS}"
     FABIO_APP_PARAMS:           "${FABIO_APP_PARAMS}"
     NETDATA_APP_PARAMS:         "${NETDATA_APP_PARAMS}"
 

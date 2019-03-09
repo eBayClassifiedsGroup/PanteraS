@@ -33,15 +33,14 @@ ENV HOME /root
 ENV GOPATH ${HOME}/go
 
 ENV SUPERVISORD_APP_VERSION       3.3.3
-ENV DOCKER_APP_VERSION            18.03.1~ce-0~ubuntu
-ENV CONSUL_APP_VERSION            1.1.0
-ENV MESOS_APP_VERSION             1.6.0-2.0.4
-ENV MARATHON_APP_VERSION          1.6.352
+ENV DOCKER_APP_VERSION            5:18.09.3~3-0~ubuntu-xenial
+ENV CONSUL_APP_VERSION            1.4.3
+ENV MESOS_APP_VERSION             1.7.1-2.0.1
+ENV MARATHON_APP_VERSION          1.7.189-0.1.20190125223314.ubuntu1604
 ENV REGISTRATOR_APP_VERSION       v7
-ENV CHRONOS_APP_VERSION           2.5.1-0.1.20171211074431.ubuntu1604
-ENV FABIO_APP_VERSION             1.5.9
-ENV FABIO_GO_APP_VERSION          go1.10.2
-ENV NETDATA_APP_VERSION           1.10.0
+ENV FABIO_APP_VERSION             1.5.11
+ENV FABIO_GO_APP_VERSION          go1.11.5
+ENV NETDATA_APP_VERSION           1.12.2
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -72,16 +71,20 @@ RUN apt-get update \
 
 # ZOOKEEPER MESOS MARATHON
 #
-RUN echo "deb http://repos.mesosphere.io/ubuntu/ xenial main" > /etc/apt/sources.list.d/mesosphere.list \
-    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv E56151BF \
+RUN echo "deb http://repos.mesosphere.com/ubuntu/ xenial main" > /etc/apt/sources.list.d/mesosphere.list \
+    # marathon postinstall fix, since we we dont need systemctl
+    && ln -sf /bin/true  /bin/systemctl \
+    && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv DF7D54CBE56151BF \
     && apt-get update \
+    # marathon still build against java8
     && apt-get -y install \
+       openjdk-8-jre \
        mesos=${MESOS_APP_VERSION} \
        marathon=${MARATHON_APP_VERSION} \
-       chronos=${CHRONOS_APP_VERSION} \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && rm /etc/mesos/zk
+    && rm /etc/mesos/zk \
+    && ln -s /usr/share/marathon/bin/marathon /usr/local/bin/
 ADD zkStart.sh /opt/zkStart.sh
 
 # DOCKER
@@ -112,9 +115,8 @@ RUN wget https://github.com/eBay/fabio/releases/download/v${FABIO_APP_VERSION}/f
     && chmod a+x fabio-${FABIO_APP_VERSION}-${FABIO_GO_APP_VERSION}-linux_amd64 \
     && ln -s fabio-${FABIO_APP_VERSION}-${FABIO_GO_APP_VERSION}-linux_amd64 fabio
 
-
 # NETDATA
-#
+
 RUN apt-get update \
     && apt-get -y install \
        zlib1g-dev \
@@ -126,7 +128,7 @@ RUN apt-get update \
        pkg-config \
        uuid-dev \
        libmnl-dev \
-    && git clone -b v${NETDATA_APP_VERSION} --single-branch https://github.com/firehol/netdata.git /tmp/netdata.git --depth=1 \
+    && git clone -b v${NETDATA_APP_VERSION} --single-branch https://github.com/netdata/netdata.git /tmp/netdata.git --depth=1 \
     && cd /tmp/netdata.git \
     && ./netdata-installer.sh --dont-wait --install /opt \
     && cd /opt \

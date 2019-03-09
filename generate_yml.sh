@@ -16,7 +16,7 @@ touch ./restricted/env
 [ -f ./restricted/overwrite ] && . ./restricted/overwrite
 
 echo "Keep in mind, to set free these ports on DOCKER HOST:"
-echo "53, 80, 81, 2181, 2888, 3888, 4400, 5050, 5151, 8080, 8300 - 8302, 8400, 8500, 8600, 9000, 31000 - 32000"
+echo "53, 80, 81, 2181, 2888, 3888, 5050, 5151, 8080, 8300 - 8302, 8400, 8500, 8600, 9000, 31000 - 32000"
 echo "and be sure that your hostname is resolvable, if not, configure dns in /etc/resolv.conf or add entry in /etc/hosts"
 
 # Try to detect IP
@@ -49,7 +49,6 @@ START_FABIO=${START_FABIO:-"true"}
 START_MESOS_MASTER=${START_MESOS_MASTER:-${MASTER}}
 START_MARATHON=${START_MARATHON:-${MASTER}}
 START_ZOOKEEPER=${START_ZOOKEEPER:-${MASTER}}
-START_CHRONOS=${START_CHRONOS:-${MASTER}}
 
 #SLAVE
 START_CONSUL_TEMPLATE=${START_CONSUL_TEMPLATE:-${SLAVE}}
@@ -87,9 +86,8 @@ FQDN=${FQDN:-${HOSTNAME}}
 
 # Memory settings
 ZOOKEEPER_JAVA_OPTS=${ZOOKEEPER_JAVA_OPTS:-"-Xmx512m"}
-CHRONOS_JAVA_OPTS=${CHRONOS_JAVA_OPTS:-"-Xmx512m"}
 
-# Disable dnsmasq address re-mapping on non slaves - no HAProxy there
+# Disable dnsmasq address re-mapping on non slaves
 [ "${SLAVE}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
 # dnsmaq cannot be set to listen on 0.0.0.0 - it causes lot of issues
 # and by default it works on all addresses
@@ -101,7 +99,6 @@ DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 [ "${START_CONSUL}"        == "true" ] && PORTS="ports:" && CONSUL_UI_PORTS='- "8500:8500"'
 [ "${START_MARATHON}"      == "true" ] && PORTS="ports:" && MARATHON_PORTS='- "8080:8080"'
 [ "${START_MESOS_MASTER}"  == "true" ] && PORTS="ports:" && MESOS_PORTS='- "5050:5050"'
-[ "${START_CHRONOS}"       == "true" ] && PORTS="ports:" && CHRONOS_PORTS='- "4400:4400"'
 [ "${START_NETDATA}"       == "true" ] && PORTS="ports:" && NETDATA_PORTS='- "19999:19999"'
 
 # Override docker with local binary
@@ -165,12 +162,6 @@ REGISTRATOR_PARAMS="-cleanup -ip=${HOST_IP} consul://${CONSUL_IP}:8500 \
 #
 ZOOKEEPER_PARAMS="start-foreground"
 #
-CHRONOS_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
- --zk_hosts ${ZOOKEEPER_HOSTS} \
- --http_address ${LISTEN_IP} \
- --http_port 4400 \
- ${CHRONOS_PARAMS}"
-#
 FABIO_PARAMS="-cfg ./fabio.properties"
 #
 NETDATA_PARAMS="-nd -ch /host"
@@ -182,7 +173,6 @@ MESOS_MASTER_APP_PARAMS=${MESOS_MASTER_APP_PARAMS:-$MESOS_MASTER_PARAMS}
 MESOS_SLAVE_APP_PARAMS=${MESOS_SLAVE_APP_PARAMS:-$MESOS_SLAVE_PARAMS}
 REGISTRATOR_APP_PARAMS=${REGISTRATOR_APP_PARAMS:-$REGISTRATOR_PARAMS}
 ZOOKEEPER_APP_PARAMS=${ZOOKEEPER_APP_PARAMS:-$ZOOKEEPER_PARAMS}
-CHRONOS_APP_PARAMS=${CHRONOS_APP_PARAMS:-$CHRONOS_PARAMS}
 FABIO_APP_PARAMS=${FABIO_APP_PARAMS:-$FABIO_PARAMS}
 NETDATA_APP_PARAMS=${NETDATA_APP_PARAMS:-$NETDATA_PARAMS}
 
