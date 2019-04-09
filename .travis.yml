@@ -41,10 +41,10 @@ script:
 - curl -s http://${IP}:8080/v2/info
 - curl -I -s http://${IP}:5050/master/health
 - curl -s http://${IP}:5050/system/stats.json
-- docker exec -ti panteras_panteras_1 supervisorctl status
+- docker exec -ti panteras_panteras_1 supervisorctl status || true
 - cd examples/SimpleWebappPython
 - "./test_service.sh"
 - cd -
 - cd examples/SmoothWebappPython
 - "./test_service.sh"
-- docker exec -ti panteras_panteras_1 supervisorctl status
+- docker exec -ti panteras_panteras_1 supervisorctl status || true
