@@ -84,9 +84,6 @@
                 <div id="marathon" class="col-md-6 hidden">
                     <a href="/" title="Deploy & manage containers"><img id="marathon_p" width="32" height="32"/>Marathon</a>
                 </div>
-                <div id="chronos" class="col-md-6 hidden">
-                    <a href="/" title="Schedule Distributed Tasks"><img id="chronos_p" width="32" height="32"/>Chronos</a>
-                </div>
                 <div id="mesos" class="col-md-6 hidden">
                     <a href="/" title="Cluster manager"><span class="glyphicon glyphicon-cloud" aria-hidden="true"></span>Mesos</a>
                 </div>
@@ -132,14 +129,9 @@
                     endpoint: '/ui/img/marathon-favicon.ico'
                 },
                 {
-                    id: 'chronos',
-                    port: 4400,
-                    endpoint: '/favicon.ico?foo=' + rand
-                },
-                {
                     id: 'consul',
                     port: 8500,
-                    endpoint: '/ui/static/favicon.png'
+                    endpoint: '/ui/assets/favicon-32x32-646753a205c6a6db7f93d0d1ba30bd93.png?foo=' + rand
                 },
                 {
                     id: 'supervisord',
@@ -154,12 +146,12 @@
                 {
                     id: 'mesos',
                     port: 5050,
-                    endpoint: '/static/img/mesos_logo.png'
+                    endpoint: '/assets/img/mesos-logo.png'
                 },
                 {
                     id: 'netdata',
                     port: 19999,
-                    endpoint: '/images/animated.gif?foo=' + rand
+                    endpoint: '/images/netdata-logomark.svg?foo=' + rand
                 },
             ];
 

@@ -9,7 +9,7 @@ paas-connect ()
         paas_image=$(su_docker ps | awk '/panteras/{print $NF}')
         [ $paas_image ] && {
             echo "Connecting to PaaS image instead..."
-            su_docker exec -ti $paas_image bash
+            su_docker exec -ti -e COLUMNS=$COLUMNS -e LINES=$LINES -e TERM=$TERM $paas_image bash
         }
     else
         for i in $(paas-list | awk 'NR>1 {print $1":"$2}');
@@ -18,7 +18,7 @@ paas-connect ()
             id=${i%%:*}
             if [[ $name =~ $1 ]]; then
                 echo "Connecting to ${id}...";
-                su_docker exec -ti $id bash;
+                su_docker exec -ti -e COLUMNS=$COLUMNS -e LINES=$LINES -e TERM=$TERM $id bash;
             fi;
         done;
     fi

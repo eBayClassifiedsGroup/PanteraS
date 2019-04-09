@@ -6,6 +6,7 @@ feed(){
 }
 
 [ -z ${HOST_IP} ] || {
+  chown -R consul:consul  /opt/consul/data/
   feed &
   exec supervisord -c /etc/supervisord.conf
 }
