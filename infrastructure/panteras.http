@@ -121,6 +121,7 @@
                 }, 5000);
             }
 
+            var rand = new Date(+(new Date()) - Math.floor(Math.random()*10000000000))
             var links = [
                 {
                     id: 'marathon',
@@ -130,7 +131,7 @@
                 {
                     id: 'consul',
                     port: 8500,
-                    endpoint: '/ui/assets/favicon-32x32-646753a205c6a6db7f93d0d1ba30bd93.png'
+                    endpoint: '/ui/assets/favicon-32x32-646753a205c6a6db7f93d0d1ba30bd93.png?foo=' + rand
                 },
                 {
                     id: 'supervisord',
@@ -150,7 +151,7 @@
                 {
                     id: 'netdata',
                     port: 19999,
-                    endpoint: '/images/netdata-logomark.svg'
+                    endpoint: '/images/netdata-logomark.svg?foo=' + rand
                 },
             ];
 

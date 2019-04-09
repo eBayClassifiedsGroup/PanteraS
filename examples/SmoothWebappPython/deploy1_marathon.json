@@ -19,7 +19,7 @@
   "env": {
     "SERVICE_TAGS" : "paas-python-smooth.service.consul/",
     "SERVICE_NAME" : "python-smooth",
-    "SERVICE_8000_CHECK_HTTP" : "/index.html"
+    "SERVICE_8000_CHECK_HTTP" : "/cgi-bin/index"
   },
   "healthChecks": [
     {
@@ -34,7 +34,7 @@
       "gracePeriodSeconds": 30,
       "intervalSeconds": 10,
       "maxConsecutiveFailures": 3,
-      "path": "/index.html",
+      "path": "/cgi-bin/index",
       "portIndex": 0,
       "protocol": "MESOS_HTTP",
       "timeoutSeconds": 30
