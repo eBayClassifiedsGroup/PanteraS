@@ -71,7 +71,7 @@ Enabling `Fabio` require stop the other concurent service `START_CONSUL_TEMPLATE
 ## Usage:
 Clone it
 ```
-git clone -b 0.4.0 https://github.com/eBayClassifiedsGroup/PanteraS.git
+git clone -b 0.4.1 https://github.com/eBayClassifiedsGroup/PanteraS.git
 cd PanteraS
 ```
 #### Default: Stand alone mode
