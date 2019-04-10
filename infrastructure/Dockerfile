@@ -74,7 +74,12 @@ RUN echo "deb http://repos.mesosphere.com/ubuntu/ xenial main" > /etc/apt/source
 #      marathon=${MARATHON_APP_VERSION} \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
-    && rm /etc/mesos/zk
+    && rm /etc/mesos/zk \
+    && chown -R zookeeper /etc/zookeeper \
+    && REAL_JAVA_PATH=$(readlink -f $(which java)) \
+    && JAVA_DIR=${REAL_JAVA_PATH%/bin/java} \
+    && mkdir -p ${JAVA_DIR}/conf/management/ \
+    && touch ${JAVA_DIR}/conf/management/management.properties
 
 #ADD marathon_${MARATHON_APP_VERSION}.tgz /
 #RUN ln -s /usr/share/marathon/bin/marathon /usr/local/bin
