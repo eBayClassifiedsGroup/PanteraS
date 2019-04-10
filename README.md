@@ -204,4 +204,3 @@ more info: https://github.com/eBayClassifiedsGroup/marathon_deploy
 [3] http://stackoverflow.com/questions/25217208/setting-up-a-docker-fig-mesos-environment  
 [4] http://www.consul.io/docs/  
 
-
