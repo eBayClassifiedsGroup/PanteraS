@@ -7,6 +7,7 @@ feed(){
 
 [ -z ${HOST_IP} ] || {
   chown -R consul:consul  /opt/consul/data/
+  chown -R zookeeper /var/lib/zookeeper/
   feed &
   exec supervisord -c /etc/supervisord.conf
 }

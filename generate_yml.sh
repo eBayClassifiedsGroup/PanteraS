@@ -138,7 +138,7 @@ MARATHON_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  ${MARATHON_PARAMS}"
 #
 MESOS_MASTER_PARAMS="--zk=zk://${ZOOKEEPER_HOSTS}/mesos \
- --work_dir=/var/lib/mesos \
+ --work_dir=/tmp/mesos \
  --quorum=${MESOS_MASTER_QUORUM} \
  --ip=${LISTEN_IP} \
  --hostname=${FQDN} \

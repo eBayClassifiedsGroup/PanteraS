@@ -77,6 +77,7 @@ panteras:
     - "/tmp/mesos:/tmp/mesos${SHARED}"
     - "/tmp/supervisord:/tmp/supervisord"
     - "/tmp/consul/data:/opt/consul/data"
+    - "/tmp/zookeeper:/var/lib/zookeeper/version-2"
     - "/proc:/host/proc:ro" 
     - "/sys:/host/sys:ro"
     ${VOLUME_DOCKER}
