@@ -1,0 +1,25 @@
+#
+debug = true
+logLevel = "INFO"
+
+[entryPoints]
+    [entryPoints.http]
+      address = ":80"
+    [entryPoints.api]
+      address = ":81"
+
+[consulCatalog]
+  endpoint = "127.0.0.1:8500"
+  exposedByDefault = false
+  stale = false
+  prefix = "paas"
+  frontEndRule = "Host:{{.ServiceName}}.service"
+
+[api]
+  entryPoint = "api"
+  dashboard = true
+
+[metrics]
+  [metrics.prometheus]
+    entryPoint = "api"
+    buckets = [0.1,0.3,1.2,5.0]

@@ -4,7 +4,7 @@
 # boot2docker
 [ -n "${DOCKER_HOST}" ] && IP=${IP:-$(echo $DOCKER_HOST | sed 's;.*//\(.*\):.*;\1;')}
 # outside vagrant
-which vagrant && IP=${IP:-$(vagrant ssh -c ifconfig 2>/dev/null| grep -oh "\w*192.168.10.10\w*")}
+#which vagrant && IP=${IP:-$(vagrant ssh -c ifconfig 2>/dev/null| grep -oh "\w*192.168.10.10\w*")}
 # inside vagrant
 [ "$HOSTNAME" == "standalone" ] && IP=${IP:-192.168.10.10}
 # try to guess
