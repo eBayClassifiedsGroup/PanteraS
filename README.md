@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/eBayClassifiedsGroup/PanteraS.svg?branch=master)](https://travis-ci.org/eBayClassifiedsGroup/PanteraS)
 [![Docker Hub](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/r/panteras/paas-in-a-box/)
-[![Current Release](https://img.shields.io/badge/release-0.4.1-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/v0.4.1)
+[![Current Release](https://img.shields.io/badge/release-0.4.2-blue.svg)](https://github.com/eBayClassifiedsGroup/PanteraS/releases/tag/v0.4.2)
 
 # PanteraS <br> _entire_ Platform as a Service, in a box
 _"One container to rule them all"_
@@ -57,11 +57,11 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
    Mesos Slave    | x | - | x
    Registrator    | x | - | x
    Fabio          | x | - | x
+   Traefik        | - | - | x
    Dnsmasq        | - | - | -
    Netdata        | - | - | -
 
-Last two require manual override like `START_FABIO=true`
-Enabling `Fabio` require stop the other concurent service `START_CONSUL_TEMPLATE=false`
+Optional services (disabled by default) require manual override like `START_TRAEFIK=true`
 
 
 ## Requirements:
@@ -71,7 +71,7 @@ Enabling `Fabio` require stop the other concurent service `START_CONSUL_TEMPLATE
 ## Usage:
 Clone it
 ```
-git clone -b 0.4.0 https://github.com/eBayClassifiedsGroup/PanteraS.git
+git clone -b 0.4.2 https://github.com/eBayClassifiedsGroup/PanteraS.git
 cd PanteraS
 ```
 #### Default: Stand alone mode
