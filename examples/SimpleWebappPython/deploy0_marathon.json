@@ -16,7 +16,7 @@
    }
  },
  "env": {
-   "SERVICE_TAGS" : "paas-python.service.consul/",
+   "SERVICE_TAGS" : "paas-python.service.consul/,paas.enable=true,paas.backend.loadbalancer.method=drr,paas.frontends.service.rule=Host:python.service.consul",
    "SERVICE_NAME" : "python",
    "SERVICE_8080_CHECK_HTTP" : "/index.html"
  },

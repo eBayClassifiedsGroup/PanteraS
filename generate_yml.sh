@@ -44,6 +44,8 @@ PANTERAS_DOCKER_IMAGE=${PANTERAS_DOCKER_IMAGE:-${REGISTRY}panteras/paas-in-a-box
 #COMMON
 START_CONSUL=${START_CONSUL:-"true"}
 START_FABIO=${START_FABIO:-"true"}
+START_TRAEFIK=${START_TRAEFIK:-"false"}
+[ "${START_TRAEFIK,,}" == "true" ] && START_FABIO="false"
 
 #MASTER
 START_MESOS_MASTER=${START_MESOS_MASTER:-${MASTER}}
@@ -88,18 +90,19 @@ FQDN=${FQDN:-${HOSTNAME}}
 ZOOKEEPER_JAVA_OPTS=${ZOOKEEPER_JAVA_OPTS:-"-Xmx512m"}
 
 # Disable dnsmasq address re-mapping on non slaves
-[ "${SLAVE}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
+[ "${SLAVE,,}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
 # dnsmaq cannot be set to listen on 0.0.0.0 - it causes lot of issues
 # and by default it works on all addresses
 DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
 [ ${LISTEN_IP} != "0.0.0.0" ] && DNSMASQ_BIND_INTERFACES="--bind-interfaces --listen-address=${LISTEN_IP}"
 
 # Expose ports depends on which service has been mark to start
-[ "${START_FABIO}"         == "true" ] && PORTS="ports:" && FABIO_UI_PORTS='- "81:81"'
-[ "${START_CONSUL}"        == "true" ] && PORTS="ports:" && CONSUL_UI_PORTS='- "8500:8500"'
-[ "${START_MARATHON}"      == "true" ] && PORTS="ports:" && MARATHON_PORTS='- "8080:8080"'
-[ "${START_MESOS_MASTER}"  == "true" ] && PORTS="ports:" && MESOS_PORTS='- "5050:5050"'
-[ "${START_NETDATA}"       == "true" ] && PORTS="ports:" && NETDATA_PORTS='- "19999:19999"'
+[ "${START_FABIO,,}"         == "true" ] && FABIO_UI_PORTS='- "81:81"'
+[ "${START_TRAEFIK,,}"       == "true" ] && TRAEFIK_UI_PORTS='- "81:81"'
+[ "${START_CONSUL,,}"        == "true" ] && CONSUL_UI_PORTS='- "8500:8500"'
+[ "${START_MARATHON,,}"      == "true" ] && MARATHON_PORTS='- "8080:8080"'
+[ "${START_MESOS_MASTER,,}"  == "true" ] && MESOS_PORTS='- "5050:5050"'
+[ "${START_NETDATA,,}"       == "true" ] && NETDATA_PORTS='- "19999:19999"'
 
 # Override docker with local binary
 [ "${HOST_DOCKER}" == "true" ] && VOLUME_DOCKER=${VOLUME_DOCKER:-'- "/usr/local/bin/docker:/usr/local/bin/docker"'}
@@ -164,6 +167,8 @@ ZOOKEEPER_PARAMS="start-foreground"
 #
 FABIO_PARAMS="-cfg ./fabio.properties"
 #
+TRAEFIK_PARAMS="-c ./traefik.toml"
+#
 NETDATA_PARAMS="-nd -ch /host"
 
 CONSUL_APP_PARAMS=${CONSUL_APP_PARAMS:-$CONSUL_PARAMS}
@@ -174,6 +179,7 @@ MESOS_SLAVE_APP_PARAMS=${MESOS_SLAVE_APP_PARAMS:-$MESOS_SLAVE_PARAMS}
 REGISTRATOR_APP_PARAMS=${REGISTRATOR_APP_PARAMS:-$REGISTRATOR_PARAMS}
 ZOOKEEPER_APP_PARAMS=${ZOOKEEPER_APP_PARAMS:-$ZOOKEEPER_PARAMS}
 FABIO_APP_PARAMS=${FABIO_APP_PARAMS:-$FABIO_PARAMS}
+TRAEFIK_APP_PARAMS=${TRAEFIK_APP_PARAMS:-$TRAEFIK_PARAMS}
 NETDATA_APP_PARAMS=${NETDATA_APP_PARAMS:-$NETDATA_PARAMS}
 
 PANTERAS_HOSTNAME=${PANTERAS_HOSTNAME:-${HOSTNAME}}

@@ -1,11 +1,14 @@
 panteras:
   image:      ${PANTERAS_DOCKER_IMAGE}
+#  net:        bridge
   net:        host
   privileged: true
   pid:        host
   restart:    "${PANTERAS_RESTART}"
-  ${PORTS}
+  ports:
+     - "9000:9000"
      ${FABIO_UI_PORTS} 
+     ${TRAEFIK_UI_PORTS}
      ${CONSUL_UI_PORTS} 
      ${MARATHON_PORTS}
      ${MESOS_PORTS}
@@ -18,8 +21,8 @@ panteras:
     FQDN:                    "${FQDN}"
     GOMAXPROCS:              "${GOMAXPROCS}"
 
-    SERVICE_81_NAME: fabio-ui
-    SERVICE_81_TAGS: paas-fabio.ui.service.consul/
+    SERVICE_81_NAME: router-ui
+    SERVICE_81_TAGS: paas-router.ui.service.consul/
     SERVICE_81_CHECK_HTTP: /routes
 
     SERVICE_8500_NAME: consul-ui
@@ -46,6 +49,7 @@ panteras:
     START_REGISTRATOR:       "${START_REGISTRATOR}"
     START_ZOOKEEPER:         "${START_ZOOKEEPER}"
     START_FABIO:             "${START_FABIO}"
+    START_TRAEFIK:           "${START_TRAEFIK}"
     START_NETDATA:           "${START_NETDATA}"
 
     CONSUL_APP_PARAMS:          "${CONSUL_APP_PARAMS}"
@@ -60,6 +64,7 @@ panteras:
     ZOOKEEPER_HOSTS:            "${ZOOKEEPER_HOSTS}"
     ZOOKEEPER_ID:               "${ZOOKEEPER_ID}"
     FABIO_APP_PARAMS:           "${FABIO_APP_PARAMS}"
+    TRAEFIK_APP_PARAMS:         "${TRAEFIK_APP_PARAMS}"
     NETDATA_APP_PARAMS:         "${NETDATA_APP_PARAMS}"
 
     HOSTNAME:                   "${PANTERAS_HOSTNAME}"
@@ -69,7 +74,6 @@ panteras:
 
   volumes:
     - "/etc/resolv.conf:/etc/resolv.conf.orig"
-    - "/var/spool/marathon/artifacts/store:/var/spool/store"
     - "/var/run/docker.sock:/tmp/docker.sock"
     - "/var/run/docker.sock:/var/run/docker.sock"
     - "/var/lib/docker:/var/lib/docker"

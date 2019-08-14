@@ -32,16 +32,19 @@ ENV TERM xterm
 ENV HOME /root
 ENV GOPATH ${HOME}/go
 
-ENV SUPERVISORD_APP_VERSION       4.0.0
-ENV DOCKER_APP_VERSION            5:18.09.3~3-0~ubuntu-xenial
-ENV CONSUL_APP_VERSION            1.4.2
-ENV MESOS_APP_VERSION             1.7.2-2.0.1
+ENV SUPERVISORD_APP_VERSION       4.0.4
+ENV DOCKER_APP_VERSION            5:19.03.1~3-0~ubuntu-xenial
+ENV CONSUL_APP_VERSION            1.5.3
+ENV MESOS_APP_VERSION             1.8.0-2.0.6.ubuntu1604
 #ENV MARATHON_APP_VERSION          1.7.189-0.1.20190125223314.ubuntu1604
 ENV MARATHON_APP_VERSION          1.7.189-48bfd6000
 ENV REGISTRATOR_APP_VERSION       v7
 ENV FABIO_APP_VERSION             1.5.11
 ENV FABIO_GO_APP_VERSION          go1.11.5
-ENV NETDATA_APP_VERSION           1.12.2
+ENV NETDATA_APP_VERSION           1.16.1
+#ENV TRAEFIK_APP_VERSION           v2.0.0-beta1
+ENV TRAEFIK_APP_VERSION           v1.7.12
+
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
 
@@ -135,8 +138,23 @@ RUN wget https://github.com/eBay/fabio/releases/download/v${FABIO_APP_VERSION}/f
     && chown -R fabio:fabio /opt/fabio \
     && setcap 'cap_net_bind_service=+ep' ./fabio
 
-# NETDATA
+# TRAEFIK
+#
+RUN mkdir /opt/traefik \
+    && groupadd -g 3002 traefik \
+    && useradd  -g 3002 -u 3002 -d /opt/traefik -s /bin/false traefik
+ENV PATH ${PATH}:/opt/traefik
+WORKDIR /opt/traefik
+#RUN wget https://github.com/containous/traefik/releases/download/${TRAEFIK_APP_VERSION}/traefik_${TRAEFIK_APP_VERSION}_linux_amd64.tar.gz -O traefik.tar.gz \
+RUN wget https://github.com/containous/traefik/releases/download/${TRAEFIK_APP_VERSION}/traefik_linux-amd64 -O traefik \
+#    && tar zxf traefik.tar.gz \
+    && chmod a+x traefik \
+    && chown -R traefik:traefik /opt/traefik \
+    && setcap 'cap_net_bind_service=+ep' ./traefik
+ADD traefik.toml /opt/traefik
 
+# NETDATA
+#
 RUN apt-get update \
     && apt-get -y install \
        zlib1g-dev \
