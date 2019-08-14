@@ -90,7 +90,7 @@ FQDN=${FQDN:-${HOSTNAME}}
 ZOOKEEPER_JAVA_OPTS=${ZOOKEEPER_JAVA_OPTS:-"-Xmx512m"}
 
 # Disable dnsmasq address re-mapping on non slaves
-[ "${SLAVEi,,}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
+[ "${SLAVE,,}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
 # dnsmaq cannot be set to listen on 0.0.0.0 - it causes lot of issues
 # and by default it works on all addresses
 DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
