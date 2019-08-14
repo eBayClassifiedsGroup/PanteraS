@@ -5,14 +5,14 @@ panteras:
   privileged: true
   pid:        host
   restart:    "${PANTERAS_RESTART}"
-  ${PORTS}
+  ports:
+     - "9000:9000"
      ${FABIO_UI_PORTS} 
      ${TRAEFIK_UI_PORTS}
      ${CONSUL_UI_PORTS} 
      ${MARATHON_PORTS}
      ${MESOS_PORTS}
      ${NETDATA_PORTS}
-     - "9000:9000"
   
   environment:
     CONSUL_IP:               "${CONSUL_IP}"
@@ -74,7 +74,6 @@ panteras:
 
   volumes:
     - "/etc/resolv.conf:/etc/resolv.conf.orig"
-#    - "/var/spool/marathon/artifacts/store:/var/spool/store"
     - "/var/run/docker.sock:/tmp/docker.sock"
     - "/var/run/docker.sock:/var/run/docker.sock"
     - "/var/lib/docker:/var/lib/docker"
