@@ -17,9 +17,9 @@ before_install:
 - sudo apt-get install -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
   docker-ce=${DOCKER_APP_VERSION}
 - sudo iptables -L DOCKER || sudo iptables -N DOCKER
-- sudo apt-get install -y curl python-pip ruby-dev build-essential python-dev
-- sudo pip install pip
-- sudo pip install docker-compose
+- sudo apt-get install -y curl ruby-dev build-essential python-dev
+#- sudo pip install pip
+#- sudo pip install docker-compose
 - gem install marathon_deploy
 - docker pull ubuntu:16.04
 - docker ps
