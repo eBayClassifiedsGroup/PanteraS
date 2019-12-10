@@ -13,9 +13,9 @@ before_install:
 - sudo cp /tmp/docker.list /etc/apt/sources.list.d/docker.list
 - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0EBFCD88
 - sudo apt-get update
-- apt-cache policy docker-engine || true
+- apt-cache policy docker-ce || true
 - sudo apt-get install -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
-  docker-engine=${DOCKER_APP_VERSION}
+  docker-ce=${DOCKER_APP_VERSION}
 - sudo iptables -L DOCKER || sudo iptables -N DOCKER
 - sudo apt-get install -y curl python-pip ruby-dev build-essential python-dev
 - sudo pip install pip
