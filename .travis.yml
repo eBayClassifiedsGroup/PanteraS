@@ -3,30 +3,29 @@ sudo: required
 services: docker
 env:
   global:
-  - DOCKER_APP_VERSION=17.05.0~ce-0~ubuntu-trusty
+  - DOCKER_APP_VERSION=5:19.03.5~3-0~ubuntu-xenial
 notifications:
   slack:
     rooms:
       secure: DThvgzkCwCBt5JlDGU6Po6sWM5nAJubUkcn2H90qRsCARL1kLgbv8KHLkMhv0SnGJfULGr5qVGcGNUzMghBkGwEbyHp6goLp8mPpohp/OGB8pV4CUKWjh20nR/2Dedq+y2clEY3fNNFIBua5Or6XTa7CoedZocR6RwTtbttA+IZCcM3pvLlZwEBsz9xbXverS7qaXH/dQ7rInOJEYxEXmlxSU2Yej2rlMIHEJVeyNoN30lw8oJjd6OLlXXAndr4t6AuZ1FABkmuEycfxDHuZL+fOmqSaGU2R77guPyOdJrQzcGfYSP1RA9ZpEsfFmftAJbcA1bqdbyHouVhMdfR/CFwqRUekymkgAAYqLrt/a0U57SGbR0dZ4upNzjEyO22dc1L1ughJTzPPgWXUeI1ENYi5xkEdFZHiBy8kSKgePusEcfdU16bQ9ZXCurbswBJfDoT2UG7mY9k3lyQQSSu1n+KzzZlbZcP027n1x5go5wRNadRCWoJJKUFghBJFB+qypCTXBCGtxV83OUuLY8cJpSNvzOI85SSEyvhrF70rrrjkuQS516XT2uyjAEypoOYf4CTxzSqPzIK3r7l0WgOkA49ggmnZ5rihu+2nQC03d43zfQNtVVbxTmyUvn2moGJd0SccL1OJ60uyDQeN719T9T3TcjPE+YMFQawpnKfXjzs=
 before_install:
-- echo 'deb https://apt.dockerproject.org/repo ubuntu-trusty main' > /tmp/docker.list
+- echo 'deb https://download.docker.com/linux/ubuntu xenial stable' > /tmp/docker.list
 - sudo cp /tmp/docker.list /etc/apt/sources.list.d/docker.list
-- sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv F76221572C52609D
+- sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0EBFCD88
 - sudo apt-get update
-- apt-cache policy docker-engine || true
+- apt-cache policy docker-ce || true
 - sudo apt-get install -y --force-yes -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
-  docker-engine=${DOCKER_APP_VERSION}
+  docker-ce=${DOCKER_APP_VERSION}
 - sudo iptables -L DOCKER || sudo iptables -N DOCKER
-- sudo apt-get install -y curl python-pip ruby-dev build-essential python-dev
-- sudo pip install pip
-- sudo pip install docker-compose
+- sudo apt-get install -y curl ruby-dev build-essential python-dev
+#- sudo pip install pip
+#- sudo pip install docker-compose
 - gem install marathon_deploy
 - docker pull ubuntu:16.04
 - docker ps
 - "./build-docker-image.sh"
-- export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
+- export IP=$(/sbin/ifconfig ens4 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
 - echo $IP
-- export START_DNSMASQ=false
 - export START_TRAEFIK=true
 - export ZOOKEEPER_HOSTS=${IP}:2181
 - "./generate_yml.sh"
