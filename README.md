@@ -58,7 +58,6 @@ Depending on `MASTER` and `SLAVE` you can define role of the container
    Registrator    | x | - | x
    Fabio          | x | - | x
    Traefik        | - | - | x
-   Dnsmasq        | - | - | -
    Netdata        | - | - | -
 
 Optional services (disabled by default) require manual override like `START_TRAEFIK=true`

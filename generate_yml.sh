@@ -16,7 +16,7 @@ touch ./restricted/env
 [ -f ./restricted/overwrite ] && . ./restricted/overwrite
 
 echo "Keep in mind, to set free these ports on DOCKER HOST:"
-echo "53, 80, 81, 2181, 2888, 3888, 5050, 5151, 8080, 8300 - 8302, 8400, 8500, 8600, 9000, 31000 - 32000"
+echo "80, 81, 2181, 2888, 3888, 5050, 5151, 8080, 8300 - 8302, 8400, 8500, 8600, 9000, 31000 - 32000"
 echo "and be sure that your hostname is resolvable, if not, configure dns in /etc/resolv.conf or add entry in /etc/hosts"
 
 # Try to detect IP
@@ -45,7 +45,7 @@ PANTERAS_DOCKER_IMAGE=${PANTERAS_DOCKER_IMAGE:-${REGISTRY}panteras/paas-in-a-box
 START_CONSUL=${START_CONSUL:-"true"}
 START_FABIO=${START_FABIO:-"true"}
 START_TRAEFIK=${START_TRAEFIK:-"false"}
-[ "${START_TRAEFIK,,}" == "true" ] && START_FABIO="false"
+[[ "${START_TRAEFIK,,}" == "true" ]] && START_FABIO="false"
 
 #MASTER
 START_MESOS_MASTER=${START_MESOS_MASTER:-${MASTER}}
@@ -59,7 +59,6 @@ START_REGISTRATOR=${START_REGISTRATOR:-${SLAVE}}
 
 #OPTIONAL
 START_NETDATA=${START_NETDATA:-"false"}
-START_DNSMASQ=${START_DNSMASQ:-"false"}
 
 # Lets consul behave as a client but on slaves only
 [ "${SLAVE}" == "true" ] && [ "${MASTER}" == "false" ] && CONSUL_MODE=${CONSUL_MODE:-' '}
@@ -89,20 +88,13 @@ FQDN=${FQDN:-${HOSTNAME}}
 # Memory settings
 ZOOKEEPER_JAVA_OPTS=${ZOOKEEPER_JAVA_OPTS:-"-Xmx512m"}
 
-# Disable dnsmasq address re-mapping on non slaves
-[ "${SLAVE,,}" == "false" ] && DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-' '}
-# dnsmaq cannot be set to listen on 0.0.0.0 - it causes lot of issues
-# and by default it works on all addresses
-DNSMASQ_ADDRESS=${DNSMASQ_ADDRESS:-"--address=/consul/${CONSUL_IP}"}
-[ ${LISTEN_IP} != "0.0.0.0" ] && DNSMASQ_BIND_INTERFACES="--bind-interfaces --listen-address=${LISTEN_IP}"
-
 # Expose ports depends on which service has been mark to start
-[ "${START_FABIO,,}"         == "true" ] && FABIO_UI_PORTS='- "81:81"'
-[ "${START_TRAEFIK,,}"       == "true" ] && TRAEFIK_UI_PORTS='- "81:81"'
-[ "${START_CONSUL,,}"        == "true" ] && CONSUL_UI_PORTS='- "8500:8500"'
-[ "${START_MARATHON,,}"      == "true" ] && MARATHON_PORTS='- "8080:8080"'
-[ "${START_MESOS_MASTER,,}"  == "true" ] && MESOS_PORTS='- "5050:5050"'
-[ "${START_NETDATA,,}"       == "true" ] && NETDATA_PORTS='- "19999:19999"'
+[[ "${START_FABIO,,}"         == "true" ]] && FABIO_UI_PORTS='- "81:81"'
+[[ "${START_TRAEFIK,,}"       == "true" ]] && TRAEFIK_UI_PORTS='- "81:81"'
+[[ "${START_CONSUL,,}"        == "true" ]] && CONSUL_UI_PORTS='- "8500:8500"'
+[[ "${START_MARATHON,,}"      == "true" ]] && MARATHON_PORTS='- "8080:8080"'
+[[ "${START_MESOS_MASTER,,}"  == "true" ]] && MESOS_PORTS='- "5050:5050"'
+[[ "${START_NETDATA,,}"       == "true" ]] && NETDATA_PORTS='- "19999:19999"'
 
 # Override docker with local binary
 [ "${HOST_DOCKER}" == "true" ] && VOLUME_DOCKER=${VOLUME_DOCKER:-'- "/usr/local/bin/docker:/usr/local/bin/docker"'}
@@ -122,16 +114,6 @@ CONSUL_PARAMS="agent \
  ${CONSUL_MODE} \
  ${CONSUL_HOSTS} \
  ${CONSUL_PARAMS}"
-#
-DNSMASQ_PARAMS="-d \
- -u dnsmasq \
- -r /etc/resolv.conf.orig \
- -7 /etc/dnsmasq.d \
- --server=/${CONSUL_DOMAIN}/${CONSUL_IP}#8600 \
- --host-record=${HOSTNAME},${CONSUL_IP} \
- ${DNSMASQ_BIND_INTERFACES} \
- ${DNSMASQ_ADDRESS} \
- ${DNSMASQ_PARAMS}"
 #
 MARATHON_PARAMS="--master zk://${ZOOKEEPER_HOSTS}/mesos \
  --zk zk://${ZOOKEEPER_HOSTS}/marathon \
@@ -172,7 +154,6 @@ TRAEFIK_PARAMS="-c ./traefik.toml"
 NETDATA_PARAMS="-nd -ch /host"
 
 CONSUL_APP_PARAMS=${CONSUL_APP_PARAMS:-$CONSUL_PARAMS}
-DNSMASQ_APP_PARAMS=${DNSMASQ_APP_PARAMS:-$DNSMASQ_PARAMS}
 MARATHON_APP_PARAMS=${MARATHON_APP_PARAMS:-$MARATHON_PARAMS}
 MESOS_MASTER_APP_PARAMS=${MESOS_MASTER_APP_PARAMS:-$MESOS_MASTER_PARAMS}
 MESOS_SLAVE_APP_PARAMS=${MESOS_SLAVE_APP_PARAMS:-$MESOS_SLAVE_PARAMS}
