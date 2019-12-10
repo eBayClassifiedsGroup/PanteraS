@@ -9,8 +9,6 @@ notifications:
     rooms:
       secure: DThvgzkCwCBt5JlDGU6Po6sWM5nAJubUkcn2H90qRsCARL1kLgbv8KHLkMhv0SnGJfULGr5qVGcGNUzMghBkGwEbyHp6goLp8mPpohp/OGB8pV4CUKWjh20nR/2Dedq+y2clEY3fNNFIBua5Or6XTa7CoedZocR6RwTtbttA+IZCcM3pvLlZwEBsz9xbXverS7qaXH/dQ7rInOJEYxEXmlxSU2Yej2rlMIHEJVeyNoN30lw8oJjd6OLlXXAndr4t6AuZ1FABkmuEycfxDHuZL+fOmqSaGU2R77guPyOdJrQzcGfYSP1RA9ZpEsfFmftAJbcA1bqdbyHouVhMdfR/CFwqRUekymkgAAYqLrt/a0U57SGbR0dZ4upNzjEyO22dc1L1ughJTzPPgWXUeI1ENYi5xkEdFZHiBy8kSKgePusEcfdU16bQ9ZXCurbswBJfDoT2UG7mY9k3lyQQSSu1n+KzzZlbZcP027n1x5go5wRNadRCWoJJKUFghBJFB+qypCTXBCGtxV83OUuLY8cJpSNvzOI85SSEyvhrF70rrrjkuQS516XT2uyjAEypoOYf4CTxzSqPzIK3r7l0WgOkA49ggmnZ5rihu+2nQC03d43zfQNtVVbxTmyUvn2moGJd0SccL1OJ60uyDQeN719T9T3TcjPE+YMFQawpnKfXjzs=
 before_install:
-- /sbin/ifconfig
-- exit 1
 - echo 'deb https://download.docker.com/linux/ubuntu xenial stable' > /tmp/docker.list
 - sudo cp /tmp/docker.list /etc/apt/sources.list.d/docker.list
 - sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0EBFCD88
@@ -26,7 +24,7 @@ before_install:
 - docker pull ubuntu:16.04
 - docker ps
 - "./build-docker-image.sh"
-- export IP=$(/sbin/ifconfig eth0 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
+- export IP=$(/sbin/ifconfig ens4 | awk '/inet addr:/{gsub(/.*:/,"",$2);print $2;exit}')
 - echo $IP
 - export START_TRAEFIK=true
 - export ZOOKEEPER_HOSTS=${IP}:2181
