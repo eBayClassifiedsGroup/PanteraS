@@ -14,7 +14,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        submodule: true
+        submodules: true
 
     - name: Build Image
       run: |-
