@@ -23,7 +23,7 @@ jobs:
     - name: Generate yaml and Start PanteraS
       run: |-
         ./generate_yml.sh && \
-        docker-compose -d
+        docker-compose up -d
 
     - name: Build and Run Example WebApp
       run: |-
