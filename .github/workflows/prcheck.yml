@@ -22,5 +22,5 @@ jobs:
 
     - name: Run Example WebApp
       run: |-
-        cd example/SmoothWebappPython && \
+        cd examples/SmoothWebappPython && \
         ./start_with_marathon.sh deploy0_marathon.json
