@@ -7,7 +7,7 @@ env:
 
 jobs:
   build:
-    name: Build Container Image and Deploy Example WebApp
+    name: Build Images and Deploy Example WebApp
     runs-on: ubuntu-16.04
 
     steps:
@@ -16,11 +16,17 @@ jobs:
       with:
         submodules: true
 
-    - name: Build Image
+    - name: Build Infra Images
       run: |-
         ./build-docker-image.sh
 
-    - name: Run Example WebApp
+    - name: Generate yaml and Start PanteraS
+      run: |-
+        ./generate_yml.sh && \
+        docker-compose -d
+
+    - name: Build and Run Example WebApp
       run: |-
         cd examples/SmoothWebappPython && \
+        ./build-docker-image.sh &&
         ./start_with_marathon.sh deploy0_marathon.json
