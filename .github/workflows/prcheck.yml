@@ -1,0 +1,26 @@
+name: Build Image and Run Example
+
+on: [push, pull_request]
+
+env:
+  IP: 127.0.0.1
+
+jobs:
+  build:
+    name: Build Container Image and Deploy Example WebApp
+    runs-on: ubuntu-16.04
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodule: true
+
+    - name: Build Image
+      run: |-
+        ./build-docker-image.sh
+
+    - name: Run Example WebApp
+      run: |-
+        cd example/SmoothWebappPython && \
+        ./start_with_marathon.sh deploy0_marathon.json
