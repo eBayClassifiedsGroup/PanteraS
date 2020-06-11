@@ -3,7 +3,7 @@
 #
 FROM ubuntu:16.04
 
-MAINTAINER Wojciech Sielski "wsielski@team.mobile.de"
+LABEL maintainer="Wojciech Sielski wsielski@team.mobile.de"
 
 RUN apt-get update --no-install-recommends \
     && apt-get install -y \
