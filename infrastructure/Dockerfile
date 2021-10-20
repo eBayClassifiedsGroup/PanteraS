@@ -32,18 +32,18 @@ ENV TERM xterm
 ENV HOME /root
 ENV GOPATH ${HOME}/go
 
-ENV SUPERVISORD_APP_VERSION       4.1.0
-ENV DOCKER_APP_VERSION            5:19.03.5~3-0~ubuntu-xenial
-ENV CONSUL_APP_VERSION            1.6.2
+ENV SUPERVISORD_APP_VERSION       4.2.2
+ENV DOCKER_APP_VERSION            5:20.10.7~3-0~ubuntu-xenial
+ENV CONSUL_APP_VERSION            1.10.3
 ENV MESOS_APP_VERSION             1.9.0-2.0.1.ubuntu1604
 #ENV MARATHON_APP_VERSION          1.9.81-0.1.20190905233136.ubuntu1604
-ENV MARATHON_APP_VERSION          1.7.216-9e2a9b579
+ENV MARATHON_APP_VERSION          1.8.222-86475ddac
 ENV REGISTRATOR_APP_VERSION       v7
-ENV FABIO_APP_VERSION             1.5.13
-ENV FABIO_GO_APP_VERSION          go1.13.4
-ENV NETDATA_APP_VERSION           1.19.0
+ENV FABIO_APP_VERSION             1.5.15
+ENV FABIO_GO_APP_VERSION          go1.15.5
+ENV NETDATA_APP_VERSION           1.31.0
 #ENV TRAEFIK_APP_VERSION           v2.0.0-beta1
-ENV TRAEFIK_APP_VERSION           v1.7.19
+ENV TRAEFIK_APP_VERSION           v1.7.33
 
 
 ENV DOCKER_HOST unix:///tmp/docker.sock
@@ -162,6 +162,7 @@ RUN savedAptMark="$(apt-mark showmanual)" \
        pkg-config \
        uuid-dev \
        libmnl-dev \
+       libuv1-dev \
        git \
     && git clone -b v${NETDATA_APP_VERSION} --single-branch https://github.com/netdata/netdata.git /tmp/netdata.git --depth=1 \
     && cd /tmp/netdata.git \
